@@ -3,6 +3,8 @@ package com.bartolome.aitor.model.entities;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "carrito_items")
@@ -23,6 +25,7 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "carrito_id")
+    @OnDelete(action = OnDeleteAction.CASCADE) // Esto agregará ON DELETE CASCADE para la relación con Cart
     private Cart carrito;
 
     @ManyToOne

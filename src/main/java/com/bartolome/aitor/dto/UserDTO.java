@@ -27,7 +27,7 @@ public class UserDTO {
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     @Schema(description = "Contraseña del usuario")
-    private String password;
+    private String pass;
 
     @NotBlank(message = "El rol es obligatorio")
     @Schema(description = "Rol del usuario", example = "cliente")

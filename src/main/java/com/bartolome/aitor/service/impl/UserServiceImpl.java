@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         // Convierte el DTO a entidad
         User user = mapper.toEntity(dto);
         // Codifica la contraseña antes de guardar
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(passwordEncoder.encode(dto.getPass()));
         // Guarda el usuario y lo convierte a DTO
         return mapper.toDto(repository.save(user));
     }

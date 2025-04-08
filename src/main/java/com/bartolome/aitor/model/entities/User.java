@@ -3,6 +3,8 @@ package com.bartolome.aitor.model.entities;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -33,9 +35,12 @@ public class User {
     @Schema(description = "Rol del usuario", example = "cliente")
     private String rol;
 
+    // Relación con pedidos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<com.bartolome.aitor.model.entities.Order> pedidos;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    // Relación uno a uno con el carrito
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE) // Indica que, al borrar el usuario, se elimine el carrito en la base de datos
     private Cart carrito;
 }
