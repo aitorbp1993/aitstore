@@ -39,4 +39,3 @@ public class User {
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private Cart carrito;
 }
-
