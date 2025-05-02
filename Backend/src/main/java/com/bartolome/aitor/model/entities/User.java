@@ -1,5 +1,6 @@
 package com.bartolome.aitor.model.entities;
 
+import com.bartolome.aitor.model.enums.Rol;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,15 +33,20 @@ public class User {
     @Schema(description = "Contraseña encriptada")
     private String password;
 
-    @Schema(description = "Rol del usuario", example = "cliente")
-    private String rol;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol rol;
 
     // Relación con pedidos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<com.bartolome.aitor.model.entities.Order> pedidos;
+    private List<Order> pedidos;
 
     // Relación uno a uno con el carrito
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE) // Indica que, al borrar el usuario, se elimine el carrito en la base de datos
     private Cart carrito;
+
+    @Column(length = 512)
+    private String refreshToken;
+
 }

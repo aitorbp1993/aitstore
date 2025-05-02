@@ -1,6 +1,6 @@
 package com.bartolome.aitor.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -8,11 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Schema(description = "Datos para autenticarse (login)")
-public class AuthRequest {
-    @NotBlank(message = "El email es obligatorio")
+public class LoginRequestDTO {
+
+    @Email(message = "El correo debe tener un formato válido")
+    @NotBlank(message = "El correo es obligatorio")
     private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
-    private String pass;
+    private String password;
 }

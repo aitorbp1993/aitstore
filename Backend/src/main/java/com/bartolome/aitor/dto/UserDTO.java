@@ -1,5 +1,6 @@
 package com.bartolome.aitor.dto;
 
+import com.bartolome.aitor.model.enums.Rol;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,9 +28,9 @@ public class UserDTO {
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     @Schema(description = "Contraseña del usuario")
-    private String pass;
+    private String password;
 
     @NotBlank(message = "El rol es obligatorio")
     @Schema(description = "Rol del usuario", example = "cliente")
-    private String rol;
+    private Rol rol;
 }

@@ -23,12 +23,13 @@ public class CartItem {
     @Schema(description = "Cantidad seleccionada del producto")
     private Integer cantidad;
 
-    @ManyToOne
-    @JoinColumn(name = "carrito_id")
-    @OnDelete(action = OnDeleteAction.CASCADE) // Esto agregará ON DELETE CASCADE para la relación con Cart
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carrito_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE) // Elimina los items si se elimina el carrito
     private Cart carrito;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producto_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE) // Elimina los items si se elimina el producto
     private Product producto;
 }

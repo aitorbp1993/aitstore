@@ -11,7 +11,8 @@ public interface UserService {
 
     Optional<UserDTO> obtenerPorId(Long id);
 
-    UserDTO guardar(UserDTO dto);
-
     void eliminar(Long id);
+
+    Optional<UserDTO> obtenerPorEmail(String email);
+
 }

@@ -1,6 +1,8 @@
 package com.bartolome.aitor.service.impl;
 
+import com.bartolome.aitor.dto.CategoriaConProductosDTO;
 import com.bartolome.aitor.dto.CategoryDTO;
+import com.bartolome.aitor.dto.ProductResponseDTO;
 import com.bartolome.aitor.mapper.CategoryMapper;
 import com.bartolome.aitor.model.entities.Category;
 import com.bartolome.aitor.repository.CategoryRepository;
@@ -41,4 +43,24 @@ public class CategoryServiceImpl implements CategoryService {
     public void eliminar(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Optional<CategoriaConProductosDTO> obtenerConProductos(Long id) {
+        return repository.findById(id).map(categoria ->
+                CategoriaConProductosDTO.builder()
+                        .nombreCategoria(categoria.getNombre())
+                        .productos(
+                                categoria.getProductos().stream()
+                                        .map(product -> ProductResponseDTO.builder()
+                                                .id(product.getId())
+                                                .nombre(product.getNombre())
+                                                .precio(product.getPrecio())
+                                                .imagenUrl(product.getImagenUrl())
+                                                .build()
+                                        ).toList()
+                        )
+                        .build()
+        );
+    }
+
 }

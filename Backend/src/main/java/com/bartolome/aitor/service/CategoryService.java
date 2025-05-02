@@ -1,5 +1,6 @@
 package com.bartolome.aitor.service;
 
+import com.bartolome.aitor.dto.CategoriaConProductosDTO;
 import com.bartolome.aitor.dto.CategoryDTO;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface CategoryService {
     CategoryDTO guardar(CategoryDTO dto);
 
     void eliminar(Long id);
+
+    Optional<CategoriaConProductosDTO> obtenerConProductos(Long id);
+
 }

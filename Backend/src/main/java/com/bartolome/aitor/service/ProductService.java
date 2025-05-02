@@ -14,4 +14,7 @@ public interface ProductService {
     ProductDTO guardar(ProductDTO dto);
 
     void eliminar(Long id);
+
+    ProductDTO actualizar(Long id, ProductDTO dto);
+
 }

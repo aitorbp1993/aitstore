@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "productos")
 @Data
@@ -36,4 +38,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Category categoria;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> carritoItems;
+
+
 }

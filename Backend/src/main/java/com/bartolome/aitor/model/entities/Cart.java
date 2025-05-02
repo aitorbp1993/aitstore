@@ -22,13 +22,12 @@ public class Cart {
     @Schema(description = "ID del carrito")
     private Long id;
 
-    // Relación con el usuario
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)  // Esto genera ON DELETE CASCADE para la columna usuario_id
+    @OnDelete(action = OnDeleteAction.CASCADE) // Si se elimina el usuario, se elimina el carrito
     private User usuario;
 
-    // Otros campos, por ejemplo, la lista de items en el carrito
-    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE) // Opcional si el motor de BD lo requiere
     private List<CartItem> items;
 }

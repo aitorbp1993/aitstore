@@ -10,4 +10,8 @@ import lombok.*;
 @Schema(description = "Respuesta de autenticación que incluye el token JWT")
 public class AuthResponse {
     private String token;
+    private Long usuarioId;
+    private String nombre;
+    private String refreshToken;
+
 }

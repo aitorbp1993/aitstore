@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,12 +38,6 @@ public class UserController {
         );
     }
 
-    @PostMapping
-    @Operation(summary = "Crear o actualizar un usuario")
-    public ResponseEntity<UserDTO> guardar(@Valid @RequestBody UserDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.guardar(dto));
-    }
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar un usuario")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
@@ -50,4 +47,15 @@ public class UserController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
+    @Operation(summary = "Obtener el usuario autenticado")
+    public ResponseEntity<UserDTO> obtenerMiPerfil(Authentication authentication) {
+        String email = authentication.getName(); // viene del JWT
+        UserDTO usuario = service.obtenerPorEmail(email)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+        return ResponseEntity.ok(usuario);
+    }
+
+
 }

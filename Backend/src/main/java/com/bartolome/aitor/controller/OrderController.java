@@ -8,7 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,5 +57,11 @@ public class OrderController {
         }
         service.eliminarPedido(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 🚨 Manejador de excepción para stock insuficiente
+    @ExceptionHandler(com.bartolome.aitor.exception.StockInsuficienteException.class)
+    public ResponseEntity<String> manejarStockInsuficiente(com.bartolome.aitor.exception.StockInsuficienteException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

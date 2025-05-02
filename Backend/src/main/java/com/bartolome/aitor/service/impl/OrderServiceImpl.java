@@ -3,6 +3,7 @@ package com.bartolome.aitor.service.impl;
 import com.bartolome.aitor.dto.CreateOrderDTO;
 import com.bartolome.aitor.dto.OrderDTO;
 import com.bartolome.aitor.exception.RecursoNoEncontradoException;
+import com.bartolome.aitor.exception.StockInsuficienteException;
 import com.bartolome.aitor.mapper.OrderMapper;
 import com.bartolome.aitor.model.entities.Order;
 import com.bartolome.aitor.model.entities.OrderItem;
@@ -14,6 +15,7 @@ import com.bartolome.aitor.repository.UserRepository;
 import com.bartolome.aitor.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO crearPedido(CreateOrderDTO dto) {
         User usuario = userRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + dto.getUsuarioId()));
@@ -63,6 +66,22 @@ public class OrderServiceImpl implements OrderService {
             Product producto = productRepository.findById(itemDto.getProductoId())
                     .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado con ID: " + itemDto.getProductoId()));
 
+            // Verificamos stock disponible
+            if (producto.getStock() < itemDto.getCantidad()) {
+                throw new StockInsuficienteException("No hay suficiente stock para el producto: " + producto.getNombre());
+            }
+
+            // Reducimos stock
+            producto.setStock(producto.getStock() - itemDto.getCantidad());
+
+            // Si el stock llega a 0 lo eliminamos
+            if (producto.getStock() == 0) {
+                productRepository.delete(producto);
+            } else {
+                productRepository.save(producto); // Guardamos el stock actualizado
+            }
+
+            // Creamos el ítem del pedido
             OrderItem item = new OrderItem();
             item.setPedido(pedido);
             item.setProducto(producto);
@@ -73,6 +92,7 @@ public class OrderServiceImpl implements OrderService {
         }).collect(Collectors.toList());
 
         pedido.setItems(items);
+
         double total = items.stream()
                 .mapToDouble(i -> i.getPrecioUnitario() * i.getCantidad())
                 .sum();
@@ -80,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
         return orderMapper.toDto(orderRepository.save(pedido));
     }
+
 
     @Override
     public void eliminarPedido(Long id) {

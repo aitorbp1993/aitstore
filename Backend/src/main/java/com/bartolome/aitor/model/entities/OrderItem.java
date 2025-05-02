@@ -26,7 +26,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
-    private com.bartolome.aitor.model.entities.Order pedido;
+    private Order pedido;
 
     @ManyToOne
     @JoinColumn(name = "producto_id")

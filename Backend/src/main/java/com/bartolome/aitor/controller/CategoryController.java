@@ -1,5 +1,6 @@
 package com.bartolome.aitor.controller;
 
+import com.bartolome.aitor.dto.CategoriaConProductosDTO;
 import com.bartolome.aitor.dto.CategoryDTO;
 import com.bartolome.aitor.exception.RecursoNoEncontradoException;
 import com.bartolome.aitor.service.CategoryService;
@@ -50,4 +51,12 @@ public class CategoryController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/productos")
+    @Operation(summary = "Obtener una categoría con sus productos")
+    public ResponseEntity<CategoriaConProductosDTO> obtenerCategoriaConProductos(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerConProductos(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada con ID: " + id)));
+    }
+
 }

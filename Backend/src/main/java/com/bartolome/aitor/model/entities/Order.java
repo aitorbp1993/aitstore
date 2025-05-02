@@ -1,7 +1,5 @@
 package com.bartolome.aitor.model.entities;
 
-import com.bartolome.aitor.model.entities.OrderItem;
-import com.bartolome.aitor.model.entities.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
