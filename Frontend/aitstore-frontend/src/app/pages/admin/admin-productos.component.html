@@ -1,0 +1,39 @@
+<div class="p-4">
+  <h2 class="text-2xl font-bold mb-4">Gestión de Productos</h2>
+
+  <button class="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition" (click)="crear()">
+    Crear nuevo producto
+  </button>
+
+  <div *ngIf="productos.length === 0" class="text-center text-gray-500">
+    No hay productos disponibles.
+  </div>
+
+  <table *ngIf="productos.length > 0" class="w-full text-left border-collapse">
+    <thead>
+      <tr class="bg-gray-200 dark:bg-gray-700 text-sm">
+        <th class="p-2">ID</th>
+        <th class="p-2">Nombre</th>
+        <th class="p-2">Precio</th>
+        <th class="p-2">Stock</th>
+        <th class="p-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of productos" class="border-b dark:border-gray-600 text-sm">
+        <td class="p-2">{{ producto.id }}</td>
+        <td class="p-2">{{ producto.nombre }}</td>
+        <td class="p-2">{{ producto.precio | currency:'EUR' }}</td>
+        <td class="p-2">{{ producto.stock }}</td>
+        <td class="p-2 space-x-2">
+          <button class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" (click)="editar(producto.id)">
+            Editar
+          </button>
+          <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition" (click)="eliminar(producto.id)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

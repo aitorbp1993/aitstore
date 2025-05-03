@@ -1,0 +1,26 @@
+<div class="p-4">
+  <h2 class="text-2xl font-bold mb-4">Detalle del Pedido</h2>
+
+  <div *ngIf="pedido; else cargando" class="bg-white dark:bg-gray-800 shadow rounded p-4">
+    <div class="mb-2"><strong>ID:</strong> {{ pedido.id }}</div>
+    <div class="mb-2"><strong>Estado:</strong> {{ pedido.estado }}</div>
+    <div class="mb-4"><strong>Total:</strong> {{ pedido.total | currency:'EUR' }}</div>
+
+    <ul class="divide-y divide-gray-300 dark:divide-gray-700">
+      <li *ngFor="let item of pedido.items" class="py-1">
+        {{ item.nombreProducto }} - {{ item.cantidad }} x {{ item.precioUnitario | currency:'EUR' }}
+      </li>
+    </ul>
+
+    <button
+      class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      (click)="volver()"
+    >
+      Volver
+    </button>
+  </div>
+
+  <ng-template #cargando>
+    <p>Cargando pedido...</p>
+  </ng-template>
+</div>

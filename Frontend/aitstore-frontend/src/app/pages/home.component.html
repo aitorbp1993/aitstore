@@ -1,0 +1,41 @@
+<!-- Mensaje si no hay productos -->
+<div *ngIf="categoriasFiltradas().length === 0" class="text-center text-gray-600 dark:text-gray-300 py-10">
+  <p class="text-xl font-semibold">😕 No se encontraron productos para tu búsqueda.</p>
+  <button
+    (click)="volverAlInicio()"
+    class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+    Volver al inicio
+  </button>
+</div>
+
+<!-- Mostrar categorías y productos -->
+<section *ngFor="let categoria of categoriasFiltradas()" class="mb-12">
+  <h2 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+    {{ categoria.nombre }}
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngFor="let producto of categoria.productos"
+         class="bg-white dark:bg-gray-800 border rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
+
+      <!-- Imagen -->
+      <img
+        [src]="producto.imagenUrl || 'assets/img/default.png'"
+        alt="{{ producto.nombre }}"
+        class="w-full h-40 object-cover border-b"
+      />
+
+      <!-- Contenido -->
+      <div class="p-4 flex-1 flex flex-col justify-between">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{{ producto.nombre }}</h3>
+        <p class="text-base text-gray-700 dark:text-gray-300 mb-4">{{ producto.precio | currency: 'EUR' }}</p>
+
+        <button
+          (click)="agregarAlCarrito(producto)"
+          class="mt-auto w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
+          Añadir al carrito
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

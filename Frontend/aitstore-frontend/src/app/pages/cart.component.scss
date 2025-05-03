@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+/* Animaciones suaves */
+button {
+  @apply transition-all duration-200;
+}
+
+/* Estilos para hover en los cards */
+div[class*="hover:shadow-lg"] {
+  transition: box-shadow 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+}

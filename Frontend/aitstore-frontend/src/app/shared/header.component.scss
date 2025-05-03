@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: translateY(-8px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Mejoras dark mode
+.dark {
+  .shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  }
+
+  .bg-gray-800 {
+    background-color: #1f2937;
+  }
+
+  .border-gray-700 {
+    border-color: #374151;
+  }
+}
+
+// Efecto hover para dropdown items
+.hover\\:bg-gray-50 {
+  &:hover {
+    background-color: rgba(249, 250, 251, 0.8);
+  }
+}

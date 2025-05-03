@@ -1,0 +1,49 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
+  <!-- Título de la categoría -->
+  <div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+      {{ categoriaNombre }}
+    </h1>
+
+    <!-- Cargando -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 mt-10">
+      <svg class="animate-spin h-8 w-8 text-blue-600 dark:text-blue-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+           viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10"
+                stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+      </svg>
+      <p class="text-lg font-medium">Cargando productos...</p>
+    </div>
+
+    <!-- Sin productos -->
+    <div *ngIf="!cargando && productos.length === 0" class="text-gray-600 dark:text-gray-300 mt-4">
+      No hay productos disponibles en esta categoría.
+    </div>
+  </div>
+
+  <!-- Grid de productos -->
+  <div *ngIf="!cargando && productos.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngFor="let producto of productos"
+         class="p-4 rounded-lg shadow border bg-white dark:bg-gray-800 hover:shadow-lg transition">
+
+      <div class="font-bold text-lg mb-2 text-gray-800 dark:text-white">{{ producto.nombre }}</div>
+      <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">Precio: {{ producto.precio }}€</div>
+
+      <button
+        (click)="agregarAlCarrito(producto)"
+        class="w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
+        Añadir al carrito
+      </button>
+    </div>
+  </div>
+
+  <!-- Botón volver -->
+  <div class="mt-10 flex justify-center">
+    <button (click)="volverInicio()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+      ← Volver al inicio
+    </button>
+  </div>
+</div>

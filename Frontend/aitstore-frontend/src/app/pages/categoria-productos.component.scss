@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+/* Animaciones suaves */
+button {
+  @apply transition-all duration-200;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+}
