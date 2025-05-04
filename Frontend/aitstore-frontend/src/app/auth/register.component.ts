@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -29,7 +29,7 @@ export class RegisterComponent {
 
     const datos = this.registerForm.value;
 
-    this.http.post<{ token: string }>('http://localhost:8081/api/auth/register', datos)
+    this.http.post<{ token: string }>(`${environment.apiUrl}/auth/register`, datos)
       .subscribe({
         next: (res) => {
           localStorage.setItem('token', res.token);

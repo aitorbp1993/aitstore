@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // ✅ Importar entorno
 
 @Component({
   selector: 'app-crear-producto',
@@ -22,7 +23,7 @@ export class CrearProductoComponent {
     precio: [0, [Validators.required, Validators.min(0.01)]],
     stock: [0, [Validators.required, Validators.min(0)]],
     imagenUrl: [''],
-    categoria: ['', Validators.required] // Se envía como string
+    categoria: ['', Validators.required]
   });
 
   categorias = [
@@ -51,7 +52,7 @@ export class CrearProductoComponent {
 
     const producto = this.form.value;
 
-    this.http.post('http://localhost:8081/api/productos', producto).subscribe({
+    this.http.post(`${environment.apiUrl}/productos`, producto).subscribe({
       next: () => {
         alert('✅ Producto creado correctamente');
         this.router.navigate(['/admin/productos']);

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment'; // ✅ Importación para usar apiUrl
 
 @Component({
   selector: 'app-pedido-detalle',
@@ -20,7 +21,7 @@ export class PedidoDetalleComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.http.get(`http://localhost:8081/api/pedidos/${id}`).subscribe({
+      this.http.get(`${environment.apiUrl}/pedidos/${id}`).subscribe({
         next: (data) => this.pedido = data,
         error: () => this.router.navigate(['/pedidos'])
       });

@@ -4,10 +4,10 @@ import {
   HttpRequest,
   HttpHandlerFn,
   HttpErrorResponse,
-  HttpClient,
-  HttpHeaders
+  HttpClient
 } from '@angular/common/http';
-import { catchError, switchMap, throwError, of } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const token = localStorage.getItem('token');
@@ -23,16 +23,17 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Si no hay refreshToken guardado o no es un 401, devolvemos el error
-      if (error.status !== 401 || !localStorage.getItem('refreshToken')) {
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      // Si no es un 401 o no hay refreshToken, devolvemos el error original
+      if (error.status !== 401 || !refreshToken) {
         return throwError(() => error);
       }
 
       const http = inject(HttpClient);
-      const refreshToken = localStorage.getItem('refreshToken');
 
       // Intentamos renovar el token con el refreshToken
-      return http.post<any>('http://localhost:8081/api/auth/refresh', { refreshToken }).pipe(
+      return http.post<any>(`${environment.apiUrl}/auth/refresh`, { refreshToken }).pipe(
         switchMap((res) => {
           const newToken = res.token;
           const newRefreshToken = res.refreshToken;
@@ -41,9 +42,11 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
           localStorage.setItem('token', newToken);
           localStorage.setItem('refreshToken', newRefreshToken);
 
-          // Clonamos la petición original con el nuevo token
+          // Reintentamos la petición original con el nuevo token
           const retryReq = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${newToken}`)
+            setHeaders: {
+              Authorization: `Bearer ${newToken}`
+            }
           });
 
           return next(retryReq);

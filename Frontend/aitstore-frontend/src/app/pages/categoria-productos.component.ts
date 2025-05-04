@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CarritoService } from '../shared/services/carrito.service';
+import { environment } from '../../environments/environment'; // ✅ Importa entorno
 
 interface ProductoDTO {
   id: number;
@@ -39,7 +40,7 @@ export class CategoriaProductosComponent implements OnInit {
 
   cargarCategoriaConProductos(id: number): void {
     this.cargando = true;
-    this.http.get<any>(`http://localhost:8081/api/categorias/${id}/productos`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
       next: (res) => {
         this.categoriaNombre = res.nombreCategoria;
         this.productos = res.productos || [];
@@ -66,6 +67,7 @@ export class CategoriaProductosComponent implements OnInit {
   volverInicio(): void {
     this.router.navigate(['/']);
   }
+
   obtenerImagen(producto: ProductoDTO): string {
     const url = producto.imagenUrl?.trim();
     if (!url || url.includes('placeholder') || url.startsWith('http') && url.includes('via.placeholder.com')) {
@@ -73,7 +75,6 @@ export class CategoriaProductosComponent implements OnInit {
     }
     return url;
   }
-
 
   obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase();

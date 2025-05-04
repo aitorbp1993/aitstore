@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-usuarios',
@@ -26,7 +27,7 @@ export class AdminUsuariosComponent implements OnInit {
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.get<any[]>('http://localhost:8081/api/usuarios', { headers }).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios`, { headers }).subscribe({
       next: data => this.usuarios = data,
       error: (err) => {
         console.error('❌ Error al obtener usuarios:', err);
@@ -43,7 +44,7 @@ export class AdminUsuariosComponent implements OnInit {
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.http.delete(`http://localhost:8081/api/usuarios/${id}`, { headers }).subscribe({
+    this.http.delete(`${environment.apiUrl}/usuarios/${id}`, { headers }).subscribe({
       next: () => {
         this.usuarios = this.usuarios.filter(u => u.id !== id);
         alert('✅ Usuario eliminado correctamente');

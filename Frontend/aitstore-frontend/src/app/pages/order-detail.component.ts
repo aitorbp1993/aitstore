@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment'; // ✅ Importación correcta
 
 @Component({
   selector: 'app-order-detail',
@@ -18,10 +19,12 @@ export class OrderDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.http.get(`http://localhost:8081/api/pedidos/${id}`).subscribe({
-      next: (data) => this.pedido = data,
-      error: () => alert('No se pudo cargar el pedido')
-    });
+    if (id) {
+      this.http.get(`${environment.apiUrl}/pedidos/${id}`).subscribe({
+        next: (data) => this.pedido = data,
+        error: () => alert('No se pudo cargar el pedido')
+      });
+    }
   }
 
   get total(): number {

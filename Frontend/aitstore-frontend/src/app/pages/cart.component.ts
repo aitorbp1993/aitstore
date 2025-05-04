@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
+import { environment } from '../../environments/environment'; // ✅ Importa entorno
 
 @Component({
   selector: 'app-cart',
@@ -70,7 +71,7 @@ export class CartComponent implements OnInit {
       items
     };
 
-    this.http.post('http://localhost:8081/api/pedidos', payload).subscribe({
+    this.http.post(`${environment.apiUrl}/pedidos`, payload).subscribe({
       next: () => {
         this.vaciar();
         this.router.navigate(['/pedidos']);

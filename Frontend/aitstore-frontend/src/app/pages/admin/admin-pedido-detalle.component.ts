@@ -2,6 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-admin-pedido-detalle',
@@ -20,7 +22,7 @@ export class AdminPedidoDetalleComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.http.get<any>(`http://localhost:8081/api/pedidos/${id}`).subscribe({
+      this.http.get<any>(`${environment.apiUrl}${id}`).subscribe({
         next: res => this.pedido = res,
         error: err => console.error('Error al cargar pedido:', err),
         complete: () => this.cargando = false

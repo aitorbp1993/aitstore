@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
 import { AuthService } from '../auth/auth.service';
-
+import { environment } from '../../environments/environment';
 interface CategoriaDTO {
   id: number;
   nombre: string;
@@ -96,8 +96,9 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
+
   private cargarCategorias(): void {
-    this.http.get<CategoriaDTO[]>('http://localhost:8081/api/categorias').subscribe({
+    this.http.get<CategoriaDTO[]>(`${environment.apiUrl}/categorias`).subscribe({
       next: res => this.categorias = res,
       error: err => console.error('Error cargando categorías:', err)
     });

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
+import { environment } from '../../environments/environment'; // ✅ IMPORTACIÓN CORRECTA
 
 interface ProductoDTO {
   id: number;
@@ -38,7 +39,7 @@ export class HomeComponent implements OnInit {
   }
 
   private cargarDatos(): void {
-    this.http.get<CategoriaConProductosDTO[]>('http://localhost:8081/api/home/categorias-productos')
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
       .subscribe({
         next: (res) => {
           this.categorias.set(res);

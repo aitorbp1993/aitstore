@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment'; // ✅ Importamos apiUrl
 
 @Component({
   selector: 'app-perfil',
@@ -19,10 +20,10 @@ export class PerfilComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    this.http.get<any>('http://localhost:8081/api/usuarios/me').subscribe({
+    this.http.get<any>(`${environment.apiUrl}/usuarios/me`).subscribe({
       next: res => {
         this.usuario = res;
-        this.http.get<any[]>(`http://localhost:8081/api/pedidos/usuario/${res.id}`).subscribe({
+        this.http.get<any[]>(`${environment.apiUrl}/pedidos/usuario/${res.id}`).subscribe({
           next: pedidos => this.pedidos = pedidos,
           error: err => console.error('Error cargando pedidos:', err),
           complete: () => this.cargando = false

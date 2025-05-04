@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment'; // ✅ Importa entorno
 
 interface PedidoItem {
   nombreProducto: string;
@@ -31,7 +32,7 @@ export class PedidosComponent implements OnInit {
     const usuarioId = localStorage.getItem('usuarioId');
     if (!usuarioId) return;
 
-    this.http.get<Pedido[]>(`http://localhost:8081/api/pedidos/usuario/${usuarioId}`)
+    this.http.get<Pedido[]>(`${environment.apiUrl}/pedidos/usuario/${usuarioId}`)
       .subscribe({
         next: (data) => this.pedidos = data,
         error: () => alert('Error al cargar pedidos')

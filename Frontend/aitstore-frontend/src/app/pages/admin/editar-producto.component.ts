@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'; // ✅ Importa el entorno
 
 @Component({
   selector: 'app-editar-producto',
@@ -48,7 +49,7 @@ export class EditarProductoComponent implements OnInit {
 
   ngOnInit(): void {
     this.productoId = Number(this.route.snapshot.paramMap.get('id'));
-    this.http.get<any>(`http://localhost:8081/api/productos/${this.productoId}`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/productos/${this.productoId}`).subscribe({
       next: (producto) => {
         this.form.patchValue(producto);
       },
@@ -59,7 +60,7 @@ export class EditarProductoComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
 
-    this.http.put(`http://localhost:8081/api/productos/${this.productoId}`, this.form.value).subscribe({
+    this.http.put(`${environment.apiUrl}/productos/${this.productoId}`, this.form.value).subscribe({
       next: () => {
         alert('✅ Producto actualizado correctamente');
         this.router.navigate(['/admin/productos']);
