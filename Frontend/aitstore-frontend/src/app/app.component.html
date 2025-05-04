@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<div class="app-container">
+  <h1>Prueba de conexión con el backend</h1>
+  <button (click)="probarCors()">Probar conexión</button>
+  <p *ngIf="mensaje">{{ mensaje }}</p>
+
+  <router-outlet></router-outlet>
+</div>
