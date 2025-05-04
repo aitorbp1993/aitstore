@@ -1,20 +1,22 @@
 :host {
   display: block;
+  width: 100%;
 }
 
-/* Animaciones suaves */
+img {
+  transition: transform 0.3s ease-in-out;
+}
+
+img:hover {
+  transform: scale(1.03);
+}
+
 button {
   @apply transition-all duration-200;
 }
 
-/* Estilos para hover en los cards */
-div[class*="hover:shadow-lg"] {
-  transition: box-shadow 0.3s ease;
-}
-
-/* Responsive */
 @media (max-width: 640px) {
-  h1 {
+  h2 {
     font-size: 1.75rem;
   }
 }

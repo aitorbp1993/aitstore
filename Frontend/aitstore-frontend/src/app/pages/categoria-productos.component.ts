@@ -66,4 +66,34 @@ export class CategoriaProductosComponent implements OnInit {
   volverInicio(): void {
     this.router.navigate(['/']);
   }
+  obtenerImagen(producto: ProductoDTO): string {
+    const url = producto.imagenUrl?.trim();
+    if (!url || url.includes('placeholder') || url.startsWith('http') && url.includes('via.placeholder.com')) {
+      return this.obtenerImagenPorCategoria(this.categoriaNombre);
+    }
+    return url;
+  }
+
+
+  obtenerImagenPorCategoria(nombreCategoria: string): string {
+    const nombre = nombreCategoria.toLowerCase();
+
+    if (nombre.includes('sobremesa')) return 'assets/img/desktop-default.png';
+    if (nombre.includes('portátil')) return 'assets/img/laptop-default.png';
+    if (nombre.includes('monitor')) return 'assets/img/monitor-default.png';
+    if (nombre.includes('teclado')) return 'assets/img/keyboard-default.png';
+    if (nombre.includes('ratón') || nombre.includes('ratones')) return 'assets/img/mouse-default.png';
+    if (nombre.includes('placa base')) return 'assets/img/motherboard-default.png';
+    if (nombre.includes('procesador') || nombre.includes('cpu')) return 'assets/img/cpu-default.png';
+    if (nombre.includes('gráfica') || nombre.includes('gpu')) return 'assets/img/gpu-default.png';
+    if (nombre.includes('ram')) return 'assets/img/ram-default.png';
+    if (nombre.includes('disco') || nombre.includes('ssd')) return 'assets/img/ssd-default.png';
+    if (nombre.includes('fuente')) return 'assets/img/psu-default.png';
+    if (nombre.includes('caja') || nombre.includes('torre')) return 'assets/img/case-default.png';
+    if (nombre.includes('refrigeración') || nombre.includes('ventilador')) return 'assets/img/cooling-default.png';
+    if (nombre.includes('periférico') || nombre.includes('accesorio')) return 'assets/img/accessory-default.png';
+    if (nombre.includes('silla') || nombre.includes('escritorio')) return 'assets/img/chair-default.png';
+
+    return 'assets/img/default.png';
+  }
 }

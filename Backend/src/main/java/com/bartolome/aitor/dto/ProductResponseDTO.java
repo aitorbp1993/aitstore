@@ -14,3 +14,4 @@ public class ProductResponseDTO {
     private String imagenUrl;
     private String categoria;
 }
+

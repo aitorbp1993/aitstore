@@ -1,0 +1,36 @@
+<div class="max-w-4xl mx-auto py-10 px-6">
+  <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8">📦 Detalles del Pedido</h2>
+
+  <div *ngIf="cargando" class="text-center text-gray-500 dark:text-gray-300">Cargando...</div>
+
+  <div *ngIf="!cargando && pedido" class="space-y-6">
+    <!-- Info general del pedido -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+      <p class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Pedido #{{ pedido.id }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Usuario ID: {{ pedido.usuarioId }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Fecha: {{ pedido.fechaCreacion | date:'medium' }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Estado: {{ pedido.estado }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 font-semibold mt-2">
+        Total: {{ pedido.total | currency:'EUR' }}
+      </p>
+    </div>
+
+    <!-- Productos del pedido -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+      <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Productos</h3>
+
+      <div *ngFor="let item of pedido.items" class="mb-4 border-b pb-4 last:border-b-0">
+        <p class="text-base text-gray-900 dark:text-white font-medium">{{ item.nombreProducto }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Cantidad: {{ item.cantidad }} &nbsp;|&nbsp;
+          Precio unitario: {{ item.precioUnitario | currency:'EUR' }} &nbsp;|&nbsp;
+          Subtotal: {{ item.precioUnitario * item.cantidad | currency:'EUR' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && !pedido" class="text-center text-red-500 mt-10">
+    No se pudo cargar el pedido.
+  </div>
+</div>

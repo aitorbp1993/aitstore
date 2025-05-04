@@ -1,41 +1,111 @@
-<!-- Mensaje si no hay productos -->
-<div *ngIf="categoriasFiltradas().length === 0" class="text-center text-gray-600 dark:text-gray-300 py-10">
-  <p class="text-xl font-semibold">😕 No se encontraron productos para tu búsqueda.</p>
-  <button
-    (click)="volverAlInicio()"
-    class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-    Volver al inicio
-  </button>
-</div>
+<div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <!-- Loading -->
+  <div *ngIf="cargando()" class="text-center py-12 md:py-20">
+    <div class="animate-spin inline-block w-10 h-10 md:w-12 md:h-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+    <p class="mt-4 text-base md:text-lg font-medium text-gray-600 dark:text-gray-300">Cargando catálogo...</p>
+  </div>
 
-<!-- Mostrar categorías y productos -->
-<section *ngFor="let categoria of categoriasFiltradas()" class="mb-12">
-  <h2 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
-    {{ categoria.nombre }}
-  </h2>
+  <!-- Categorías -->
+  <div *ngIf="!cargando()">
+    <section *ngFor="let categoria of categorias()" class="mb-12 md:mb-16 group relative">
+      <!-- Encabezado de categoría -->
+      <div class="flex items-center justify-between mb-6 md:mb-8 px-2 sm:px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+          {{ categoria.nombreCategoria }}
+        </h2>
+        <span class="hidden md:block text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          Desliza para ver más →
+        </span>
+      </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    <div *ngFor="let producto of categoria.productos"
-         class="bg-white dark:bg-gray-800 border rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
+      <!-- Listado de productos -->
+      <div class="relative overflow-x-auto pb-4 md:pb-6 scroll-smooth">
+        <div class="flex gap-4 sm:gap-6 px-2 sm:px-4 pb-2">
+          <div *ngFor="let producto of categoria.productos"
+               class="w-64 sm:w-72 flex-shrink-0 transform transition-all duration-300 hover:scale-105">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-full flex flex-col">
+              <!-- Imagen del producto -->
+              <div class="relative aspect-square overflow-hidden">
+                <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
+                     [alt]="producto.nombre"
+                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+              </div>
 
-      <!-- Imagen -->
-      <img
-        [src]="producto.imagenUrl || 'assets/img/default.png'"
-        alt="{{ producto.nombre }}"
-        class="w-full h-40 object-cover border-b"
-      />
+              <!-- Detalles del producto -->
+              <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate mb-2">
+                  {{ producto.nombre }}
+                </h3>
+                <p class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
+                  {{ producto.precio | currency:'EUR' }}
+                </p>
 
-      <!-- Contenido -->
-      <div class="p-4 flex-1 flex flex-col justify-between">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{{ producto.nombre }}</h3>
-        <p class="text-base text-gray-700 dark:text-gray-300 mb-4">{{ producto.precio | currency: 'EUR' }}</p>
+                <!-- Botón ver detalles -->
+                <div class="mb-3 sm:mb-4 relative">
+                  <button
+                    (click)="productoSeleccionado = producto"
+                    class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center group"
+                  >
+                    <span class="text-sm">Ver detalles</span>
+                    <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
 
-        <button
-          (click)="agregarAlCarrito(producto)"
-          class="mt-auto w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
-          Añadir al carrito
-        </button>
+                <button (click)="agregarAlCarrito(producto)"
+                        class="mt-auto w-full py-2 sm:py-3 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg
+                               font-medium sm:font-semibold hover:from-blue-700 hover:to-blue-600 transition-all duration-300
+                               active:scale-95 shadow-md hover:shadow-lg text-sm sm:text-base">
+                  Añadir al carrito
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal de detalles (sin imágenes) -->
+  <div *ngIf="productoSeleccionado" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-sm"
+       (click)="productoSeleccionado = null">
+    <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all"
+         (click)="$event.stopPropagation()">
+      <button (click)="productoSeleccionado = null"
+              class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="p-8">
+        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          {{ productoSeleccionado.nombre }}
+        </h3>
+
+        <div class="prose dark:prose-invert max-w-none">
+          <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+            {{ productoSeleccionado.descripcion }}
+          </p>
+
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {{ productoSeleccionado.precio | currency:'EUR' }}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
+                      class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors text-center">
+                Añadir al carrito
+              </button>
+              <button (click)="productoSeleccionado = null"
+                      class="px-8 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-semibold transition-colors text-center">
+                Cerrar detalles
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>

@@ -1,0 +1,33 @@
+<div class="max-w-5xl mx-auto py-8 px-4">
+  <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">📑 Gestión de Pedidos</h2>
+
+  <div *ngIf="cargando" class="text-center text-gray-500 dark:text-gray-300">
+    Cargando pedidos...
+  </div>
+
+  <div *ngIf="!cargando && pedidos.length === 0" class="text-center text-gray-500 dark:text-gray-300">
+    No hay pedidos registrados.
+  </div>
+
+  <div *ngIf="!cargando && pedidos.length > 0" class="space-y-4">
+    <div *ngFor="let pedido of pedidos"
+         (click)="verDetalles(pedido.id)"
+         class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition">
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+        <div class="text-lg font-semibold text-gray-900 dark:text-white">
+          Pedido #{{ pedido.id }}
+          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">({{ pedido.estado }})</span>
+        </div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          {{ pedido.fechaCreacion | date:'short' }}
+        </div>
+      </div>
+
+      <div class="text-sm text-gray-700 dark:text-gray-300">
+        Cliente ID: <strong>{{ pedido.usuarioId }}</strong>
+        <span class="ml-4">Total: <strong>{{ pedido.total | currency:'EUR' }}</strong></span>
+      </div>
+    </div>
+  </div>
+</div>

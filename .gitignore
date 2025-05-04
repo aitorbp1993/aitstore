@@ -1,0 +1,56 @@
+# === BACKEND (Spring Boot) ===
+/backend/target/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/*.iml
+/backend/.idea/
+/backend/.vscode/
+*.log
+
+# === FRONTEND (Angular) ===
+/Frontend/aitstore-frontend/node_modules/
+/Frontend/aitstore-frontend/dist/
+/Frontend/aitstore-frontend/.angular/
+/Frontend/aitstore-frontend/.vscode/
+/Frontend/aitstore-frontend/*.log
+/Frontend/aitstore-frontend/.idea/
+
+# === OS / SISTEMA ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === GENERAL ===
+*.log
+*.tmp
+*.bak
+*.swp
+.history/
+
+# === IDEs y editores ===
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.sublime-workspace
+
+# === VSCode (permitir algunos archivos de config útiles) ===
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# === Angular cache & testing ===
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# === VSCode (Angular project) ===
+/Frontend/aitstore-frontend/.angular/cache

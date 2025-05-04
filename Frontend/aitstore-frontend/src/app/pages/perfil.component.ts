@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -19,12 +19,9 @@ export class PerfilComponent implements OnInit {
   cargando = true;
 
   ngOnInit(): void {
-    // ✅ Obtener usuario autenticado usando /me
     this.http.get<any>('http://localhost:8081/api/usuarios/me').subscribe({
       next: res => {
         this.usuario = res;
-
-        // 🟢 Una vez obtenemos el usuario, cargamos sus pedidos
         this.http.get<any[]>(`http://localhost:8081/api/pedidos/usuario/${res.id}`).subscribe({
           next: pedidos => this.pedidos = pedidos,
           error: err => console.error('Error cargando pedidos:', err),

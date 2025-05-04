@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+button {
+  @apply transition-all duration-200;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2563eb; // azul-600
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+@media (max-width: 640px) {
+  h2 {
+    font-size: 1.75rem;
+  }
+}

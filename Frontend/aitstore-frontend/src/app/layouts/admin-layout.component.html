@@ -1,16 +1,31 @@
-<div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-  <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+<div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-4 px-6 shadow flex justify-between items-center">
     <h1 class="text-xl font-bold">Panel de Administración</h1>
-
-    <!-- Botón salir -->
-    <button
-      class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm"
-      (click)="salirDelPanelAdmin()">
-      Salir del panel admin
+    <button (click)="salirDelPanelAdmin()" class="bg-red-600 hover:bg-red-700 text-sm px-4 py-2 rounded">
+      Salir de admin
     </button>
   </header>
 
-  <main class="p-6">
-    <router-outlet></router-outlet>
-  </main>
+  <!-- Contenido principal con barra lateral -->
+  <div class="flex flex-1">
+    <!-- Menú lateral -->
+    <nav class="w-64 bg-gray-200 dark:bg-gray-800 p-4 hidden sm:block">
+      <ul class="space-y-2 text-sm">
+        <li><a routerLink="/admin/productos" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">📦 Productos</a></li>
+        <li><a routerLink="/admin/usuarios" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">👥 Usuarios</a></li>
+        <li><a routerLink="/admin/pedidos" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">📑 Pedidos</a></li>
+      </ul>
+    </nav>
+
+    <!-- Contenido dinámico -->
+    <main class="flex-1 p-6">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-sm py-4 bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+    © AITStore Admin
+  </footer>
 </div>

@@ -47,10 +47,11 @@ export class CartComponent implements OnInit {
     this.carrito = [];
     this.mensajeError = null;
   }
+
   finalizarCompra(): void {
     this.mensajeError = null;
-
     const usuarioId = this.carritoService.obtenerUsuarioId();
+
     if (!usuarioId || usuarioId === 0) {
       this.mensajeError = '🔒 Necesitas iniciar sesión o registrarte para finalizar la compra.';
       return;
@@ -78,7 +79,6 @@ export class CartComponent implements OnInit {
         console.error('Error backend:', error);
 
         if (error.status === 403) {
-          // No logueado o sin permisos
           this.mensajeError = '🔒 Necesitas iniciar sesión o registrarte para finalizar la compra.';
         } else if (
           error.status === 400 &&
@@ -92,5 +92,4 @@ export class CartComponent implements OnInit {
       }
     });
   }
-
 }

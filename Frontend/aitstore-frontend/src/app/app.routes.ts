@@ -13,7 +13,7 @@ import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
-  // Layout de cliente
+  // 🧍‍♂️ Cliente - Layout general
   {
     path: '',
     component: LayoutComponent,
@@ -38,7 +38,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Layout del administrador
+  // 🛠 Admin - Panel administrativo (protegido por rol)
   {
     path: 'admin',
     component: AdminLayoutComponent,
@@ -63,7 +63,18 @@ export const routes: Routes = [
         path: 'usuarios',
         loadComponent: () =>
           import('./pages/admin/admin-usuarios.component').then(m => m.AdminUsuariosComponent)
+      },
+      {
+        path: 'pedidos',
+        loadComponent: () =>
+          import('./pages/admin/admin-pedidos.component').then(m => m.AdminPedidosComponent)
+      },
+      {
+        path: 'pedidos/:id',
+        loadComponent: () =>
+          import('./pages/admin/admin-pedido-detalle.component').then(m => m.AdminPedidoDetalleComponent)
       }
+
     ]
   }
 ];

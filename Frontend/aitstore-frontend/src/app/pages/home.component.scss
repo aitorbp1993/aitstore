@@ -1,12 +1,111 @@
 :host {
   display: block;
-  width: 100%;
+  position: relative;
 }
 
-img {
-  transition: transform 0.3s ease-in-out;
+/* Animaciones */
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-img:hover {
-  transform: scale(1.03);
+@keyframes modalExit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Modal de detalles */
+.modal-enter {
+  animation: modalEnter 0.3s ease-out;
+}
+
+.modal-exit {
+  animation: modalExit 0.2s ease-in;
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dark {
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .product-card {
+    width: calc(100vw - 2rem);
+    min-width: unset;
+  }
+
+  .modal-content {
+    flex-direction: column;
+    max-height: 95vh;
+
+    > div {
+      width: 100% !important;
+    }
+
+    img {
+      height: 200px;
+    }
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .product-card {
+    width: calc(50vw - 2rem);
+  }
+}
+
+/* Mejoras de accesibilidad */
+button:focus {
+  outline: 2px solid theme('colors.blue.500');
+  outline-offset: 2px;
+}
+
+.dark button:focus {
+  outline-color: theme('colors.blue.400');
+}
+
+/* Transiciones suaves */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }

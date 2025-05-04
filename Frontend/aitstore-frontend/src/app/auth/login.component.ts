@@ -35,7 +35,7 @@ export class LoginComponent {
         const rol = payload.rol;
 
         localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken); // ✅ GUARDAMOS
+        localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('usuarioId', usuarioId.toString());
         localStorage.setItem('nombre', nombre);
         localStorage.setItem('rol', rol);
@@ -48,6 +48,5 @@ export class LoginComponent {
           : 'Error al iniciar sesión';
       }
     });
-
   }
 }

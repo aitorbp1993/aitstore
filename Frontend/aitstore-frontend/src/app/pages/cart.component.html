@@ -1,57 +1,65 @@
-<div class="max-w-3xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow rounded">
-  <h2 class="text-2xl font-bold mb-6 text-center">🛒 Tu carrito</h2>
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
+  <h2 class="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white">🛒 Tu carrito</h2>
 
-  <div *ngIf="mensajeError" class="mb-4 p-3 rounded bg-red-200 text-red-900 dark:bg-red-700 dark:text-white">
+  <!-- Error -->
+  <div *ngIf="mensajeError" class="mb-6 p-4 rounded bg-red-100 text-red-800 dark:bg-red-700 dark:text-white font-medium">
     {{ mensajeError }}
   </div>
 
-  <div *ngIf="carrito.length === 0" class="text-center text-gray-500 dark:text-gray-300">
+  <!-- Vacío -->
+  <div *ngIf="carrito.length === 0" class="text-center text-gray-500 dark:text-gray-300 text-lg">
     El carrito está vacío.
   </div>
 
+  <!-- Lista de productos -->
   <div *ngFor="let item of carrito"
-       class="mb-4 p-4 bg-gray-50 dark:bg-gray-900 border rounded shadow flex justify-between items-center">
-    <div>
-      <p class="font-semibold text-gray-800 dark:text-white">{{ item.nombre }}</p>
-      <p class="text-sm text-gray-500 dark:text-gray-300">
-        Precio unitario: {{ item.precio | currency:'EUR' }}
-      </p>
+       class="mb-5 p-5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+
+    <!-- Info producto -->
+    <div class="flex flex-col gap-1">
+      <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ item.nombre }}</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Precio: {{ item.precio | currency:'EUR' }}</p>
+
+      <!-- Controles de cantidad -->
       <div class="flex items-center gap-2 mt-2">
         <button (click)="disminuir(item.id)"
-                class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-2 rounded hover:bg-gray-400">
+                class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400">
           -
         </button>
-        <span class="font-semibold text-gray-800 dark:text-white">{{ item.cantidad }}</span>
+        <span class="font-semibold text-gray-900 dark:text-white">{{ item.cantidad }}</span>
         <button (click)="aumentar(item.id)"
-                class="bg-gray-300 dark:bg-gray-700 text-black dark:text-white px-2 rounded hover:bg-gray-400">
+                class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400">
           +
         </button>
         <button (click)="eliminarItem(item.id)"
-                class="text-red-600 text-sm ml-4 hover:underline">
-          Eliminar
+                class="text-red-600 text-sm ml-3 hover:underline">
+          ❌ Eliminar
         </button>
       </div>
     </div>
 
-    <div class="text-right font-semibold text-gray-800 dark:text-white">
+    <!-- Subtotal -->
+    <div class="text-right font-bold text-gray-900 dark:text-white text-lg min-w-[100px]">
       {{ item.precio * item.cantidad | currency:'EUR' }}
     </div>
   </div>
 
-  <div class="mt-6 text-right text-lg font-bold">
+  <!-- Total -->
+  <div class="text-right text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">
     Total: {{ total | currency:'EUR' }}
   </div>
 
-  <div class="flex justify-between mt-6">
+  <!-- Acciones -->
+  <div class="flex flex-col sm:flex-row justify-between gap-4 mt-4">
     <button (click)="vaciar()"
-            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-      Vaciar carrito
+            class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition font-medium">
+      🗑 Vaciar carrito
     </button>
 
     <button (click)="finalizarCompra()"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-            [disabled]="carrito.length === 0">
-      Finalizar compra
+            [disabled]="carrito.length === 0"
+            class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition font-medium disabled:opacity-50">
+      ✅ Finalizar compra
     </button>
   </div>
 </div>
