@@ -1,9 +1,13 @@
 package com.bartolome.aitor.exception.handler;
 
-import com.bartolome.aitor.exception.*;
-import org.springframework.http.*;
+import com.bartolome.aitor.exception.ApiError;
+import com.bartolome.aitor.exception.OperacionNoPermitidaException;
+import com.bartolome.aitor.exception.RecursoNoEncontradoException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;

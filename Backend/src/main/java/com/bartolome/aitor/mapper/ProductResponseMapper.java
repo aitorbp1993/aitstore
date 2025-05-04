@@ -1,9 +1,10 @@
 package com.bartolome.aitor.mapper;
 
 import com.bartolome.aitor.dto.ProductResponseDTO;
-import com.bartolome.aitor.model.entities.Product;
 import com.bartolome.aitor.model.entities.Category;
-import org.mapstruct.*;
+import com.bartolome.aitor.model.entities.Product;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 

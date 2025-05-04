@@ -1,4 +1,3 @@
-
 package com.bartolome.aitor.service.impl;
 
 import com.bartolome.aitor.dto.CategoriaConProductosDTO;

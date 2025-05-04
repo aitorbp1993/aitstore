@@ -5,12 +5,10 @@ import com.bartolome.aitor.exception.RecursoNoEncontradoException;
 import com.bartolome.aitor.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +45,7 @@ public class UserController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/me")
     @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
     @Operation(summary = "Obtener el usuario autenticado")

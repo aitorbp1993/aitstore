@@ -9,14 +9,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class AiTstoreApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AiTstoreApplication.class, args);
-	}
-	@PostConstruct
-	public void generarHashAdmin() {
-		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		String hash = encoder.encode("admin123");
-		System.out.println("🧪 Hash correcto para 'admin123': " + hash);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AiTstoreApplication.class, args);
+    }
+
+    @PostConstruct
+    public void generarHashAdmin() {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        String hash = encoder.encode("admin123");
+        System.out.println("🧪 Hash correcto para 'admin123': " + hash);
+    }
 
 }

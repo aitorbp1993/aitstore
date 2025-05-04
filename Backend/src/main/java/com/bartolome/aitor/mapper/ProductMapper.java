@@ -11,6 +11,7 @@ public interface ProductMapper {
     @Mapping(source = "categoria.nombre", target = "categoria")
     ProductDTO toDto(Product producto);
 
-    @Mapping(target = "categoria", ignore = true) // la categoría se asignará desde el servicio
+    @Mapping(target = "categoria", ignore = true)
+        // la categoría se asignará desde el servicio
     Product toEntity(ProductDTO productoDto);
 }

@@ -2,7 +2,6 @@ package com.bartolome.aitor.service.impl;
 
 import com.bartolome.aitor.dto.UserDTO;
 import com.bartolome.aitor.mapper.UserMapper;
-import com.bartolome.aitor.model.entities.User;
 import com.bartolome.aitor.repository.UserRepository;
 import com.bartolome.aitor.service.UserService;
 import lombok.RequiredArgsConstructor;
