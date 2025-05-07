@@ -24,12 +24,11 @@ export const routes: Routes = [
       { path: 'auth/register', component: RegisterComponent },
       { path: 'pedidos', component: PedidosComponent, canActivate: [authGuard] },
       { path: 'pedidos/:id', component: OrderDetailComponent, canActivate: [authGuard] },
-     {
-  path: 'categoria/:id',
-  loadComponent: () =>
-    import('./pages/categoria-productos.component').then(m => m.CategoriaProductosComponent),
-  onSameUrlNavigation: 'reload'
-},
+      {
+        path: 'categoria/:id',
+        loadComponent: () =>
+          import('./pages/categoria-productos.component').then(m => m.CategoriaProductosComponent)
+      },
       {
         path: 'perfil',
         canActivate: [authGuard],
