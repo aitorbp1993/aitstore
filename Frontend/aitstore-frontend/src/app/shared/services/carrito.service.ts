@@ -78,15 +78,7 @@ export class CarritoService {
 
 
   obtenerUsuarioId(): number {
-    const token = localStorage.getItem('token');
-    if (!token) return 0;
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-
-      return payload.usuarioId ?? 0;
-    } catch {
-      return 0;
-    }
+    const id = localStorage.getItem('usuarioId');
+    return id ? parseInt(id, 10) : 0;
   }
 }
