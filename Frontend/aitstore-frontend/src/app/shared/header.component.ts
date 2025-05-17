@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
+
 interface CategoriaDTO {
   id: number;
   nombre: string;
@@ -61,42 +62,44 @@ export class HeaderComponent implements OnInit {
     this.categoriasDesplegadas = !this.categoriasDesplegadas;
   }
 
-togglePerfilMenu(): void {
-  this.perfilMenuAbierto = !this.perfilMenuAbierto;
-  this.menuAbierto = false;
-}
+  togglePerfilMenu(): void {
+    this.perfilMenuAbierto = !this.perfilMenuAbierto;
+    this.menuAbierto = false;
+  }
 
+  cerrarMenus(): void {
+    this.menuAbierto = false;
+    this.perfilMenuAbierto = false;
+    this.categoriasDesplegadas = false;
+  }
 
   buscar(): void {
     if (this.searchTerm.trim().length > 0) {
       this.router.navigate(['/'], { queryParams: { search: this.searchTerm.trim() } });
-      this.menuAbierto = false;
-      this.perfilMenuAbierto = false;
+      this.cerrarMenus();
     }
   }
 
   irACategoria(id: number): void {
     this.router.navigate(['/categoria', id]);
-    this.menuAbierto = false;
-    this.categoriasDesplegadas = false;
-    this.perfilMenuAbierto = false;
+    this.cerrarMenus();
   }
 
   irAInicio(): void {
     this.router.navigate(['/']);
+    this.cerrarMenus();
   }
 
   irAPerfil(): void {
     this.router.navigate(['/perfil']);
-    this.perfilMenuAbierto = false;
+    this.cerrarMenus();
   }
 
   logout(): void {
     this.authService.logout();
-    this.perfilMenuAbierto = false;
     this.router.navigate(['/auth/login']);
+    this.cerrarMenus();
   }
-
 
   private cargarCategorias(): void {
     this.http.get<CategoriaDTO[]>(`${environment.apiUrl}/categorias`).subscribe({
