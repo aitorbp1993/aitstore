@@ -28,21 +28,20 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
 
     const { email, password } = this.loginForm.value;
-
     this.authService.login(email, password).subscribe({
-      next: ({ token, refreshToken }) => {
-        // Decodificar JWT para extraer payload
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const rol = payload.rol;
-        const nombre = payload.nombre;
-
-        // Guardar solo token, refreshToken, rol y nombre
+      next: ({ token, refreshToken, usuarioId, nombre }) => {
+        // Guardar credenciales y datos de usuario
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('rol', rol);
+        localStorage.setItem('usuarioId', usuarioId.toString());
         localStorage.setItem('nombre', nombre);
 
-        // Redirigir según rol
+        // Extraer y guardar rol desde el JWT
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const rol = payload.rol;
+        localStorage.setItem('rol', rol);
+
+        // Navegar según rol
         this.router.navigate([rol === 'ADMIN' ? '/admin/productos' : '/']);
       },
       error: (error: HttpErrorResponse) => {
@@ -53,4 +52,3 @@ export class LoginComponent {
     });
   }
 }
-
