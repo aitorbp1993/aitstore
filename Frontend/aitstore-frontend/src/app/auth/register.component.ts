@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { CarritoService } from '../shared/services/carrito.service';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
   private router = inject(Router);
+  private carritoService = inject(CarritoService);
 
   registerForm: FormGroup = this.fb.group({
     nombre: ['', Validators.required],
@@ -38,11 +40,23 @@ export class RegisterComponent {
           const payload = JSON.parse(atob(token.split('.')[1]));
           const rol = payload.rol;
           const nombre = payload.nombre;
+          const usuarioId = payload.usuarioId || payload.sub;
 
           // Guardar token y datos de usuario
           localStorage.setItem('token', token);
           localStorage.setItem('rol', rol);
           localStorage.setItem('nombre', nombre);
+          localStorage.setItem('usuarioId', usuarioId.toString());
+
+          // Recargar carrito asociado al usuario y fusionar con el anónimo si existe
+          const anonKey = 'carrito_usuario_anonimo';
+          const anon = JSON.parse(localStorage.getItem(anonKey) || '[]');
+          const userKey = `carrito_usuario_${usuarioId}`;
+          const userCart = JSON.parse(localStorage.getItem(userKey) || '[]');
+          const fusion = [...anon, ...userCart];
+          localStorage.setItem(userKey, JSON.stringify(fusion));
+          localStorage.removeItem(anonKey);
+          this.carritoService.recargarCarrito();
 
           this.router.navigateByUrl('/');
         },

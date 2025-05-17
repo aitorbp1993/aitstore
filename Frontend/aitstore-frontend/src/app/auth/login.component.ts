@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { CarritoService } from '../shared/services/carrito.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private carritoService = inject(CarritoService);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -41,11 +43,19 @@ export class LoginComponent {
         const rol = payload.rol;
         localStorage.setItem('rol', rol);
 
+        // Recargar carrito asociado al usuario
+        this.carritoService.recargarCarrito();
+
         // Navegar según rol
         this.router.navigate([rol === 'ADMIN' ? '/admin/productos' : '/']);
       },
       error: (error: HttpErrorResponse) => {
-        this.errorMessage = error.status === 401
+        const detalles = error.error?.detalles as string[] | undefined;
+        const isCredencialesErroneas =
+          error.status === 401 ||
+          (error.status === 500 && detalles?.includes('Credenciales erróneas'));
+
+        this.errorMessage = isCredencialesErroneas
           ? 'Credenciales incorrectas'
           : 'Error al iniciar sesión';
       }
