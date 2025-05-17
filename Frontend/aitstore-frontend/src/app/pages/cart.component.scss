@@ -3,16 +3,47 @@
   width: 100%;
 }
 
-img {
-  transition: transform 0.3s ease-in-out;
+.carrito-container {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
-img:hover {
-  transform: scale(1.03);
+.cart-box {
+  width: 100%;
+  max-width: 64rem;
+  padding: 1.5rem;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 40;
 }
 
 button {
   @apply transition-all duration-200;
+}
+
+img {
+  transition: transform 0.3s ease-in-out;
+}
+img:hover {
+  transform: scale(1.03);
 }
 
 @media (max-width: 640px) {

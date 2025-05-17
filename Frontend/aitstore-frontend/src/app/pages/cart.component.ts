@@ -93,4 +93,15 @@ export class CartComponent implements OnInit {
       }
     });
   }
+
+  esMovil(): boolean {
+  return window.innerWidth < 768;
+}
+
+cerrarModal(): void {
+  if (this.esMovil()) {
+    this.router.navigate(['/']);
+  }
+}
+
 }
