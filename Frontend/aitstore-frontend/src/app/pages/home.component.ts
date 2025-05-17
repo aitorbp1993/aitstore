@@ -1,8 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { CarritoService } from '../shared/services/carrito.service';
-import { environment } from '../../environments/environment'; // ✅ IMPORTACIÓN CORRECTA
+import { ProductService } from '../shared/services/product.service';
+import { environment } from '../../environments/environment';
 
 interface ProductoDTO {
   id: number;
@@ -27,21 +29,33 @@ interface CategoriaConProductosDTO {
 })
 export class HomeComponent implements OnInit {
   private http = inject(HttpClient);
+  private route = inject(ActivatedRoute);
   private carritoService = inject(CarritoService);
+  private productService = inject(ProductService);
 
   categorias = signal<CategoriaConProductosDTO[]>([]);
+  productosFiltrados = signal<ProductoDTO[]>([]);
   cargando = signal(true);
   productoSeleccionado: ProductoDTO | null = null;
   categoriaActiva: CategoriaConProductosDTO | null = null;
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search && search.trim().length > 0) {
+        this.buscarProductos(search.trim());
+      } else {
+        this.cargarDatos();
+      }
+    });
   }
 
   private cargarDatos(): void {
+    this.cargando.set(true);
     this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
       .subscribe({
         next: (res) => {
+          this.productosFiltrados.set([]);
           this.categorias.set(res);
           this.cargando.set(false);
         },
@@ -50,6 +64,21 @@ export class HomeComponent implements OnInit {
           this.cargando.set(false);
         }
       });
+  }
+
+  private buscarProductos(termino: string): void {
+    this.cargando.set(true);
+    this.productService.searchByNombre(termino).subscribe({
+      next: (res) => {
+        this.categorias.set([]); // limpia vista por categoría
+        this.productosFiltrados.set(res);
+        this.cargando.set(false);
+      },
+      error: (err) => {
+        console.error('Error al buscar productos:', err);
+        this.cargando.set(false);
+      }
+    });
   }
 
   agregarAlCarrito(producto: ProductoDTO): void {
@@ -70,7 +99,6 @@ export class HomeComponent implements OnInit {
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase().trim();
-
     const mapeoImagenes: { [key: string]: string } = {
       'sobremesa': 'desktop-default.png',
       'portátil': 'laptop-default.png',

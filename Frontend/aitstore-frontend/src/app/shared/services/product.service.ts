@@ -32,4 +32,8 @@ export class ProductService {
   deleteById(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  searchByNombre(nombre: string): Observable<ProductDTO[]> {
+  return this.http.get<ProductDTO[]>(`${this.apiUrl}?search=${encodeURIComponent(nombre)}`);
+}
+
 }
