@@ -40,7 +40,8 @@ export class RegisterComponent {
           const payload = JSON.parse(atob(token.split('.')[1]));
           const rol = payload.rol;
           const nombre = payload.nombre;
-          const usuarioId = payload.usuarioId || payload.sub;
+          // Extraer ID robustamente (usuarioId, id o sub)
+          const usuarioId = payload.usuarioId ?? payload.id ?? payload.sub ?? 0;
 
           // Guardar token y datos de usuario
           localStorage.setItem('token', token);
@@ -48,7 +49,7 @@ export class RegisterComponent {
           localStorage.setItem('nombre', nombre);
           localStorage.setItem('usuarioId', usuarioId.toString());
 
-          // Recargar carrito asociado al usuario y fusionar con el anónimo si existe
+          // Fusionar carrito anónimo con el del usuario
           const anonKey = 'carrito_usuario_anonimo';
           const anon = JSON.parse(localStorage.getItem(anonKey) || '[]');
           const userKey = `carrito_usuario_${usuarioId}`;
@@ -56,8 +57,11 @@ export class RegisterComponent {
           const fusion = [...anon, ...userCart];
           localStorage.setItem(userKey, JSON.stringify(fusion));
           localStorage.removeItem(anonKey);
+
+          // Recargar carrito
           this.carritoService.recargarCarrito();
 
+          // Redirigir al home
           this.router.navigateByUrl('/');
         },
         error: (err: HttpErrorResponse) => {

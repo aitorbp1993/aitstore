@@ -15,7 +15,7 @@ export class CarritoService {
 
   private get clave(): string {
     const id = this.obtenerUsuarioId();
-    return `carrito_usuario_${id || 'anonimo'}`;
+    return `carrito_usuario_${id > 0 ? id : 'anonimo'}`;
   }
 
   private cargarCarrito(): CarritoItem[] {
@@ -35,7 +35,6 @@ export class CarritoService {
   agregarItem(item: CarritoItem): void {
     const carrito = this.obtenerCarrito();
     const idx = carrito.findIndex(i => i.id === item.id);
-
     if (idx !== -1) {
       carrito[idx].cantidad += item.cantidad;
     } else {
@@ -76,9 +75,9 @@ export class CarritoService {
     this.carritoSubject.next(this.cargarCarrito());
   }
 
-
   obtenerUsuarioId(): number {
-    const id = localStorage.getItem('usuarioId');
-    return id ? parseInt(id, 10) : 0;
+    const idStr = localStorage.getItem('usuarioId');
+    const id = Number(idStr);
+    return isNaN(id) ? 0 : id;
   }
 }
