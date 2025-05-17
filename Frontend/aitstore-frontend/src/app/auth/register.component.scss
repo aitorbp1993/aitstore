@@ -3,18 +3,20 @@
   width: 100%;
 }
 
+h2 {
+  @apply text-3xl md:text-4xl font-extrabold;
+}
+
+input {
+  @apply transition;
+}
+
 button {
-  @apply transition-all duration-200;
+  @apply transition-all duration-200 ease-in-out;
 }
 
-input:focus {
-  outline: none;
-  border-color: #2563eb; // azul-600
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-}
-
-@media (max-width: 640px) {
-  h2 {
-    font-size: 1.75rem;
+@media (min-width: 640px) {
+  :host > div {
+    @apply py-10;
   }
 }
