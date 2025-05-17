@@ -38,7 +38,7 @@
         </button>
         <div *ngIf="categoriasDesplegadas" class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 border border-gray-100 dark:border-gray-700 z-50 animate-pop-in">
           <a *ngFor="let cat of categorias"
-             (click)="irACategoria(cat.id)"
+             (click)="irACategoria(cat.id); toggleCategorias()"
              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-700 dark:text-gray-200">
             {{ cat.nombre }}
           </a>
@@ -55,7 +55,7 @@
         </span>
       </a>
 
-      <!-- Auth (escritorio) -->
+      <!-- Auth escritorio -->
       <ng-container *ngIf="!autenticado">
         <a routerLink="/auth/login" class="hover:text-blue-600 dark:hover:text-blue-300">Ingresar</a>
         <a routerLink="/auth/register" class="px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">Registro</a>
@@ -69,13 +69,13 @@
             {{ inicial }}
           </button>
           <div *ngIf="perfilMenuAbierto" class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 animate-pop-in">
-            <a (click)="irAPerfil()" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+            <a (click)="irAPerfil(); togglePerfilMenu()" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
               </svg>
               Perfil
             </a>
-            <button (click)="logout()" class="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-800">
+            <button (click)="logout(); togglePerfilMenu()" class="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-800">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
               </svg>
@@ -86,26 +86,23 @@
       </ng-container>
     </nav>
 
-    <!-- 📱 Botones móviles (👤 + ☰) -->
+    <!-- Botones móviles -->
     <div class="md:hidden flex items-center gap-3 ml-auto">
+      <!-- Botón usuario -->
       <ng-container *ngIf="!autenticado">
-        <button
-          class="flex items-center justify-center w-9 h-9 bg-blue-600 text-white rounded-full"
-          title="Ingresar o registrarse"
-          (click)="togglePerfilMenu()"
-        >
+        <button class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center"
+                (click)="togglePerfilMenu()" title="Ingresar o registrarse">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
           </svg>
         </button>
-
         <div *ngIf="perfilMenuAbierto" class="absolute top-16 right-4 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md z-50 animate-pop-in">
           <a routerLink="/auth/login" (click)="togglePerfilMenu()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-gray-200">Ingresar</a>
           <a routerLink="/auth/register" (click)="togglePerfilMenu()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-gray-200">Registrarse</a>
         </div>
       </ng-container>
 
-      <!-- ☰ Menú hamburguesa -->
+      <!-- Menú hamburguesa -->
       <button (click)="toggleMenu()" class="text-gray-800 dark:text-gray-200">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 6h18M3 12h18M3 18h18"/>
@@ -114,7 +111,7 @@
     </div>
   </div>
 
-  <!-- 🔍 Buscador móvil -->
+  <!-- Buscador móvil -->
   <div class="sm:hidden px-4 pb-3" [class.hidden]="!menuAbierto">
     <div class="flex rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm">
       <input [(ngModel)]="searchTerm" (keyup.enter)="buscar()"
@@ -129,10 +126,9 @@
     </div>
   </div>
 
-  <!-- 📱 Menú móvil desplegable -->
+  <!-- Menú móvil desplegable -->
   <div *ngIf="menuAbierto" class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-4 animate-pop-in">
     <div class="flex flex-col gap-4 text-sm text-gray-800 dark:text-gray-200">
-
       <a routerLink="/" (click)="toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -157,6 +153,7 @@
         </div>
       </div>
 
+      <!-- Carrito -->
       <a routerLink="/carrito" (click)="toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7a1 1 0 00.9 1.5h11m-12-4h12m-4 5a1 1 0 11-2 0 1 1 0 012 0zm-8 0a1 1 0 11-2 0 1 1 0 012 0z"/>
@@ -164,6 +161,7 @@
         Carrito ({{ cantidadTotal }})
       </a>
 
+      <!-- Autenticación -->
       <ng-container *ngIf="autenticado">
         <a (click)="irAPerfil(); toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
