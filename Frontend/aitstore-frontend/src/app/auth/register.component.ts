@@ -32,41 +32,41 @@ export class RegisterComponent {
 
     const datos = this.registerForm.value;
 
-    this.http.post<{ token: string }>(`${environment.apiUrl}/auth/register`, datos)
-      .subscribe({
-        next: (res) => {
-          const token = res.token;
-          // Decodificar JWT para extraer payload
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const rol = payload.rol;
-          const nombre = payload.nombre;
-          // Extraer ID robustamente (usuarioId, id o sub)
-          const usuarioId = payload.usuarioId ?? payload.id ?? payload.sub ?? 0;
+    this.http.post<{ token: string; refreshToken: string; usuarioId: number; nombre: string }>(
+      `${environment.apiUrl}/auth/register`,
+      datos
+    )
+    .subscribe({
+      next: ({ token, refreshToken, usuarioId, nombre }) => {
+        // Guardar credenciales y datos de usuario
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('usuarioId', usuarioId.toString());
+        localStorage.setItem('nombre', nombre);
 
-          // Guardar token y datos de usuario
-          localStorage.setItem('token', token);
-          localStorage.setItem('rol', rol);
-          localStorage.setItem('nombre', nombre);
-          localStorage.setItem('usuarioId', usuarioId.toString());
+        // Extraer y guardar rol desde el JWT
+        const payload: any = JSON.parse(atob(token.split('.')[1]));
+        const rol: string = payload.rol;
+        localStorage.setItem('rol', rol);
 
-          // Fusionar carrito anónimo con el del usuario
-          const anonKey = 'carrito_usuario_anonimo';
-          const anon = JSON.parse(localStorage.getItem(anonKey) || '[]');
-          const userKey = `carrito_usuario_${usuarioId}`;
-          const userCart = JSON.parse(localStorage.getItem(userKey) || '[]');
-          const fusion = [...anon, ...userCart];
-          localStorage.setItem(userKey, JSON.stringify(fusion));
-          localStorage.removeItem(anonKey);
+        // Fusionar carrito anónimo con el del usuario
+        const anonKey = 'carrito_usuario_anonimo';
+        const anon = JSON.parse(localStorage.getItem(anonKey) || '[]');
+        const userKey = `carrito_usuario_${usuarioId}`;
+        const userCart = JSON.parse(localStorage.getItem(userKey) || '[]');
+        const fusion = [...anon, ...userCart];
+        localStorage.setItem(userKey, JSON.stringify(fusion));
+        localStorage.removeItem(anonKey);
 
-          // Recargar carrito
-          this.carritoService.recargarCarrito();
+        // Recargar carrito
+        this.carritoService.recargarCarrito();
 
-          // Redirigir al home
-          this.router.navigateByUrl('/');
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorMessage = err.error?.message || 'Error al registrarse';
-        }
-      });
+        // Navegar al home
+        this.router.navigateByUrl('/');
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = err.error?.message || 'Error al registrarse';
+      }
+    });
   }
 }

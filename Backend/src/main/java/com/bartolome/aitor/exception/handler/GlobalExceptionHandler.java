@@ -5,11 +5,13 @@ import com.bartolome.aitor.exception.OperacionNoPermitidaException;
 import com.bartolome.aitor.exception.RecursoNoEncontradoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,9 +41,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({ BadCredentialsException.class, AuthenticationException.class })
+    public ResponseEntity<ApiError> handleAuthenticationErrors(RuntimeException ex, WebRequest request) {
+        ApiError error = construirError(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciales incorrectas",
+                request.getDescription(false),
+                null
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> manejarGenerico(Exception ex, WebRequest request) {
-        ApiError error = construirError(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado", request.getDescription(false), List.of(ex.getMessage()));
+        ApiError error = construirError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error inesperado",
+                request.getDescription(false),
+                List.of(ex.getMessage())
+        );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
