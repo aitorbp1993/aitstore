@@ -61,10 +61,11 @@ export class HeaderComponent implements OnInit {
     this.categoriasDesplegadas = !this.categoriasDesplegadas;
   }
 
-  togglePerfilMenu(): void {
-    this.perfilMenuAbierto = !this.perfilMenuAbierto;
-    this.menuAbierto = false;
-  }
+togglePerfilMenu(): void {
+  this.perfilMenuAbierto = !this.perfilMenuAbierto;
+  this.menuAbierto = false;
+}
+
 
   buscar(): void {
     if (this.searchTerm.trim().length > 0) {

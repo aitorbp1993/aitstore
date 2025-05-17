@@ -87,11 +87,25 @@
     </nav>
 
     <!-- Menú móvil -->
-    <button (click)="toggleMenu()" class="md:hidden text-gray-800 dark:text-gray-200">
-      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 12h18M3 6h18M3 18h18"/>
-      </svg>
-    </button>
+   <!-- Ícono login (solo visible en móvil cuando no está autenticado) -->
+<ng-container *ngIf="!autenticado">
+  <button
+    class="md:hidden flex items-center justify-center w-9 h-9 bg-blue-600 text-white rounded-full"
+    title="Ingresar o registrarse"
+    (click)="togglePerfilMenu()"
+  >
+    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
+    </svg>
+  </button>
+
+  <!-- Menú rápido responsive -->
+  <div *ngIf="perfilMenuAbierto" class="absolute top-16 right-4 w-40 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md z-50 animate-pop-in">
+    <a routerLink="/auth/login" (click)="togglePerfilMenu()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-gray-200">Ingresar</a>
+    <a routerLink="/auth/register" (click)="togglePerfilMenu()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-800 dark:text-gray-200">Registrarse</a>
+  </div>
+</ng-container>
+
   </div>
 
   <!-- Buscador móvil -->
