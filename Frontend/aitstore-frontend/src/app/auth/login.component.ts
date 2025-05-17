@@ -32,32 +32,24 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
     this.authService.login(email, password).subscribe({
       next: ({ token, refreshToken, usuarioId, nombre }) => {
-        // Guardar credenciales y datos de usuario
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('usuarioId', usuarioId.toString());
         localStorage.setItem('nombre', nombre);
 
-        // Extraer y guardar rol desde el JWT
         const payload = JSON.parse(atob(token.split('.')[1]));
         const rol = payload.rol;
         localStorage.setItem('rol', rol);
 
-        // Recargar carrito asociado al usuario
         this.carritoService.recargarCarrito();
-
-        // Navegar según rol
         this.router.navigate([rol === 'ADMIN' ? '/admin/productos' : '/']);
       },
       error: (error: HttpErrorResponse) => {
         const detalles = error.error?.detalles as string[] | undefined;
-        const isCredencialesErroneas =
-          error.status === 401 ||
-          (error.status === 500 && detalles?.includes('Credenciales erróneas'));
-
-        this.errorMessage = isCredencialesErroneas
-          ? 'Credenciales incorrectas'
-          : 'Error al iniciar sesión';
+        this.errorMessage =
+          error.status === 401 || (error.status === 500 && detalles?.includes('Credenciales erróneas'))
+            ? 'Credenciales incorrectas'
+            : 'Error al iniciar sesión';
       }
     });
   }
