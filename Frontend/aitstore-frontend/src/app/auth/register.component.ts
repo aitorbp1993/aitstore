@@ -30,7 +30,10 @@ export class RegisterComponent {
 
     this.http.post(`${environment.apiUrl}/auth/register`, this.registerForm.value)
       .subscribe({
-        next: () => this.router.navigateByUrl('/auth/login'),
+        next: () => {
+          // Redirige a la página de login para forzar autenticación
+          this.router.navigate(['/auth/login']);
+        },
         error: (err: HttpErrorResponse) => {
           this.errorMessage = err.error?.message || 'Error al registrarse';
         }
