@@ -1,9 +1,11 @@
+// register.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -32,7 +34,17 @@ export class RegisterComponent {
     this.http.post<{ token: string }>(`${environment.apiUrl}/auth/register`, datos)
       .subscribe({
         next: (res) => {
-          localStorage.setItem('token', res.token);
+          const token = res.token;
+          // Decodificar JWT para extraer payload
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const rol = payload.rol;
+          const nombre = payload.nombre;
+
+          // Guardar token y datos de usuario
+          localStorage.setItem('token', token);
+          localStorage.setItem('rol', rol);
+          localStorage.setItem('nombre', nombre);
+
           this.router.navigateByUrl('/');
         },
         error: (err: HttpErrorResponse) => {

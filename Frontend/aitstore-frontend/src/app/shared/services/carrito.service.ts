@@ -13,7 +13,6 @@ export class CarritoService {
   private carritoSubject = new BehaviorSubject<CarritoItem[]>(this.cargarCarrito());
   carrito$ = this.carritoSubject.asObservable();
 
-  // Clave dinámica basada en el usuario
   private get clave(): string {
     const id = this.obtenerUsuarioId();
     return `carrito_usuario_${id || 'anonimo'}`;
@@ -35,19 +34,18 @@ export class CarritoService {
 
   agregarItem(item: CarritoItem): void {
     const carrito = this.obtenerCarrito();
-    const index = carrito.findIndex(i => i.id === item.id);
+    const idx = carrito.findIndex(i => i.id === item.id);
 
-    if (index !== -1) {
-      carrito[index].cantidad += item.cantidad;
+    if (idx !== -1) {
+      carrito[idx].cantidad += item.cantidad;
     } else {
       carrito.push(item);
     }
-
     this.guardarCarrito(carrito);
   }
 
   eliminarItem(productoId: number): void {
-    const actualizado = this.obtenerCarrito().filter(item => item.id !== productoId);
+    const actualizado = this.obtenerCarrito().filter(i => i.id !== productoId);
     this.guardarCarrito(actualizado);
   }
 
@@ -55,35 +53,40 @@ export class CarritoService {
     this.guardarCarrito([]);
   }
 
-  obtenerUsuarioId(): number {
-    const id = localStorage.getItem('usuarioId');
-    return id ? parseInt(id, 10) : 0;
-  }
-
   incrementarCantidad(productoId: number): void {
     const carrito = this.obtenerCarrito();
     const item = carrito.find(p => p.id === productoId);
     if (item) {
-      item.cantidad += 1;
+      item.cantidad++;
       this.guardarCarrito(carrito);
     }
   }
 
   disminuirCantidad(productoId: number): void {
     const carrito = this.obtenerCarrito();
-    const index = carrito.findIndex(p => p.id === productoId);
-    if (index !== -1) {
-      if (carrito[index].cantidad > 1) {
-        carrito[index].cantidad -= 1;
-      } else {
-        carrito.splice(index, 1);
-      }
+    const idx = carrito.findIndex(p => p.id === productoId);
+    if (idx !== -1) {
+      if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
+      else carrito.splice(idx, 1);
       this.guardarCarrito(carrito);
     }
   }
 
   recargarCarrito(): void {
-    const nuevo = this.cargarCarrito();
-    this.carritoSubject.next(nuevo);
+    this.carritoSubject.next(this.cargarCarrito());
+  }
+
+
+  obtenerUsuarioId(): number {
+    const token = localStorage.getItem('token');
+    if (!token) return 0;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      return payload.usuarioId ?? 0;
+    } catch {
+      return 0;
+    }
   }
 }
