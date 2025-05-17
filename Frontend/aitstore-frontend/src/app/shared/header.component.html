@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <!-- Navegación (escritorio) -->
+    <!-- Navegación escritorio -->
     <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-800 dark:text-gray-200">
       <a routerLink="/" class="hover:text-blue-600 dark:hover:text-blue-300 transition">Inicio</a>
 
@@ -131,6 +131,53 @@
 
   <!-- 📱 Menú móvil desplegable -->
   <div *ngIf="menuAbierto" class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-4 animate-pop-in">
-    <!-- ... (todo el menú móvil sigue como ya lo tenías) ... -->
+    <div class="flex flex-col gap-4 text-sm text-gray-800 dark:text-gray-200">
+
+      <a routerLink="/" (click)="toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        </svg>
+        Inicio
+      </a>
+
+      <!-- Categorías -->
+      <div>
+        <p class="font-medium flex items-center gap-2 text-gray-700 dark:text-gray-300">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19h16M4 15l3-3m13 3l-3-3M4 11l6-6m10 6l-6-6"/>
+          </svg>
+          Categorías
+        </p>
+        <div class="pl-2 mt-1 space-y-1">
+          <a *ngFor="let cat of categorias"
+             (click)="irACategoria(cat.id); toggleMenu()"
+             class="block py-1.5 px-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
+            {{ cat.nombre }}
+          </a>
+        </div>
+      </div>
+
+      <a routerLink="/carrito" (click)="toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7a1 1 0 00.9 1.5h11m-12-4h12m-4 5a1 1 0 11-2 0 1 1 0 012 0zm-8 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+        </svg>
+        Carrito ({{ cantidadTotal }})
+      </a>
+
+      <ng-container *ngIf="autenticado">
+        <a (click)="irAPerfil(); toggleMenu()" class="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-300">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
+          </svg>
+          Perfil
+        </a>
+        <button (click)="logout(); toggleMenu()" class="flex items-center gap-2 text-red-600 hover:text-red-700">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+          </svg>
+          Cerrar sesión
+        </button>
+      </ng-container>
+    </div>
   </div>
 </header>
