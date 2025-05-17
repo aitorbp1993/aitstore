@@ -8,6 +8,7 @@ import com.bartolome.aitor.repository.UserRepository;
 import com.bartolome.aitor.security.JwtUtil;
 import com.bartolome.aitor.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,12 @@ public class AuthServiceImpl implements AuthService {
                 .rol(Rol.CLIENTE)
                 .build();
 
-        userRepository.save(user);
-
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            // por si hay restricción única en BD
+            throw new IllegalArgumentException("Ya existe un usuario con ese correo electrónico");
+        }
 
         String token = jwtUtil.generateJwtToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(user);

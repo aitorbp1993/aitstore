@@ -20,7 +20,14 @@ export class RegisterComponent {
   registerForm: FormGroup = this.fb.group({
     nombre: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/^\S*$/)
+      ]
+    ]
   });
 
   errorMessage: string | null = null;
@@ -30,10 +37,7 @@ export class RegisterComponent {
 
     this.http.post(`${environment.apiUrl}/auth/register`, this.registerForm.value)
       .subscribe({
-        next: () => {
-          // Redirige a la página de login para forzar autenticación
-          this.router.navigate(['/auth/login']);
-        },
+        next: () => this.router.navigate(['/auth/login']),
         error: (err: HttpErrorResponse) => {
           this.errorMessage = err.error?.message || 'Error al registrarse';
         }

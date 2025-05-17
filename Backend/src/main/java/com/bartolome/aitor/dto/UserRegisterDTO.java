@@ -1,11 +1,7 @@
 package com.bartolome.aitor.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -16,10 +12,12 @@ public class UserRegisterDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
-    @Email(message = "El correo debe tener un formato válido")
     @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El correo debe tener un formato válido")
     private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    @Pattern(regexp = "^\\S*$", message = "La contraseña no puede contener espacios")
     private String password;
 }

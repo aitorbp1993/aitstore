@@ -32,12 +32,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> manejarValidacion(MethodArgumentNotValidException ex, WebRequest request) {
-        List<String> detalles = ex.getBindingResult().getFieldErrors().stream()
+    public ResponseEntity<ApiError> manejarValidacion(MethodArgumentNotValidException ex, WebRequest req) {
+        List<String> detalles = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.toList());
-
-        ApiError error = construirError(HttpStatus.BAD_REQUEST, "Errores de validación", request.getDescription(false), detalles);
+        ApiError error = construirError(HttpStatus.BAD_REQUEST, "Errores de validación", req.getDescription(false), detalles);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -63,6 +64,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> manejarDuplicado(IllegalArgumentException ex, WebRequest req) {
+        ApiError error = construirError(HttpStatus.BAD_REQUEST, ex.getMessage(), req.getDescription(false), null);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
     private ApiError construirError(HttpStatus status, String mensaje, String path, List<String> detalles) {
         return ApiError.builder()
                 .timestamp(LocalDateTime.now())
