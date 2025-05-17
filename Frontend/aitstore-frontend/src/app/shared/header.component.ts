@@ -81,8 +81,10 @@ export class HeaderComponent implements OnInit {
   }
 
   irACategoria(id: number): void {
-    this.router.navigate(['/categoria', id]);
-    this.cerrarMenus();
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/categoria', id]);
+      this.cerrarMenus();
+    });
   }
 
   irAInicio(): void {
