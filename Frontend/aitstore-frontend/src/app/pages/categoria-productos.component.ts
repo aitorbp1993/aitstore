@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -8,9 +8,10 @@ import { environment } from '../../environments/environment';
 interface ProductoDTO {
   id: number;
   nombre: string;
+  descripcion: string;
   precio: number;
-  descripcion?: string;
-  imagenUrl?: string;
+  stock: number;
+  imagenUrl: string;
   categoriaNombre?: string;
 }
 
@@ -27,10 +28,10 @@ export class CategoriaProductosComponent implements OnInit {
   private http = inject(HttpClient);
   private carritoService = inject(CarritoService);
 
-  categoriaNombre = '';
+  categoriaNombre = signal('');
+  productos = signal<ProductoDTO[]>([]);
+  cargando = signal(true);
   productoSeleccionado: ProductoDTO | null = null;
-  productos: ProductoDTO[] = [];
-  cargando = true;
 
   ngOnInit(): void {
     this.cargarDatosCategoria();
@@ -41,23 +42,23 @@ export class CategoriaProductosComponent implements OnInit {
       const id = params.get('id');
       if (!id) return;
 
-      this.cargando = true;
+      this.cargando.set(true);
       this.http.get<{nombreCategoria: string; productos: ProductoDTO[]}>(
         `${environment.apiUrl}/categorias/${id}/productos`
       ).subscribe({
         next: (res) => {
-          this.categoriaNombre = res.nombreCategoria;
-          this.productos = res.productos.map(p => ({
+          this.categoriaNombre.set(res.nombreCategoria);
+          this.productos.set(res.productos.map(p => ({
             ...p,
             categoriaNombre: res.nombreCategoria
-          }));
-          this.cargando = false;
+          })));
+          this.cargando.set(false);
         },
         error: (err) => {
           console.error('Error:', err);
-          this.categoriaNombre = 'Categoría no encontrada';
-          this.productos = [];
-          this.cargando = false;
+          this.categoriaNombre.set('Categoría no encontrada');
+          this.productos.set([]);
+          this.cargando.set(false);
         }
       });
     });
@@ -72,8 +73,8 @@ export class CategoriaProductosComponent implements OnInit {
     });
   }
 
-  verDetalles(productoId: number): void {
-    this.router.navigate(['/producto', productoId]);
+  verDetalles(producto: ProductoDTO): void {
+    this.productoSeleccionado = producto;
   }
 
   volverInicio(): void {
@@ -82,7 +83,7 @@ export class CategoriaProductosComponent implements OnInit {
 
   obtenerImagen(producto: ProductoDTO): string {
     const url = producto.imagenUrl?.trim();
-    const categoria = producto.categoriaNombre || this.categoriaNombre;
+    const categoria = producto.categoriaNombre || this.categoriaNombre();
 
     if (!url || url.includes('placeholder')) {
       return this.obtenerImagenPorCategoria(categoria);
