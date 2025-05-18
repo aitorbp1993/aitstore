@@ -8,10 +8,9 @@ import { environment } from '../../environments/environment';
 interface ProductoDTO {
   id: number;
   nombre: string;
-  descripcion: string;
   precio: number;
-  stock: number;
-  imagenUrl: string;
+  descripcion?: string;
+  imagenUrl?: string;
   categoriaNombre?: string;
 }
 
@@ -28,39 +27,40 @@ export class CategoriaProductosComponent implements OnInit {
   private http = inject(HttpClient);
   private carritoService = inject(CarritoService);
 
-  categoriaNombre = signal('');
+  categoriaNombre = '';
   productos = signal<ProductoDTO[]>([]);
   cargando = signal(true);
   productoSeleccionado: ProductoDTO | null = null;
 
   ngOnInit(): void {
-    this.cargarDatosCategoria();
-  }
-
-  private cargarDatosCategoria(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      if (!id) return;
+      if (id) this.cargarDatosCategoria(id);
+    });
 
-      this.cargando.set(true);
-      this.http.get<{nombreCategoria: string; productos: ProductoDTO[]}>(
-        `${environment.apiUrl}/categorias/${id}/productos`
-      ).subscribe({
-        next: (res) => {
-          this.categoriaNombre.set(res.nombreCategoria);
-          this.productos.set(res.productos.map(p => ({
-            ...p,
-            categoriaNombre: res.nombreCategoria
-          })));
-          this.cargando.set(false);
-        },
-        error: (err) => {
-          console.error('Error:', err);
-          this.categoriaNombre.set('Categoría no encontrada');
-          this.productos.set([]);
-          this.cargando.set(false);
-        }
-      });
+    this.carritoService.recargarCarrito();
+  }
+
+  private cargarDatosCategoria(id: string): void {
+    this.cargando.set(true);
+    this.http.get<{ nombreCategoria: string; productos: ProductoDTO[] }>(
+      `${environment.apiUrl}/categorias/${id}/productos`
+    ).subscribe({
+      next: res => {
+        this.categoriaNombre = res.nombreCategoria;
+        const productos = res.productos.map(p => ({
+          ...p,
+          categoriaNombre: res.nombreCategoria
+        }));
+        this.productos.set(productos);
+        this.cargando.set(false);
+      },
+      error: err => {
+        console.error('Error:', err);
+        this.categoriaNombre = 'Categoría no encontrada';
+        this.productos.set([]);
+        this.cargando.set(false);
+      }
     });
   }
 
@@ -73,56 +73,49 @@ export class CategoriaProductosComponent implements OnInit {
     });
   }
 
-  verDetalles(producto: ProductoDTO): void {
-    this.productoSeleccionado = producto;
-  }
-
   volverInicio(): void {
     this.router.navigate(['/']);
   }
 
   obtenerImagen(producto: ProductoDTO): string {
     const url = producto.imagenUrl?.trim();
-    const categoria = producto.categoriaNombre || this.categoriaNombre();
-
-    if (!url || url.includes('placeholder')) {
+    const categoria = producto.categoriaNombre || this.categoriaNombre;
+    if (!url || url.includes('placeholder') || url.includes('via.placeholder.com')) {
       return this.obtenerImagenPorCategoria(categoria);
     }
     return url;
   }
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
-    const nombre = nombreCategoria.toLowerCase();
-    const mapeo: {[key: string]: string} = {
-      'sobremesa': 'desktop',
-      'portátil': 'laptop',
-      'monitor': 'monitor',
-      'teclado': 'keyboard',
-      'ratón': 'mouse',
-      'ratones': 'mouse',
-      'placa base': 'motherboard',
-      'procesador': 'cpu',
-      'cpu': 'cpu',
-      'gráfica': 'gpu',
-      'gpu': 'gpu',
-      'ram': 'ram',
-      'disco': 'ssd',
-      'ssd': 'ssd',
-      'fuente': 'psu',
-      'caja': 'case',
-      'torre': 'case',
-      'refrigeración': 'cooling',
-      'ventilador': 'cooling',
-      'periférico': 'accessory',
-      'accesorio': 'accessory',
-      'silla': 'chair',
-      'escritorio': 'chair'
+    const nombre = nombreCategoria.toLowerCase().trim();
+    const mapeo: { [key: string]: string } = {
+      'sobremesa': 'desktop-default.png',
+      'portátil': 'laptop-default.png',
+      'monitor': 'monitor-default.png',
+      'teclado': 'keyboard-default.png',
+      'ratón': 'mouse-default.png',
+      'ratones': 'mouse-default.png',
+      'placa base': 'motherboard-default.png',
+      'procesador': 'cpu-default.png',
+      'cpu': 'cpu-default.png',
+      'gráfica': 'gpu-default.png',
+      'gpu': 'gpu-default.png',
+      'ram': 'ram-default.png',
+      'disco': 'ssd-default.png',
+      'ssd': 'ssd-default.png',
+      'fuente': 'psu-default.png',
+      'caja': 'case-default.png',
+      'torre': 'case-default.png',
+      'refrigeración': 'cooling-default.png',
+      'ventilador': 'cooling-default.png',
+      'periférico': 'accessory-default.png',
+      'accesorio': 'accessory-default.png',
+      'silla': 'chair-default.png',
+      'escritorio': 'chair-default.png'
     };
 
-    for (const [keyword, image] of Object.entries(mapeo)) {
-      if (nombre.includes(keyword)) {
-        return `assets/img/${image}-default.png`;
-      }
+    for (const [key, value] of Object.entries(mapeo)) {
+      if (nombre.includes(key)) return `assets/img/${value}`;
     }
     return 'assets/img/default.png';
   }
