@@ -33,11 +33,20 @@ export class HeaderComponent implements OnInit {
   categoriasDesplegadas = false;
   perfilMenuAbierto = false;
 
+  mensajePopup: string | null = null;
+
   ngOnInit(): void {
     this.carritoService.recargarCarrito();
+
     this.carritoService.carrito$.subscribe(carrito => {
       this.cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     });
+
+    this.carritoService.notificacion$.subscribe(msg => {
+      this.mensajePopup = msg;
+      setTimeout(() => this.mensajePopup = null, 2500);
+    });
+
     this.cargarCategorias();
   }
 

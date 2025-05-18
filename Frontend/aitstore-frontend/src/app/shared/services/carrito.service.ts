@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface CarritoItem {
   id: number;
@@ -12,6 +12,9 @@ export interface CarritoItem {
 export class CarritoService {
   private carritoSubject = new BehaviorSubject<CarritoItem[]>(this.cargarCarrito());
   carrito$ = this.carritoSubject.asObservable();
+
+  private notificacionSubject = new Subject<string>();
+  notificacion$ = this.notificacionSubject.asObservable();
 
   private get clave(): string {
     const id = this.obtenerUsuarioId();
@@ -35,12 +38,15 @@ export class CarritoService {
   agregarItem(item: CarritoItem): void {
     const carrito = this.obtenerCarrito();
     const idx = carrito.findIndex(i => i.id === item.id);
+
     if (idx !== -1) {
       carrito[idx].cantidad += item.cantidad;
     } else {
       carrito.push(item);
     }
+
     this.guardarCarrito(carrito);
+    this.notificacionSubject.next(`✅ ${item.nombre} añadido al carrito`);
   }
 
   eliminarItem(productoId: number): void {
@@ -65,8 +71,11 @@ export class CarritoService {
     const carrito = this.obtenerCarrito();
     const idx = carrito.findIndex(p => p.id === productoId);
     if (idx !== -1) {
-      if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
-      else carrito.splice(idx, 1);
+      if (carrito[idx].cantidad > 1) {
+        carrito[idx].cantidad--;
+      } else {
+        carrito.splice(idx, 1);
+      }
       this.guardarCarrito(carrito);
     }
   }

@@ -173,4 +173,11 @@
       </ng-container>
     </div>
   </div>
+
+  <!-- Popup al añadir producto al carrito -->
+<div *ngIf="mensajePopup"
+     class="fixed bottom-6 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-slide">
+  {{ mensajePopup }}
+</div>
+
 </header>
