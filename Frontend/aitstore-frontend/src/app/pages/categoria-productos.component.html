@@ -1,52 +1,83 @@
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4">
-  <!-- Título de categoría -->
-  <div class="text-center mb-10">
-    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+  <!-- Encabezado -->
+  <div class="max-w-7xl mx-auto text-center mb-12">
+    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
       {{ categoriaNombre }}
     </h1>
 
-    <!-- Skeleton Loader mientras carga -->
-    <div *ngIf="cargando" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto mt-8">
-      <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="animate-pulse bg-gray-200 dark:bg-gray-700 h-72 rounded-xl"></div>
+    <!-- Botón Volver -->
+    <button (click)="volverInicio()"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Volver al catálogo
+    </button>
+  </div>
+
+  <!-- Contenido -->
+  <div class="max-w-7xl mx-auto">
+    <!-- Skeleton Loader -->
+    <div *ngIf="cargando" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div *ngFor="let i of [1,2,3,4,5,6,7,8]"
+           class="animate-pulse bg-gray-200 dark:bg-gray-700 rounded-xl h-[400px]">
+        <div class="h-48 bg-gray-300 dark:bg-gray-600 rounded-t-xl"></div>
+        <div class="p-6 space-y-4">
+          <div class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+          <div class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
+          <div class="h-10 bg-gray-300 dark:bg-gray-600 rounded-xl"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Sin productos -->
-    <div *ngIf="!cargando && productos.length === 0" class="text-gray-600 dark:text-gray-300 mt-4">
-      No hay productos disponibles en esta categoría.
+    <div *ngIf="!cargando && productos.length === 0"
+         class="text-center py-20 text-gray-600 dark:text-gray-300">
+      <p class="text-xl mb-4">😞 No encontramos productos en esta categoría</p>
+      <button (click)="volverInicio()"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        Explorar otras categorías
+      </button>
     </div>
-  </div>
 
-  <!-- Grid de productos -->
-  <div *ngIf="!cargando && productos.length > 0"
-       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
-    <div *ngFor="let producto of productos"
-         class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
+    <!-- Grid de productos -->
+    <div *ngIf="!cargando && productos.length > 0"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div *ngFor="let producto of productos"
+           class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
 
-      <!-- Imagen -->
-      <img
-        [src]="obtenerImagen(producto)"
-        alt="{{ producto.nombre }}"
-        class="w-full h-48 object-cover border-b"
-      />
+        <!-- Imagen -->
+        <div class="relative h-60 overflow-hidden">
+          <img [src]="obtenerImagen(producto)"
+               [alt]="producto.nombre"
+               class="w-full h-full object-cover transform transition duration-500 group-hover:scale-110">
+        </div>
 
-      <!-- Contenido -->
-      <div class="p-4 flex-1 flex flex-col justify-between">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 truncate">{{ producto.nombre }}</h2>
-        <p class="text-base text-gray-700 dark:text-gray-300 mb-4">{{ producto.precio | currency: 'EUR' }}</p>
+        <!-- Detalles del producto -->
+        <div class="p-6 space-y-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white truncate">
+            {{ producto.nombre }}
+          </h2>
 
-        <button
-          (click)="agregarAlCarrito(producto)"
-          class="mt-auto w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
-          Añadir al carrito
-        </button>
+          <div class="flex items-center justify-between">
+            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {{ producto.precio | currency:'EUR' }}
+            </p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="flex gap-3">
+            <button (click)="verDetalles(producto.id)"
+                    class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 rounded-lg transition-colors">
+              Ver detalles
+            </button>
+            <button (click)="agregarAlCarrito(producto)"
+                    class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+              Añadir
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Botón volver -->
-  <div class="mt-12 flex justify-center">
-    <button (click)="volverInicio()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-      ← Volver al inicio
-    </button>
   </div>
 </div>

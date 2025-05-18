@@ -1,20 +1,48 @@
 :host {
   display: block;
+  min-height: 100vh;
+}
+
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
 }
 
 img {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-img:hover {
-  transform: scale(1.03);
-}
+.dark {
+  .product-card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 
-h1 {
-  font-family: 'Inter', system-ui, sans-serif;
-  margin-bottom: 1rem;
+    &:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+  }
 }
 
 button {
-  @apply transition-all duration-200;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
