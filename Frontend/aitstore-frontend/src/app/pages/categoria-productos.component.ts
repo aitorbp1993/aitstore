@@ -40,25 +40,30 @@ export class CategoriaProductosComponent implements OnInit {
     });
   }
 
-  private cargarProductos(id: number): void {
-    this.cargando = true;
-    this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
-      next: (res) => {
-        this.categoriaNombre = res.nombreCategoria;
-        // Mismo tratamiento que en home.component.ts
-        this.productos = res.productos.map((p: any) => ({
-          ...p,
-          descripcion: p.descripcion || 'Descripción no disponible'
-        }));
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        this.cargando = false;
-      }
-    });
-  }
+ private cargarProductos(id: number): void {
+  this.cargando = true;
+  this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
+    next: (res) => {
+      this.categoriaNombre = res.nombreCategoria;
 
+      // Mismo tratamiento que en home.component.ts
+      this.productos = res.productos.map((p: any) => ({
+        id: p.id,
+        nombre: p.nombre,
+        descripcion: p.descripcion || 'Descripción no disponible', // ← ¡Aquí está la clave!
+        precio: p.precio,
+        stock: p.stock || 0, // Por si acaso
+        imagenUrl: p.imagenUrl || ''
+      }));
+
+      this.cargando = false;
+    },
+    error: (err) => {
+      console.error('Error:', err);
+      this.cargando = false;
+    }
+  });
+}
   // Mantener mismos métodos que en home.component.ts
   agregarAlCarrito(producto: ProductoDTO): void {
     this.carritoService.agregarItem({
