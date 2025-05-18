@@ -53,31 +53,80 @@
                class="w-full h-full object-cover transform transition duration-500 group-hover:scale-110">
         </div>
 
-        <!-- Detalles del producto -->
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white truncate">
-            {{ producto.nombre }}
-          </h2>
+          <!-- Detalles del producto -->
+              <div class="p-4 sm:p-5 flex flex-col flex-grow">
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate mb-2">
+                  {{ producto.nombre }}
+                </h3>
+                <p class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
+                  {{ producto.precio | currency:'EUR' }}
+                </p>
 
-          <div class="flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {{ producto.precio | currency:'EUR' }}
-            </p>
+                <!-- Botón ver detalles -->
+                <div class="mb-3 sm:mb-4 relative">
+                  <button
+                    (click)="productoSeleccionado = producto"
+                    class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center group"
+                  >
+                    <span class="text-sm">Ver detalles</span>
+                    <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <button (click)="agregarAlCarrito(producto)"
+                        class="mt-auto w-full py-2 sm:py-3 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg
+                               font-medium sm:font-semibold hover:from-blue-700 hover:to-blue-600 transition-all duration-300
+                               active:scale-95 shadow-md hover:shadow-lg text-sm sm:text-base">
+                  Añadir al carrito
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Botones de acción -->
-          <div class="flex gap-3">
-            <button (click)="productoSeleccionado = null"
+
+  <!-- Modal de detalles (sin imágenes) -->
+  <div *ngIf="productoSeleccionado" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-sm"
+       (click)="productoSeleccionado = null">
+    <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all"
+         (click)="$event.stopPropagation()">
+      <button (click)="productoSeleccionado = null"
+              class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="p-8">
+        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          {{ productoSeleccionado.nombre }}
+        </h3>
+
+        <div class="prose dark:prose-invert max-w-none">
+          <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+            {{ productoSeleccionado.descripcion }}
+          </p>
+
+          <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {{ productoSeleccionado.precio | currency:'EUR' }}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
+                      class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors text-center">
+                Añadir al carrito
+              </button>
+              <button (click)="productoSeleccionado = null"
                       class="px-8 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-semibold transition-colors text-center">
                 Cerrar detalles
               </button>
-            <button (click)="agregarAlCarrito(producto)"
-                    class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
-              Añadir
-            </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
