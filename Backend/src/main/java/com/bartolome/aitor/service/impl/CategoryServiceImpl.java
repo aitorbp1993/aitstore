@@ -4,6 +4,7 @@ import com.bartolome.aitor.dto.CategoriaConProductosDTO;
 import com.bartolome.aitor.dto.CategoryDTO;
 import com.bartolome.aitor.dto.ProductResponseDTO;
 import com.bartolome.aitor.mapper.CategoryMapper;
+import com.bartolome.aitor.mapper.ProductResponseMapper;
 import com.bartolome.aitor.model.entities.Category;
 import com.bartolome.aitor.repository.CategoryRepository;
 import com.bartolome.aitor.service.CategoryService;
@@ -20,6 +21,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
+    private final ProductResponseMapper productResponseMapper;
+
 
     @Override
     public List<CategoryDTO> obtenerTodas() {
@@ -49,18 +52,10 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.findById(id).map(categoria ->
                 CategoriaConProductosDTO.builder()
                         .nombreCategoria(categoria.getNombre())
-                        .productos(
-                                categoria.getProductos().stream()
-                                        .map(product -> ProductResponseDTO.builder()
-                                                .id(product.getId())
-                                                .nombre(product.getNombre())
-                                                .precio(product.getPrecio())
-                                                .imagenUrl(product.getImagenUrl())
-                                                .build()
-                                        ).toList()
-                        )
+                        .productos(productResponseMapper.toResponseDtoList(categoria.getProductos()))
                         .build()
         );
     }
+    }
 
-}
+
