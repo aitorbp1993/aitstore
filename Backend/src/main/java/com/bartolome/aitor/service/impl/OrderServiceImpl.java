@@ -13,6 +13,7 @@ import com.bartolome.aitor.repository.OrderRepository;
 import com.bartolome.aitor.repository.ProductRepository;
 import com.bartolome.aitor.repository.UserRepository;
 import com.bartolome.aitor.service.OrderService;
+import com.bartolome.aitor.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
+    private final ProductService productService;
 
     @Override
     public List<OrderDTO> obtenerTodos() {
@@ -66,22 +68,13 @@ public class OrderServiceImpl implements OrderService {
             Product producto = productRepository.findById(itemDto.getProductoId())
                     .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado con ID: " + itemDto.getProductoId()));
 
-            // Verificamos stock disponible
             if (producto.getStock() < itemDto.getCantidad()) {
                 throw new StockInsuficienteException("No hay suficiente stock para el producto: " + producto.getNombre());
             }
 
-            // Reducimos stock
             producto.setStock(producto.getStock() - itemDto.getCantidad());
+            productRepository.save(producto); // Guardamos siempre el producto actualizado
 
-            // Si el stock llega a 0 lo eliminamos
-            if (producto.getStock() == 0) {
-                productRepository.delete(producto);
-            } else {
-                productRepository.save(producto); // Guardamos el stock actualizado
-            }
-
-            // Creamos el ítem del pedido
             OrderItem item = new OrderItem();
             item.setPedido(pedido);
             item.setProducto(producto);
@@ -98,9 +91,13 @@ public class OrderServiceImpl implements OrderService {
                 .sum();
         pedido.setTotal(total);
 
-        return orderMapper.toDto(orderRepository.save(pedido));
-    }
+        Order pedidoGuardado = orderRepository.save(pedido);
 
+        // 🧹 Limpiar productos con stock 0
+        productService.eliminarProductosSinStock();
+
+        return orderMapper.toDto(pedidoGuardado);
+    }
 
     @Override
     public void eliminarPedido(Long id) {

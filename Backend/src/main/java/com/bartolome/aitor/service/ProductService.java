@@ -17,4 +17,6 @@ public interface ProductService {
 
     ProductDTO actualizar(Long id, ProductDTO dto);
 
+    void eliminarProductosSinStock();
+
 }

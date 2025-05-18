@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,6 +73,14 @@ public class ProductController {
         dto.setId(id); // aseguramos que se actualiza el correcto
         ProductDTO actualizado = service.guardar(dto);
         return ResponseEntity.ok(actualizado);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/eliminar-sin-stock")
+    @Operation(summary = "Elimina todos los productos con stock igual a 0")
+    public ResponseEntity<String> eliminarProductosSinStock() {
+        service.eliminarProductosSinStock();
+        return ResponseEntity.ok("Productos sin stock eliminados correctamente");
     }
 
 

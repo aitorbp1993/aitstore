@@ -8,7 +8,9 @@ import com.bartolome.aitor.model.entities.Product;
 import com.bartolome.aitor.repository.CategoryRepository;
 import com.bartolome.aitor.repository.ProductRepository;
 import com.bartolome.aitor.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -78,5 +81,20 @@ public class ProductServiceImpl implements ProductService {
 
         return mapper.toDto(productRepository.save(productoExistente));
     }
+
+    @Override
+    @Transactional
+    public void eliminarProductosSinStock() {
+        List<Product> sinStock = productRepository.findAll().stream()
+                .filter(product -> product.getStock() <= 0)
+                .toList(); // .toList() es preferible si usas Java 16+
+
+        if (!sinStock.isEmpty()) {
+            productRepository.deleteAll(sinStock);
+            log.info("🗑 Se eliminaron {} productos sin stock", sinStock.size());
+        }
+    }
+
+
 
 }
