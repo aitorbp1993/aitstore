@@ -67,10 +67,10 @@
 
           <!-- Botones de acción -->
           <div class="flex gap-3">
-            <button (click)="verDetalles(producto.id)"
-                    class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 rounded-lg transition-colors">
-              Ver detalles
-            </button>
+            <button (click)="productoSeleccionado = null"
+                      class="px-8 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-semibold transition-colors text-center">
+                Cerrar detalles
+              </button>
             <button (click)="agregarAlCarrito(producto)"
                     class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
               Añadir

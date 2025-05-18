@@ -28,6 +28,7 @@ export class CategoriaProductosComponent implements OnInit {
   private carritoService = inject(CarritoService);
 
   categoriaNombre = '';
+  productoSeleccionado: ProductoDTO | null = null;
   productos: ProductoDTO[] = [];
   cargando = true;
 
