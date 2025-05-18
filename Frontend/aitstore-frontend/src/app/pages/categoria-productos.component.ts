@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
 
+// Mantener misma interfaz que en home.component.ts
 interface ProductoDTO {
   id: number;
   nombre: string;
@@ -12,7 +13,6 @@ interface ProductoDTO {
   precio: number;
   stock: number;
   imagenUrl: string;
-  categoriaNombre?: string;
 }
 
 @Component({
@@ -28,47 +28,38 @@ export class CategoriaProductosComponent implements OnInit {
   private http = inject(HttpClient);
   private carritoService = inject(CarritoService);
 
-  categoriaNombre = signal('');
-  productos = signal<ProductoDTO[]>([]);
-  cargando = signal(true);
+  categoriaNombre = '';
+  productos: ProductoDTO[] = [];
+  cargando = true;
   productoSeleccionado: ProductoDTO | null = null;
 
   ngOnInit(): void {
-    this.cargarDatosCategoria();
-  }
-
-  private cargarDatosCategoria(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
-      if (!id) return;
-
-      this.cargando.set(true);
-      this.http.get<{nombreCategoria: string; productos: any[]}>(
-        `${environment.apiUrl}/categorias/${id}/productos`
-      ).subscribe({
-        next: (res) => {
-          this.categoriaNombre.set(res.nombreCategoria);
-          this.productos.set(res.productos.map(p => ({
-            id: p.id,
-            nombre: p.nombre,
-            descripcion: p.descripcion || 'Descripción no disponible',
-            precio: p.precio,
-            stock: p.stock,
-            imagenUrl: p.imagenUrl,
-            categoriaNombre: res.nombreCategoria
-          })));
-          this.cargando.set(false);
-        },
-        error: (err) => {
-          console.error('Error:', err);
-          this.categoriaNombre.set('Categoría no encontrada');
-          this.productos.set([]);
-          this.cargando.set(false);
-        }
-      });
+      if (id) this.cargarProductos(Number(id));
     });
   }
 
+  private cargarProductos(id: number): void {
+    this.cargando = true;
+    this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
+      next: (res) => {
+        this.categoriaNombre = res.nombreCategoria;
+        // Mismo tratamiento que en home.component.ts
+        this.productos = res.productos.map((p: any) => ({
+          ...p,
+          descripcion: p.descripcion || 'Descripción no disponible'
+        }));
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.cargando = false;
+      }
+    });
+  }
+
+  // Mantener mismos métodos que en home.component.ts
   agregarAlCarrito(producto: ProductoDTO): void {
     this.carritoService.agregarItem({
       id: producto.id,
@@ -78,57 +69,50 @@ export class CategoriaProductosComponent implements OnInit {
     });
   }
 
-  verDetalles(producto: ProductoDTO): void {
-    this.productoSeleccionado = producto;
-  }
-
-  volverInicio(): void {
-    this.router.navigate(['/']);
-  }
-
   obtenerImagen(producto: ProductoDTO): string {
     const url = producto.imagenUrl?.trim();
-    const categoria = producto.categoriaNombre || this.categoriaNombre();
-
     if (!url || url.includes('placeholder')) {
-      return this.obtenerImagenPorCategoria(categoria);
+      return this.obtenerImagenPorCategoria(this.categoriaNombre);
     }
     return url;
   }
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase();
-    const mapeo: {[key: string]: string} = {
-      'sobremesa': 'desktop',
-      'portátil': 'laptop',
-      'monitor': 'monitor',
-      'teclado': 'keyboard',
-      'ratón': 'mouse',
-      'ratones': 'mouse',
-      'placa base': 'motherboard',
-      'procesador': 'cpu',
-      'cpu': 'cpu',
-      'gráfica': 'gpu',
-      'gpu': 'gpu',
-      'ram': 'ram',
-      'disco': 'ssd',
-      'ssd': 'ssd',
-      'fuente': 'psu',
-      'caja': 'case',
-      'torre': 'case',
-      'refrigeración': 'cooling',
-      'ventilador': 'cooling',
-      'periférico': 'accessory',
-      'accesorio': 'accessory',
-      'silla': 'chair',
-      'escritorio': 'chair'
+    // Misma lógica que en home.component.ts
+    const mapeo: { [key: string]: string } = {
+      'sobremesa': 'desktop-default.png',
+      'portátil': 'laptop-default.png',
+      'monitor': 'monitor-default.png',
+      'teclado': 'keyboard-default.png',
+      'ratón': 'mouse-default.png',
+      'ratones': 'mouse-default.png',
+      'placa base': 'motherboard-default.png',
+      'procesador': 'cpu-default.png',
+      'cpu': 'cpu-default.png',
+      'gráfica': 'gpu-default.png',
+      'gpu': 'gpu-default.png',
+      'ram': 'ram-default.png',
+      'disco': 'ssd-default.png',
+      'ssd': 'ssd-default.png',
+      'fuente': 'psu-default.png',
+      'caja': 'case-default.png',
+      'torre': 'case-default.png',
+      'refrigeración': 'cooling-default.png',
+      'ventilador': 'cooling-default.png',
+      'periférico': 'accessory-default.png',
+      'accesorio': 'accessory-default.png',
+      'silla': 'chair-default.png',
+      'escritorio': 'chair-default.png'
     };
 
-    for (const [keyword, image] of Object.entries(mapeo)) {
-      if (nombre.includes(keyword)) {
-        return `assets/img/${image}-default.png`;
-      }
+    for (const [key, value] of Object.entries(mapeo)) {
+      if (nombre.includes(key)) return `assets/img/${value}`;
     }
     return 'assets/img/default.png';
+  }
+
+  volverInicio(): void {
+    this.router.navigate(['/']);
   }
 }
