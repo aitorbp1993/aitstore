@@ -11,6 +11,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout.component';
 
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { CategoriaProductosComponent } from './pages/categoria-productos.component';
 
 export const routes: Routes = [
   // 🧍‍♂️ Cliente - Layout general
@@ -73,7 +74,12 @@ export const routes: Routes = [
         path: 'pedidos/:id',
         loadComponent: () =>
           import('./pages/admin/admin-pedido-detalle.component').then(m => m.AdminPedidoDetalleComponent)
-      }
+      },
+      {
+  path: 'categoria/:id',
+  component: CategoriaProductosComponent
+}
+
 
     ]
   }
