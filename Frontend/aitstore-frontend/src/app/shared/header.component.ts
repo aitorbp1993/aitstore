@@ -24,8 +24,8 @@ export class HeaderComponent implements OnInit {
   private elementRef = inject(ElementRef);
 
   categorias: any[] = [];
-  categoriasAgrupadas: { [key: string]: any[] } = {};
-  submenusAbiertos: { [grupo: string]: boolean } = {};
+  categoriasAgrupadas: Record<string, any[]> = {};
+  submenusAbiertos: Record<string, boolean> = {};
   categoriasDesplegadas = false;
   menuAbierto = false;
   perfilMenuAbierto = false;
@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
   autenticado: boolean = false;
   inicial: string = '';
   cantidadTotal: number = 0;
-  mensajePopup: string = '';
 
   ngOnInit(): void {
     this.autenticado = !!localStorage.getItem('token');
@@ -53,8 +52,8 @@ export class HeaderComponent implements OnInit {
     this.cantidadTotal = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
   }
 
-  agruparCategorias(categorias: any[]): { [key: string]: any[] } {
-    const grupos: { [key: string]: string[] } = {
+  agruparCategorias(categorias: any[]): Record<string, any[]> {
+    const grupos: Record<string, string[]> = {
       'Ordenadores': ['portátiles', 'sobremesa'],
       'Pantallas': ['monitores'],
       'Periféricos': ['teclados', 'ratones'],
@@ -63,7 +62,8 @@ export class HeaderComponent implements OnInit {
       'Otros': ['accesorios', 'periféricos', 'sillas', 'escritorios']
     };
 
-    const resultado: { [key: string]: any[] } = {};
+    const resultado: Record<string, any[]> = {};
+
     categorias.forEach(cat => {
       const nombre = cat.nombre.toLowerCase();
       for (const grupo in grupos) {
@@ -116,6 +116,7 @@ export class HeaderComponent implements OnInit {
   }
 
   irAPerfil() {
+    this.cerrarMenus();
     this.router.navigate(['/perfil']);
   }
 
@@ -134,7 +135,6 @@ export class HeaderComponent implements OnInit {
       this.categoriasDesplegadas = false;
     }
   }
-
   get gruposCategorias(): string[] {
   return Object.keys(this.categoriasAgrupadas);
 }
