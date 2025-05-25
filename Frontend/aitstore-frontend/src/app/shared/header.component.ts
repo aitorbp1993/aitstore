@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
 
   categorias: any[] = [];
   categoriasAgrupadas: { [key: string]: any[] } = {};
+  grupoExpandido: { [key: string]: boolean } = {};
   categoriasDesplegadas = false;
   menuAbierto = false;
   perfilMenuAbierto = false;
@@ -37,6 +38,11 @@ export class HeaderComponent implements OnInit {
       next: res => {
         this.categorias = res;
         this.categoriasAgrupadas = this.agruparCategorias(res);
+
+        // Inicializa todos los grupos como colapsados
+        for (const grupo of Object.keys(this.categoriasAgrupadas)) {
+          this.grupoExpandido[grupo] = false;
+        }
       },
       error: err => console.error('Error al cargar categorías', err)
     });
@@ -71,6 +77,14 @@ export class HeaderComponent implements OnInit {
     });
 
     return resultado;
+  }
+
+  obtenerGrupos(): string[] {
+    return Object.keys(this.categoriasAgrupadas);
+  }
+
+  toggleGrupo(grupo: string): void {
+    this.grupoExpandido[grupo] = !this.grupoExpandido[grupo];
   }
 
   toggleCategorias() {
