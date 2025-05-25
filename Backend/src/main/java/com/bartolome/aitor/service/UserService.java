@@ -1,5 +1,6 @@
 package com.bartolome.aitor.service;
 
+import com.bartolome.aitor.dto.UpdateUserProfileDTO;
 import com.bartolome.aitor.dto.UserDTO;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface UserService {
     void eliminar(Long id);
 
     Optional<UserDTO> obtenerPorEmail(String email);
+
+    UserDTO actualizarPerfil(String email, UpdateUserProfileDTO dto);
 
 }

@@ -30,18 +30,22 @@ public class AuthServiceImpl implements AuthService {
                 .nombre(request.getNombre())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .direccion(request.getDireccion())
+                .telefono(request.getTelefono())
                 .rol(Rol.CLIENTE)
                 .build();
 
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
-            // por si hay restricción única en BD
             throw new IllegalArgumentException("Ya existe un usuario con ese correo electrónico");
         }
 
         String token = jwtUtil.generateJwtToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(user);
+
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
 
         return AuthResponse.builder()
                 .token(token)

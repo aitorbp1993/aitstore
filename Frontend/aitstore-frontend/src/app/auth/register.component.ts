@@ -27,7 +27,9 @@ export class RegisterComponent {
         Validators.minLength(6),
         Validators.pattern(/^\S*$/)
       ]
-    ]
+    ],
+    direccion: ['', Validators.maxLength(255)],
+    telefono: ['', [Validators.pattern(/^\d{9}$/)]]
   });
 
   errorMessage: string | null = null;

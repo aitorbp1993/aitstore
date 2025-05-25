@@ -5,9 +5,34 @@
       Crear cuenta
     </h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Dirección -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dirección</label>
+  <input
+    type="text"
+    formControlName="direccion"
+    placeholder="Calle Ejemplo 123, Ciudad"
+    class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+  />
+</div>
+
+<!-- Teléfono -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Teléfono</label>
+  <input
+    type="text"
+    formControlName="telefono"
+    placeholder="612345678"
+    class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+  />
+  <p *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched" class="text-sm text-red-600 mt-1">
+    El teléfono debe tener exactamente 9 dígitos numéricos.
+  </p>
+</div>
+
       <!-- Nombre -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre completo</label>
         <input
           type="text"
           formControlName="nombre"

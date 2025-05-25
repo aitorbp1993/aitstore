@@ -1,10 +1,12 @@
 package com.bartolome.aitor.controller;
 
+import com.bartolome.aitor.dto.UpdateUserProfileDTO;
 import com.bartolome.aitor.dto.UserDTO;
 import com.bartolome.aitor.exception.RecursoNoEncontradoException;
 import com.bartolome.aitor.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,11 +52,18 @@ public class UserController {
     @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
     @Operation(summary = "Obtener el usuario autenticado")
     public ResponseEntity<UserDTO> obtenerMiPerfil(Authentication authentication) {
-        String email = authentication.getName(); // viene del JWT
+        String email = authentication.getName();
         UserDTO usuario = service.obtenerPorEmail(email)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
         return ResponseEntity.ok(usuario);
     }
 
-
+    @PatchMapping("/me")
+    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
+    @Operation(summary = "Actualizar perfil del usuario autenticado (nombre, dirección y teléfono)")
+    public ResponseEntity<UserDTO> actualizarPerfil(@Valid @RequestBody UpdateUserProfileDTO request, Authentication authentication) {
+        String email = authentication.getName();
+        UserDTO actualizado = service.actualizarPerfil(email, request);
+        return ResponseEntity.ok(actualizado);
+    }
 }
