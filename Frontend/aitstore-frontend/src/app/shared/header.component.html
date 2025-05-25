@@ -1,6 +1,5 @@
 <header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-800">
   <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
-
     <!-- Logo -->
     <div class="flex items-center gap-3 cursor-pointer select-none" (click)="irAInicio()">
       <svg class="w-9 h-9 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -12,7 +11,8 @@
     <!-- Buscador escritorio -->
     <div class="flex-1 max-w-2xl hidden sm:flex">
       <div class="flex w-full rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-sm">
-        <input [(ngModel)]="searchTerm" (keyup.enter)="buscar()" type="text" placeholder="Buscar productos..."
+        <input [(ngModel)]="searchTerm" (keyup.enter)="buscar()"
+               type="text" placeholder="Buscar productos..."
                class="w-full px-4 py-2 text-sm bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <button (click)="buscar()" class="px-4 bg-blue-600 text-white hover:bg-blue-700 transition font-semibold flex items-center">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -23,13 +23,14 @@
       </div>
     </div>
 
-    <!-- Navegación escritorio -->
+    <!-- Menú escritorio -->
     <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-800 dark:text-gray-200">
-      <a routerLink="/" (click)="cerrarMenus()" class="hover:text-blue-600 dark:hover:text-blue-300 transition">Inicio</a>
+      <a (click)="irAInicio()" class="hover:text-blue-600 dark:hover:text-blue-300 transition cursor-pointer">Inicio</a>
 
-      <!-- Categorías agrupadas -->
+      <!-- Categorías -->
       <div class="relative">
-        <button (click)="categoriasDesplegadas = !categoriasDesplegadas" class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-300 transition">
+        <button (click)="categoriasDesplegadas = !categoriasDesplegadas"
+                class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-300 transition">
           Categorías
           <svg class="w-4 h-4 transform transition-transform" [ngClass]="{ 'rotate-180': categoriasDesplegadas }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 9l6 6 6-6"/>
@@ -38,18 +39,16 @@
         <div *ngIf="categoriasDesplegadas"
              class="absolute right-0 mt-2 w-64 max-h-[400px] overflow-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 border border-gray-100 dark:border-gray-700 z-50 animate-pop-in">
           <ng-container *ngFor="let grupo of gruposCategorias">
-
             <div>
-              <button (click)="toggleSubmenu(grupo)"
-                      class="flex justify-between items-center w-full px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 text-left text-sm text-gray-700 dark:text-gray-200">
+              <button (click)="toggleSubmenu(grupo)" class="flex justify-between items-center w-full px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 text-left text-sm text-gray-700 dark:text-gray-200">
                 {{ grupo }}
-                <svg class="w-4 h-4 transition-transform" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo] }"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 transition-transform" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M9 6l6 6-6 6"/>
                 </svg>
               </button>
               <div *ngIf="submenusAbiertos[grupo]" class="pl-6">
-                <a *ngFor="let cat of categoriasAgrupadas[grupo]" (click)="irACategoria(cat.id)"
+                <a *ngFor="let cat of categoriasAgrupadas[grupo]"
+                   (click)="irACategoria(cat.id)"
                    class="block px-4 py-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                   {{ cat.nombre }}
                 </a>
@@ -60,7 +59,7 @@
       </div>
 
       <!-- Carrito -->
-      <a routerLink="/carrito" (click)="cerrarMenus()" class="relative hover:text-blue-600 dark:hover:text-blue-300 transition flex items-center">
+      <a (click)="irACarrito()" class="relative hover:text-blue-600 dark:hover:text-blue-300 transition flex items-center cursor-pointer">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7a1 1 0 00.9 1.5h11m-12-4h12m-4 5a1 1 0 11-2 0 1 1 0 012 0zm-8 0a1 1 0 11-2 0 1 1 0 012 0z"/>
         </svg>
@@ -69,14 +68,13 @@
         </span>
       </a>
 
-      <!-- Perfil o auth -->
-      <ng-container *ngIf="autenticado; else authLinks">
+      <!-- Perfil o Auth -->
+      <ng-container *ngIf="autenticado; else noAuth">
         <div class="relative">
           <button (click)="togglePerfilMenu()" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition" title="Menú de usuario">
             {{ inicial }}
           </button>
-          <div *ngIf="perfilMenuAbierto"
-               class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 animate-pop-in">
+          <div *ngIf="perfilMenuAbierto" class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 animate-pop-in">
             <a (click)="irAPerfil()" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
@@ -92,13 +90,14 @@
           </div>
         </div>
       </ng-container>
-      <ng-template #authLinks>
-        <a routerLink="/auth/login" class="hover:text-blue-600 dark:hover:text-blue-300">Ingresar</a>
-        <a routerLink="/auth/register" class="px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">Registro</a>
+
+      <ng-template #noAuth>
+        <a (click)="irALogin()" class="hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer">Ingresar</a>
+        <a (click)="irARegistro()" class="px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition cursor-pointer">Registro</a>
       </ng-template>
     </nav>
 
-    <!-- Botón hamburguesa móvil -->
+    <!-- Botón menú móvil -->
     <button (click)="toggleMenu()" class="md:hidden text-gray-800 dark:text-gray-200">
       <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 6h18M3 12h18M3 18h18"/>
@@ -109,10 +108,9 @@
   <!-- Menú móvil -->
   <div *ngIf="menuAbierto" class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-4 animate-pop-in overflow-x-hidden">
     <div class="flex flex-col gap-4 text-sm text-gray-800 dark:text-gray-200">
-      <a routerLink="/" (click)="cerrarMenus()">Inicio</a>
+      <a (click)="irAInicio()" class="cursor-pointer">Inicio</a>
 
-      <div ng-container *ngFor="let grupo of gruposCategorias">
-
+      <div *ngFor="let grupo of gruposCategorias">
         <button (click)="toggleSubmenu(grupo)" class="w-full text-left font-semibold flex justify-between items-center">
           {{ grupo }}
           <svg class="w-4 h-4" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -120,21 +118,21 @@
           </svg>
         </button>
         <div *ngIf="submenusAbiertos[grupo]" class="pl-4">
-          <a *ngFor="let cat of categoriasAgrupadas[grupo]" (click)="irACategoria(cat.id)" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-300">
+          <a *ngFor="let cat of categoriasAgrupadas[grupo]" (click)="irACategoria(cat.id)" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer">
             {{ cat.nombre }}
           </a>
         </div>
       </div>
 
-      <a routerLink="/carrito" (click)="cerrarMenus()">Carrito ({{ cantidadTotal }})</a>
+      <a (click)="irACarrito()" class="cursor-pointer">Carrito ({{ cantidadTotal }})</a>
 
       <ng-container *ngIf="autenticado">
-        <a (click)="irAPerfil(); cerrarMenus()">Perfil</a>
-        <button (click)="logout(); cerrarMenus()" class="text-left text-red-600">Cerrar sesión</button>
+        <a (click)="irAPerfil()" class="cursor-pointer">Perfil</a>
+        <button (click)="logout()" class="text-left text-red-600">Cerrar sesión</button>
       </ng-container>
       <ng-container *ngIf="!autenticado">
-        <a routerLink="/auth/login" (click)="cerrarMenus()">Ingresar</a>
-        <a routerLink="/auth/register" (click)="cerrarMenus()">Registrarse</a>
+        <a (click)="irALogin()" class="cursor-pointer">Ingresar</a>
+        <a (click)="irARegistro()" class="cursor-pointer">Registrarse</a>
       </ng-container>
     </div>
   </div>

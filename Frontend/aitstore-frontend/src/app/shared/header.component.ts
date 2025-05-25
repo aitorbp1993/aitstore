@@ -3,7 +3,10 @@ import {
   ElementRef,
   HostListener,
   OnInit,
-  inject
+  inject,
+  Signal,
+  computed,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,7 +19,7 @@ import { environment } from '../../environments/environment';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   private http = inject(HttpClient);
@@ -24,8 +27,9 @@ export class HeaderComponent implements OnInit {
   private elementRef = inject(ElementRef);
 
   categorias: any[] = [];
-  categoriasAgrupadas: Record<string, any[]> = {};
-  submenusAbiertos: Record<string, boolean> = {};
+  categoriasAgrupadas: { [grupo: string]: any[] } = {};
+  gruposCategorias: string[] = [];
+  submenusAbiertos: { [grupo: string]: boolean } = {};
   categoriasDesplegadas = false;
   menuAbierto = false;
   perfilMenuAbierto = false;
@@ -34,6 +38,7 @@ export class HeaderComponent implements OnInit {
   autenticado: boolean = false;
   inicial: string = '';
   cantidadTotal: number = 0;
+  mensajePopup: string = '';
 
   ngOnInit(): void {
     this.autenticado = !!localStorage.getItem('token');
@@ -41,33 +46,48 @@ export class HeaderComponent implements OnInit {
     if (nombre) this.inicial = nombre.charAt(0).toUpperCase();
 
     this.http.get<any[]>(`${environment.apiUrl}/categorias`).subscribe({
-      next: res => {
+      next: (res) => {
         this.categorias = res;
         this.categoriasAgrupadas = this.agruparCategorias(res);
+        this.gruposCategorias = Object.keys(this.categoriasAgrupadas);
       },
-      error: err => console.error('Error al cargar categorías', err)
+      error: (err) => console.error('Error al cargar categorías', err),
     });
 
     const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    this.cantidadTotal = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
+    this.cantidadTotal = carrito.reduce(
+      (total: number, item: any) => total + item.cantidad,
+      0
+    );
   }
 
-  agruparCategorias(categorias: any[]): Record<string, any[]> {
-    const grupos: Record<string, string[]> = {
-      'Ordenadores': ['portátiles', 'sobremesa'],
-      'Pantallas': ['monitores'],
-      'Periféricos': ['teclados', 'ratones'],
-      'Componentes': ['cpu', 'procesadores', 'gpu', 'gráficas', 'placas base', 'ram', 'ssd', 'discos duros', 'fuentes', 'cajas'],
-      'Refrigeración': ['refrigeración', 'ventiladores'],
-      'Otros': ['accesorios', 'periféricos', 'sillas', 'escritorios']
+  agruparCategorias(categorias: any[]): { [grupo: string]: any[] } {
+    const grupos: { [grupo: string]: string[] } = {
+      Ordenadores: ['portátiles', 'sobremesa'],
+      Pantallas: ['monitores'],
+      Periféricos: ['teclados', 'ratones'],
+      Componentes: [
+        'cpu',
+        'procesadores',
+        'gpu',
+        'gráficas',
+        'placas base',
+        'ram',
+        'ssd',
+        'discos duros',
+        'fuentes',
+        'cajas',
+      ],
+      Refrigeración: ['refrigeración', 'ventiladores'],
+      Otros: ['accesorios', 'periféricos', 'sillas', 'escritorios'],
     };
 
-    const resultado: Record<string, any[]> = {};
+    const resultado: { [grupo: string]: any[] } = {};
 
-    categorias.forEach(cat => {
+    categorias.forEach((cat) => {
       const nombre = cat.nombre.toLowerCase();
       for (const grupo in grupos) {
-        if (grupos[grupo].some(palabra => nombre.includes(palabra))) {
+        if (grupos[grupo].some((palabra) => nombre.includes(palabra))) {
           if (!resultado[grupo]) resultado[grupo] = [];
           resultado[grupo].push(cat);
           return;
@@ -112,6 +132,7 @@ export class HeaderComponent implements OnInit {
   }
 
   irAInicio() {
+    this.cerrarMenus();
     this.router.navigate(['/']);
   }
 
@@ -120,9 +141,26 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/perfil']);
   }
 
+  irACarrito() {
+    this.cerrarMenus();
+    this.router.navigate(['/carrito']);
+  }
+
+  irALogin() {
+    this.cerrarMenus();
+    this.router.navigate(['/auth/login']);
+  }
+
+  irARegistro() {
+    this.cerrarMenus();
+    this.router.navigate(['/auth/register']);
+  }
+
   buscar() {
     if (this.searchTerm.trim()) {
-      this.router.navigate(['/'], { queryParams: { search: this.searchTerm.trim() } });
+      this.router.navigate(['/'], {
+        queryParams: { search: this.searchTerm.trim() },
+      });
       this.searchTerm = '';
       this.cerrarMenus();
     }
@@ -135,8 +173,4 @@ export class HeaderComponent implements OnInit {
       this.categoriasDesplegadas = false;
     }
   }
-  get gruposCategorias(): string[] {
-  return Object.keys(this.categoriasAgrupadas);
-}
-
 }

@@ -4,11 +4,10 @@
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Animaciones */
 @keyframes pop-in {
   0% {
     opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+    transform: translateY(-10px) scale(0.95);
   }
   100% {
     opacity: 1;
@@ -19,7 +18,7 @@
 @keyframes fade-slide {
   0% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   10% {
     opacity: 1;
@@ -27,10 +26,11 @@
   }
   90% {
     opacity: 1;
+    transform: translateY(0);
   }
   100% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
 }
 
@@ -42,7 +42,36 @@
   animation: fade-slide 2.5s ease-in-out forwards;
 }
 
-/* Modo oscuro */
+svg {
+  stroke: currentColor;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
+button,
+a {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+/* Evitar desbordes del dropdown de categorías */
+@media (min-width: 768px) {
+  .categorias-dropdown {
+    max-width: 16rem;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}
+
+/* Ajustes modo oscuro */
 .dark {
   .shadow-lg {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
@@ -67,51 +96,8 @@
   }
 }
 
-/* Estilo base */
-svg {
-  stroke: currentColor;
-  fill: none;
-  transition: stroke 0.2s ease;
-}
-
-button, a {
-  transition: all 0.2s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-}
-
 .hover\:text-blue-600:hover {
   svg {
     stroke: #2563eb;
   }
-}
-
-/* Evitar desbordamiento del menú de categorías */
-header .overflow-auto {
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-}
-
-/* Ajuste del menú en móvil */
-@media (max-width: 768px) {
-  .menu-movil-categorias {
-    max-height: 50vh;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-  }
-}
-
-/* Asegura que los botones del perfil estén correctamente alineados */
-.perfil-menu button,
-.perfil-menu a {
-  width: 100%;
-  text-align: left;
 }
