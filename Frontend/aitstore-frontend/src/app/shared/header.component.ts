@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  inject
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -15,10 +21,12 @@ import { environment } from '../../environments/environment';
 export class HeaderComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private elementRef = inject(ElementRef);
 
   categorias: any[] = [];
   categoriasAgrupadas: { [key: string]: any[] } = {};
-  categoriasDesplegadas: { [key: string]: boolean } = {};
+  submenusAbiertos: { [grupo: string]: boolean } = {};
+  categoriasDesplegadas = false;
   menuAbierto = false;
   perfilMenuAbierto = false;
 
@@ -37,7 +45,6 @@ export class HeaderComponent implements OnInit {
       next: res => {
         this.categorias = res;
         this.categoriasAgrupadas = this.agruparCategorias(res);
-        Object.keys(this.categoriasAgrupadas).forEach(g => this.categoriasDesplegadas[g] = false);
       },
       error: err => console.error('Error al cargar categorías', err)
     });
@@ -57,7 +64,6 @@ export class HeaderComponent implements OnInit {
     };
 
     const resultado: { [key: string]: any[] } = {};
-
     categorias.forEach(cat => {
       const nombre = cat.nombre.toLowerCase();
       for (const grupo in grupos) {
@@ -74,13 +80,12 @@ export class HeaderComponent implements OnInit {
     return resultado;
   }
 
-  toggleGrupo(grupo: string) {
-    this.categoriasDesplegadas[grupo] = !this.categoriasDesplegadas[grupo];
+  toggleSubmenu(grupo: string) {
+    this.submenusAbiertos[grupo] = !this.submenusAbiertos[grupo];
   }
 
   toggleMenu() {
     this.menuAbierto = !this.menuAbierto;
-    this.perfilMenuAbierto = false;
   }
 
   togglePerfilMenu() {
@@ -90,6 +95,8 @@ export class HeaderComponent implements OnInit {
   cerrarMenus() {
     this.menuAbierto = false;
     this.perfilMenuAbierto = false;
+    this.categoriasDesplegadas = false;
+    this.submenusAbiertos = {};
   }
 
   logout() {
@@ -119,4 +126,17 @@ export class HeaderComponent implements OnInit {
       this.cerrarMenus();
     }
   }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.perfilMenuAbierto = false;
+      this.categoriasDesplegadas = false;
+    }
+  }
+
+  get gruposCategorias(): string[] {
+  return Object.keys(this.categoriasAgrupadas);
+}
+
 }

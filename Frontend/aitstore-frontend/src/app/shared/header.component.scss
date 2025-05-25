@@ -4,7 +4,6 @@
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Animación para desplegables */
 @keyframes pop-in {
   0% {
     opacity: 0;
@@ -20,7 +19,6 @@
   animation: pop-in 0.25s ease-out;
 }
 
-/* Fade-slide para popup de feedback */
 @keyframes fade-slide {
   0% {
     opacity: 0;
@@ -44,7 +42,12 @@
   animation: fade-slide 2.5s ease-in-out forwards;
 }
 
-/* Transiciones suaves */
+svg {
+  stroke: currentColor;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
 button, a {
   transition: all 0.2s ease;
 
@@ -55,12 +58,6 @@ button, a {
   &:active {
     transform: translateY(1px);
   }
-}
-
-svg {
-  stroke: currentColor;
-  fill: none;
-  transition: stroke 0.2s ease;
 }
 
 .hover\:text-blue-600:hover {
@@ -76,6 +73,10 @@ svg {
     }
   }
 
+  .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
+  }
+
   .bg-gray-800 {
     background-color: #1f2937;
   }
@@ -87,49 +88,19 @@ svg {
   .text-gray-200 {
     color: #e5e7eb;
   }
-
-  .text-blue-300 {
-    color: #93c5fd;
-  }
-
-  .hover\:text-blue-300:hover {
-    color: #93c5fd;
-  }
-
-  .hover\:bg-gray-700:hover {
-    background-color: #374151;
-  }
-
-  .hover\:bg-red-800:hover {
-    background-color: #991b1b;
-  }
-
-  .hover\:bg-blue-700:hover {
-    background-color: #1e40af;
-  }
-
-  .hover\:bg-gray-800:hover {
-    background-color: #1f2937;
-  }
 }
 
-/* Manejo del scroll interno en el dropdown */
-.menu-scroll {
-  max-height: 70vh;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
-
-  &::-webkit-scrollbar {
-    width: 6px;
+/* Prevención de desbordamiento horizontal del menú de categorías */
+header {
+  .overflow-x-hidden {
+    overflow-x: hidden;
   }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: #d1d5db;
-    border-radius: 6px;
+  .max-h-\[400px\] {
+    max-height: 400px;
   }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
+  .w-64 {
+    width: 16rem; // Equivalente a Tailwind w-64
   }
 }
