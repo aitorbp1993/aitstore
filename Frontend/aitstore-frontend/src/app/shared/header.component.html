@@ -23,14 +23,13 @@
       </div>
     </div>
 
-    <!-- Menú escritorio -->
+    <!-- Navegación escritorio -->
     <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-800 dark:text-gray-200">
-      <a (click)="irAInicio()" class="hover:text-blue-600 dark:hover:text-blue-300 transition cursor-pointer">Inicio</a>
+      <a routerLink="/" (click)="cerrarMenus()" class="hover:text-blue-600 dark:hover:text-blue-300 transition">Inicio</a>
 
-      <!-- Categorías -->
+      <!-- Categorías agrupadas -->
       <div class="relative">
-        <button (click)="categoriasDesplegadas = !categoriasDesplegadas"
-                class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-300 transition">
+        <button (click)="toggleCategorias()" class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-300 transition">
           Categorías
           <svg class="w-4 h-4 transform transition-transform" [ngClass]="{ 'rotate-180': categoriasDesplegadas }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 9l6 6 6-6"/>
@@ -38,16 +37,16 @@
         </button>
         <div *ngIf="categoriasDesplegadas"
              class="absolute right-0 mt-2 w-64 max-h-[400px] overflow-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 border border-gray-100 dark:border-gray-700 z-50 animate-pop-in">
-          <ng-container *ngFor="let grupo of gruposCategorias">
+          <ng-container *ngFor="let grupo of categoriasAgrupadas">
             <div>
-              <button (click)="toggleSubmenu(grupo)" class="flex justify-between items-center w-full px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 text-left text-sm text-gray-700 dark:text-gray-200">
-                {{ grupo }}
-                <svg class="w-4 h-4 transition-transform" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <button (click)="toggleSubmenu(grupo.grupo)" class="w-full text-left flex justify-between items-center px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200">
+                {{ grupo.grupo }}
+                <svg class="w-4 h-4 transition-transform" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo.grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M9 6l6 6-6 6"/>
                 </svg>
               </button>
-              <div *ngIf="submenusAbiertos[grupo]" class="pl-6">
-                <a *ngFor="let cat of categoriasAgrupadas[grupo]"
+              <div *ngIf="submenusAbiertos[grupo.grupo]" class="pl-6">
+                <a *ngFor="let cat of grupo.items"
                    (click)="irACategoria(cat.id)"
                    class="block px-4 py-1 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                   {{ cat.nombre }}
@@ -59,7 +58,7 @@
       </div>
 
       <!-- Carrito -->
-      <a (click)="irACarrito()" class="relative hover:text-blue-600 dark:hover:text-blue-300 transition flex items-center cursor-pointer">
+      <a routerLink="/carrito" (click)="cerrarMenus()" class="relative hover:text-blue-600 dark:hover:text-blue-300 transition flex items-center">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7a1 1 0 00.9 1.5h11m-12-4h12m-4 5a1 1 0 11-2 0 1 1 0 012 0zm-8 0a1 1 0 11-2 0 1 1 0 012 0z"/>
         </svg>
@@ -68,36 +67,27 @@
         </span>
       </a>
 
-      <!-- Perfil o Auth -->
+      <!-- Perfil o login -->
       <ng-container *ngIf="autenticado; else noAuth">
         <div class="relative">
           <button (click)="togglePerfilMenu()" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition" title="Menú de usuario">
             {{ inicial }}
           </button>
-          <div *ngIf="perfilMenuAbierto" class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 animate-pop-in">
-            <a (click)="irAPerfil()" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z"/>
-              </svg>
-              Perfil
-            </a>
-            <button (click)="logout()" class="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-800">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-              </svg>
-              Salir
-            </button>
+          <div *ngIf="perfilMenuAbierto"
+               class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 z-50 animate-pop-in">
+            <a (click)="irAPerfil()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">Perfil</a>
+            <button (click)="logout()" class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-800">Cerrar sesión</button>
           </div>
         </div>
       </ng-container>
 
       <ng-template #noAuth>
-        <a (click)="irALogin()" class="hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer">Ingresar</a>
-        <a (click)="irARegistro()" class="px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition cursor-pointer">Registro</a>
+        <a routerLink="/auth/login" (click)="cerrarMenus()" class="hover:text-blue-600 dark:hover:text-blue-300">Ingresar</a>
+        <a routerLink="/auth/register" (click)="cerrarMenus()" class="px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">Registro</a>
       </ng-template>
     </nav>
 
-    <!-- Botón menú móvil -->
+    <!-- Botón hamburguesa móvil -->
     <button (click)="toggleMenu()" class="md:hidden text-gray-800 dark:text-gray-200">
       <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 6h18M3 12h18M3 18h18"/>
@@ -108,32 +98,40 @@
   <!-- Menú móvil -->
   <div *ngIf="menuAbierto" class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-4 animate-pop-in overflow-x-hidden">
     <div class="flex flex-col gap-4 text-sm text-gray-800 dark:text-gray-200">
-      <a (click)="irAInicio()" class="cursor-pointer">Inicio</a>
+      <a routerLink="/" (click)="cerrarMenus()">Inicio</a>
 
-      <div *ngFor="let grupo of gruposCategorias">
-        <button (click)="toggleSubmenu(grupo)" class="w-full text-left font-semibold flex justify-between items-center">
-          {{ grupo }}
-          <svg class="w-4 h-4" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div *ngFor="let grupo of categoriasAgrupadas">
+        <button (click)="toggleSubmenu(grupo.grupo)" class="w-full text-left font-semibold flex justify-between items-center">
+          {{ grupo.grupo }}
+          <svg class="w-4 h-4" [ngClass]="{ 'rotate-90': submenusAbiertos[grupo.grupo] }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 6l6 6-6 6"/>
           </svg>
         </button>
-        <div *ngIf="submenusAbiertos[grupo]" class="pl-4">
-          <a *ngFor="let cat of categoriasAgrupadas[grupo]" (click)="irACategoria(cat.id)" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer">
+        <div *ngIf="submenusAbiertos[grupo.grupo]" class="pl-4">
+          <a *ngFor="let cat of grupo.items"
+             (click)="irACategoria(cat.id)"
+             class="block py-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-300">
             {{ cat.nombre }}
           </a>
         </div>
       </div>
 
-      <a (click)="irACarrito()" class="cursor-pointer">Carrito ({{ cantidadTotal }})</a>
+      <a routerLink="/carrito" (click)="cerrarMenus()">Carrito ({{ cantidadTotal }})</a>
 
-      <ng-container *ngIf="autenticado">
-        <a (click)="irAPerfil()" class="cursor-pointer">Perfil</a>
-        <button (click)="logout()" class="text-left text-red-600">Cerrar sesión</button>
+      <ng-container *ngIf="autenticado; else noAuthMobile">
+        <a (click)="irAPerfil(); cerrarMenus()">Perfil</a>
+        <button (click)="logout(); cerrarMenus()" class="text-left text-red-600">Cerrar sesión</button>
       </ng-container>
-      <ng-container *ngIf="!autenticado">
-        <a (click)="irALogin()" class="cursor-pointer">Ingresar</a>
-        <a (click)="irARegistro()" class="cursor-pointer">Registrarse</a>
-      </ng-container>
+      <ng-template #noAuthMobile>
+        <a routerLink="/auth/login" (click)="cerrarMenus()">Ingresar</a>
+        <a routerLink="/auth/register" (click)="cerrarMenus()">Registrarse</a>
+      </ng-template>
     </div>
+  </div>
+
+  <!-- Popup al añadir producto al carrito -->
+  <div *ngIf="mensajePopup"
+       class="fixed bottom-6 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-slide">
+    {{ mensajePopup }}
   </div>
 </header>

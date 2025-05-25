@@ -1,176 +1,162 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  inject,
-  Signal,
-  computed,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { CarritoService } from '../shared/services/carrito.service';
+import { AuthService } from '../auth/auth.service';
 import { environment } from '../../environments/environment';
+
+interface CategoriaDTO {
+  id: number;
+  nombre: string;
+}
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  private http = inject(HttpClient);
   private router = inject(Router);
-  private elementRef = inject(ElementRef);
+  private http = inject(HttpClient);
+  private carritoService = inject(CarritoService);
+  private authService = inject(AuthService);
 
-  categorias: any[] = [];
-  categoriasAgrupadas: { [grupo: string]: any[] } = {};
-  gruposCategorias: string[] = [];
+  categorias: CategoriaDTO[] = [];
+  categoriasAgrupadas: { grupo: string, items: CategoriaDTO[] }[] = [];
   submenusAbiertos: { [grupo: string]: boolean } = {};
-  categoriasDesplegadas = false;
+
+  searchTerm = '';
+  cantidadTotal = 0;
+  mensajePopup: string | null = null;
+
   menuAbierto = false;
+  categoriasDesplegadas = false;
   perfilMenuAbierto = false;
 
-  searchTerm: string = '';
-  autenticado: boolean = false;
-  inicial: string = '';
-  cantidadTotal: number = 0;
-  mensajePopup: string = '';
-
   ngOnInit(): void {
-    this.autenticado = !!localStorage.getItem('token');
-    const nombre = localStorage.getItem('nombre');
-    if (nombre) this.inicial = nombre.charAt(0).toUpperCase();
+    this.carritoService.recargarCarrito();
 
-    this.http.get<any[]>(`${environment.apiUrl}/categorias`).subscribe({
-      next: (res) => {
-        this.categorias = res;
-        this.categoriasAgrupadas = this.agruparCategorias(res);
-        this.gruposCategorias = Object.keys(this.categoriasAgrupadas);
-      },
-      error: (err) => console.error('Error al cargar categorías', err),
+    this.carritoService.carrito$.subscribe(carrito => {
+      this.cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     });
 
-    const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-    this.cantidadTotal = carrito.reduce(
-      (total: number, item: any) => total + item.cantidad,
-      0
-    );
-  }
-
-  agruparCategorias(categorias: any[]): { [grupo: string]: any[] } {
-    const grupos: { [grupo: string]: string[] } = {
-      Ordenadores: ['portátiles', 'sobremesa'],
-      Pantallas: ['monitores'],
-      Periféricos: ['teclados', 'ratones'],
-      Componentes: [
-        'cpu',
-        'procesadores',
-        'gpu',
-        'gráficas',
-        'placas base',
-        'ram',
-        'ssd',
-        'discos duros',
-        'fuentes',
-        'cajas',
-      ],
-      Refrigeración: ['refrigeración', 'ventiladores'],
-      Otros: ['accesorios', 'periféricos', 'sillas', 'escritorios'],
-    };
-
-    const resultado: { [grupo: string]: any[] } = {};
-
-    categorias.forEach((cat) => {
-      const nombre = cat.nombre.toLowerCase();
-      for (const grupo in grupos) {
-        if (grupos[grupo].some((palabra) => nombre.includes(palabra))) {
-          if (!resultado[grupo]) resultado[grupo] = [];
-          resultado[grupo].push(cat);
-          return;
-        }
-      }
-      if (!resultado['Otros']) resultado['Otros'] = [];
-      resultado['Otros'].push(cat);
+    this.carritoService.notificacion$.subscribe(msg => {
+      this.mensajePopup = msg;
+      setTimeout(() => this.mensajePopup = null, 2500);
     });
 
-    return resultado;
+    this.cargarCategorias();
   }
 
-  toggleSubmenu(grupo: string) {
+  get autenticado(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  get nombreUsuario(): string {
+    return this.authService.getNombre();
+  }
+
+  get inicial(): string {
+    return this.nombreUsuario.charAt(0).toUpperCase();
+  }
+
+  toggleMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+    this.perfilMenuAbierto = false;
+  }
+
+  toggleCategorias(): void {
+    this.categoriasDesplegadas = !this.categoriasDesplegadas;
+  }
+
+  togglePerfilMenu(): void {
+    this.perfilMenuAbierto = !this.perfilMenuAbierto;
+    this.menuAbierto = false;
+  }
+
+  toggleSubmenu(grupo: string): void {
     this.submenusAbiertos[grupo] = !this.submenusAbiertos[grupo];
   }
 
-  toggleMenu() {
-    this.menuAbierto = !this.menuAbierto;
-  }
-
-  togglePerfilMenu() {
-    this.perfilMenuAbierto = !this.perfilMenuAbierto;
-  }
-
-  cerrarMenus() {
+  cerrarMenus(): void {
     this.menuAbierto = false;
     this.perfilMenuAbierto = false;
     this.categoriasDesplegadas = false;
     this.submenusAbiertos = {};
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('nombre');
-    localStorage.removeItem('carrito');
-    this.router.navigate(['/auth/login']);
-  }
-
-  irACategoria(id: number) {
-    this.cerrarMenus();
-    this.router.navigate(['/categoria', id]);
-  }
-
-  irAInicio() {
-    this.cerrarMenus();
-    this.router.navigate(['/']);
-  }
-
-  irAPerfil() {
-    this.cerrarMenus();
-    this.router.navigate(['/perfil']);
-  }
-
-  irACarrito() {
-    this.cerrarMenus();
-    this.router.navigate(['/carrito']);
-  }
-
-  irALogin() {
-    this.cerrarMenus();
-    this.router.navigate(['/auth/login']);
-  }
-
-  irARegistro() {
-    this.cerrarMenus();
-    this.router.navigate(['/auth/register']);
-  }
-
-  buscar() {
-    if (this.searchTerm.trim()) {
-      this.router.navigate(['/'], {
-        queryParams: { search: this.searchTerm.trim() },
-      });
-      this.searchTerm = '';
+  buscar(): void {
+    if (this.searchTerm.trim().length > 0) {
+      this.router.navigate(['/'], { queryParams: { search: this.searchTerm.trim() } });
       this.cerrarMenus();
     }
   }
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.perfilMenuAbierto = false;
-      this.categoriasDesplegadas = false;
-    }
+  irACategoria(id: number): void {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/categoria', id]);
+      this.cerrarMenus();
+    });
+  }
+
+  irAInicio(): void {
+    this.router.navigate(['/']);
+    this.cerrarMenus();
+  }
+
+  irAPerfil(): void {
+    this.router.navigate(['/perfil']);
+    this.cerrarMenus();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+    this.cerrarMenus();
+  }
+
+  private cargarCategorias(): void {
+    this.http.get<CategoriaDTO[]>(`${environment.apiUrl}/categorias`).subscribe({
+      next: res => {
+        this.categorias = res;
+        this.agruparCategorias(res);
+      },
+      error: err => console.error('Error cargando categorías:', err)
+    });
+  }
+
+  private agruparCategorias(categorias: CategoriaDTO[]): void {
+    const grupos: { [key: string]: string[] } = {
+      'Ordenadores': ['portátiles', 'sobremesa'],
+      'Pantallas': ['monitores'],
+      'Periféricos': ['teclados', 'ratones'],
+      'Componentes': ['cpu', 'procesadores', 'gpu', 'gráficas', 'placas base', 'ram', 'ssd', 'discos duros', 'fuentes', 'cajas'],
+      'Refrigeración': ['refrigeración', 'ventiladores'],
+      'Otros': ['accesorios', 'periféricos', 'sillas', 'escritorios']
+    };
+
+    const agrupadas: { [grupo: string]: CategoriaDTO[] } = {};
+
+    categorias.forEach(cat => {
+      const nombre = cat.nombre.toLowerCase();
+      for (const grupo in grupos) {
+        if (grupos[grupo].some(palabra => nombre.includes(palabra))) {
+          if (!agrupadas[grupo]) agrupadas[grupo] = [];
+          agrupadas[grupo].push(cat);
+          return;
+        }
+      }
+      if (!agrupadas['Otros']) agrupadas['Otros'] = [];
+      agrupadas['Otros'].push(cat);
+    });
+
+    this.categoriasAgrupadas = Object.keys(agrupadas).map(grupo => ({
+      grupo,
+      items: agrupadas[grupo]
+    }));
   }
 }
