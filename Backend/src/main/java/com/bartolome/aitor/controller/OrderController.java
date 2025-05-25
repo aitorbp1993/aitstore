@@ -59,7 +59,6 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    // 🚨 Manejador de excepción para stock insuficiente
     @ExceptionHandler(com.bartolome.aitor.exception.StockInsuficienteException.class)
     public ResponseEntity<String> manejarStockInsuficiente(com.bartolome.aitor.exception.StockInsuficienteException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());

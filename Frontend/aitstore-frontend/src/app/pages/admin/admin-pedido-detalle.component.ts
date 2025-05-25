@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 
-
 @Component({
   selector: 'app-admin-pedido-detalle',
   standalone: true,
@@ -22,7 +21,7 @@ export class AdminPedidoDetalleComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.http.get<any>(`${environment.apiUrl}${id}`).subscribe({
+      this.http.get<any>(`${environment.apiUrl}/pedidos/${id}`).subscribe({
         next: res => this.pedido = res,
         error: err => console.error('Error al cargar pedido:', err),
         complete: () => this.cargando = false
