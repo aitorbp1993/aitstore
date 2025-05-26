@@ -2,3 +2,18 @@
   display: block;
   width: 100%;
 }
+
+h2 {
+  @apply text-2xl sm:text-3xl font-bold;
+}
+
+@media (max-width: 640px) {
+  .pedido-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pedido-card .text-sm {
+    margin-top: 0.25rem;
+  }
+}
