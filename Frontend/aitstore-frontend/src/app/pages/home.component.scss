@@ -1,88 +1,107 @@
 :host {
   display: block;
-  position: relative;
-  width: 100%;
+  background-color: #f9fafb; // fondo uniforme (modo claro)
+  @apply dark:bg-gray-900;
 }
 
-/* Hero */
-h1 {
-  @apply text-4xl sm:text-5xl font-extrabold text-center mb-4;
+// Container principal
+.home-container {
+  @apply w-full max-w-screen-xl mx-auto;
 }
 
-p {
-  @apply text-center text-lg sm:text-xl text-gray-600 dark:text-gray-300;
+// Hero
+.hero {
+  @apply text-center mb-10;
+
+  h1 {
+    @apply text-4xl sm:text-5xl font-extrabold leading-tight mb-3;
+  }
+
+  p {
+    @apply text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto;
+  }
 }
 
-/* Spinner */
-.animate-spin {
-  @apply border-4 border-blue-500 rounded-full border-t-transparent;
+// Banner promo
+.promo-banner {
+  @apply rounded-xl py-6 px-4 text-white text-center shadow-lg mb-16;
+  background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%);
+  h2 {
+    @apply text-2xl sm:text-3xl font-semibold mb-1;
+  }
+
+  p {
+    @apply text-sm sm:text-base opacity-90;
+  }
 }
 
-/* Categoría */
-section {
-  scroll-margin-top: 5rem;
-}
-
-/* Card */
+// Card producto
 .product-card {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full;
+  @apply flex flex-col bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300;
+
+  img {
+    @apply w-full h-full object-cover transition-transform duration-300;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  h3 {
+    @apply text-lg font-semibold text-gray-900 dark:text-white truncate;
+  }
+
+  p {
+    @apply text-blue-600 dark:text-blue-400 font-bold;
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+
+  button:focus {
+    outline: 2px solid theme('colors.blue.500');
+    outline-offset: 2px;
+  }
 }
 
-/* Imagen dentro de la card */
-.product-card img {
-  @apply w-full h-full object-cover transition-transform duration-300;
-}
-
-.product-card img:hover {
-  transform: scale(1.1);
-}
-
-/* Botón */
-button {
-  @apply transition-all duration-200;
-}
-
-button:focus {
-  outline: 2px solid theme('colors.blue.500');
-  outline-offset: 2px;
-}
-
-.dark button:focus {
-  outline-color: theme('colors.blue.400');
-}
-
-/* Modal */
+// Modal
 .modal-backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50;
+  @apply fixed inset-0 bg-black bg-opacity-50 z-50 backdrop-blur-sm;
 }
 
 .modal-content {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-2xl w-full;
   animation: modalEnter 0.3s ease-out;
 }
 
-.modal-content button.close-btn {
-  @apply absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition;
+.modal-content h3 {
+  @apply text-3xl font-bold mb-4;
 }
 
-/* Scrollbar */
+.modal-content p {
+  @apply text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line;
+}
+
+.modal-content button {
+  @apply transition duration-200;
+}
+
+.modal-content button:hover {
+  @apply shadow-lg;
+}
+
+// Scroll horizontal
 ::-webkit-scrollbar {
-  width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
 }
 
 .dark ::-webkit-scrollbar-track {
@@ -93,11 +112,7 @@ button:focus {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Animaciones */
+// Animación modal
 @keyframes modalEnter {
   from {
     opacity: 0;
@@ -109,7 +124,7 @@ button:focus {
   }
 }
 
-/* Responsive */
+// Responsive
 @media (max-width: 640px) {
   .product-card {
     width: 100%;
@@ -119,11 +134,7 @@ button:focus {
     padding: 1.5rem;
   }
 
-  h1 {
+  .hero h1 {
     font-size: 2rem;
-  }
-
-  p {
-    font-size: 1rem;
   }
 }

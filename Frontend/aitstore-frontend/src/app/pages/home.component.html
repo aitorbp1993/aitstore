@@ -1,68 +1,65 @@
-<div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+<div class="home-container py-12 px-4 sm:px-6 lg:px-8">
 
-  <!-- Hero Intro -->
-  <section class="text-center mb-12">
+  <!-- Hero principal -->
+  <section class="hero text-center mb-12">
     <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-      Bienvenido a AITStore 🖥️
+      Bienvenido a <span class="text-blue-600">AITStore</span>
     </h1>
     <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-      Descubre los mejores productos tecnológicos por categoría. Calidad, confianza y buen precio.
+      Encuentra lo mejor en hardware, periféricos y tecnología con la mejor atención.
     </p>
   </section>
 
-  <!-- Loading -->
-  <div *ngIf="cargando()" class="text-center py-12">
+  <!-- Banner promocional -->
+  <section class="promo-banner mb-16 text-center rounded-xl shadow-md py-6 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+    <h2 class="text-2xl font-semibold mb-2">🚀 ¡ENVÍO GRATIS en pedidos superiores a 50 €!</h2>
+    <p class="text-sm sm:text-base opacity-90">Aprovecha ofertas exclusivas esta semana.</p>
+  </section>
+
+  <!-- Loader -->
+  <div *ngIf="cargando()" class="text-center py-20">
     <div class="animate-spin inline-block w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-    <p class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">Cargando catálogo...</p>
+    <p class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">Cargando productos...</p>
   </div>
 
-  <!-- Categorías y productos -->
+  <!-- Secciones por categoría -->
   <div *ngIf="!cargando()">
-    <section *ngFor="let categoria of categorias()" class="mb-16 group">
-      <!-- Título categoría -->
-      <div class="flex justify-between items-center mb-6 px-2 sm:px-4">
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
-          {{ categoria.nombreCategoria }}
-        </h2>
+    <section *ngFor="let categoria of categorias()" class="mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {{ categoria.nombreCategoria }}
+      </h2>
 
-      </div>
-
-      <!-- Productos en scroll horizontal -->
+      <!-- Scroll de productos -->
       <div class="overflow-x-auto pb-4">
-        <div class="flex gap-5 px-2 sm:px-4 scroll-smooth">
+        <div class="flex gap-6 scroll-smooth">
           <div *ngFor="let producto of categoria.productos"
-               class="w-64 sm:w-72 flex-shrink-0 transform transition hover:scale-105">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition p-4 flex flex-col h-full">
-              <!-- Imagen -->
-              <div class="aspect-square mb-4 overflow-hidden rounded-lg">
-                <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
-                     [alt]="producto.nombre"
-                     class="w-full h-full object-cover hover:scale-110 transition duration-300" />
-              </div>
+               class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition w-64 flex-shrink-0 flex flex-col">
 
-              <!-- Info producto -->
-              <div class="flex-grow flex flex-col">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate mb-1">
-                  {{ producto.nombre }}
-                </h3>
-                <p class="text-blue-600 dark:text-blue-400 font-bold text-lg mb-3">
-                  {{ producto.precio | currency:'EUR' }}
-                </p>
+            <!-- Imagen -->
+            <div class="aspect-square overflow-hidden rounded-t-xl">
+              <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
+                   [alt]="producto.nombre"
+                   class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+            </div>
 
-                <!-- Acciones -->
-                <div class="flex flex-col gap-2 mt-auto">
-                  <button (click)="productoSeleccionado = producto"
-                          class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition flex items-center justify-center">
-                    Ver detalles
-                  </button>
+            <!-- Info -->
+            <div class="p-4 flex flex-col flex-grow">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate mb-1">
+                {{ producto.nombre }}
+              </h3>
+              <p class="text-blue-600 dark:text-blue-400 font-bold text-base mb-3">
+                {{ producto.precio | currency:'EUR' }}
+              </p>
 
-                  <button (click)="agregarAlCarrito(producto)"
-                          class="py-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600
-                                 text-white rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all">
-                    Añadir al carrito
-                  </button>
-                </div>
-              </div>
+              <button (click)="productoSeleccionado = producto"
+                      class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition mb-2">
+                Ver detalles →
+              </button>
+
+              <button (click)="agregarAlCarrito(producto)"
+                      class="mt-auto py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition">
+                Añadir al carrito
+              </button>
             </div>
           </div>
         </div>
@@ -77,30 +74,32 @@
 
     <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6"
          (click)="$event.stopPropagation()">
+
       <button (click)="productoSeleccionado = null"
-              class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition">
+              class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition text-xl">
         ✖
       </button>
 
-      <h3 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-6">
+      <h3 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-6">
         {{ productoSeleccionado.nombre }}
       </h3>
 
-      <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed">
+      <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed mb-6">
         {{ productoSeleccionado.descripcion }}
       </p>
 
-      <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
         <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
           {{ productoSeleccionado.precio | currency:'EUR' }}
         </p>
+
         <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
-                  class="w-full sm:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow">
+                  class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow">
             Añadir al carrito
           </button>
           <button (click)="productoSeleccionado = null"
-                  class="w-full sm:w-auto px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium">
+                  class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded font-medium">
             Cerrar
           </button>
         </div>
