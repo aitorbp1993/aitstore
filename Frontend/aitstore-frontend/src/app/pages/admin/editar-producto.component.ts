@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment'; // ✅ Importa el entorno
+import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-editar-producto',
@@ -53,19 +54,46 @@ export class EditarProductoComponent implements OnInit {
       next: (producto) => {
         this.form.patchValue(producto);
       },
-      error: () => alert('Error al cargar el producto')
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo cargar el producto.',
+          confirmButtonColor: '#ef4444'
+        });
+      }
     });
   }
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Revisa los campos obligatorios',
+        confirmButtonColor: '#f59e0b'
+      });
+      return;
+    }
 
     this.http.put(`${environment.apiUrl}/productos/${this.productoId}`, this.form.value).subscribe({
       next: () => {
-        alert('✅ Producto actualizado correctamente');
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto actualizado',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.router.navigate(['/admin/productos']);
       },
-      error: () => alert('Error al editar el producto')
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el producto.',
+          confirmButtonColor: '#ef4444'
+        });
+      }
     });
   }
 }
