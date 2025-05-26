@@ -1,24 +1,46 @@
-<div class="p-4">
-  <h2 class="text-2xl font-bold mb-4">Mis Pedidos</h2>
+<div class="max-w-3xl mx-auto p-4 sm:p-6">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b border-gray-300 dark:border-gray-700 pb-2">
+    📦 Mis Pedidos
+  </h2>
 
-  <div *ngIf="pedidos.length === 0">No tienes pedidos aún.</div>
+  <div *ngIf="pedidos.length === 0" class="text-gray-500 dark:text-gray-400 text-center italic">
+    Aún no has realizado ningún pedido.
+  </div>
 
-  <div *ngFor="let pedido of pedidos" class="mb-6 p-4 rounded shadow bg-white dark:bg-gray-800">
-    <div class="flex justify-between items-center mb-2">
-      <div><strong>ID:</strong> {{ pedido.id }}</div>
-      <div><strong>Estado:</strong> {{ pedido.estado }}</div>
-      <div><strong>Total:</strong> {{ pedido.total | currency:'EUR' }}</div>
+  <div *ngFor="let pedido of pedidos"
+       class="relative border-l-4 shadow-md bg-white dark:bg-gray-800 rounded-lg p-5 mb-6 transition hover:shadow-lg"
+       [ngClass]="{
+         'border-green-500': pedido.estado.toLowerCase().includes('entregado'),
+         'border-yellow-500': pedido.estado.toLowerCase().includes('en proceso'),
+         'border-red-500': pedido.estado.toLowerCase().includes('cancelado')
+       }">
+
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
+      <div class="text-sm text-gray-700 dark:text-gray-300">
+        🆔 <strong class="font-medium">Pedido #{{ pedido.id }}</strong>
+      </div>
+      <div class="text-sm">
+        <span class="font-semibold text-gray-600 dark:text-gray-300">Estado:</span>
+        <span [ngClass]="{
+          'text-green-600': pedido.estado.toLowerCase().includes('entregado'),
+          'text-yellow-500': pedido.estado.toLowerCase().includes('en proceso'),
+          'text-red-500': pedido.estado.toLowerCase().includes('cancelado')
+        }">{{ pedido.estado }}</span>
+      </div>
+      <div class="text-sm text-gray-700 dark:text-gray-300">
+        💶 <strong>Total:</strong> {{ pedido.total | currency:'EUR' }}
+      </div>
     </div>
 
-    <ul class="divide-y divide-gray-300 dark:divide-gray-700">
-      <li *ngFor="let item of pedido.items" class="py-1">
-        {{ item.nombreProducto }} - {{ item.cantidad }} x {{ item.precioUnitario | currency:'EUR' }}
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700 text-sm mb-3">
+      <li *ngFor="let item of pedido.items" class="py-2 text-gray-600 dark:text-gray-300">
+        {{ item.nombreProducto }} – {{ item.cantidad }} x {{ item.precioUnitario | currency:'EUR' }}
       </li>
     </ul>
 
-    <!-- Botón para ver detalles -->
-    <div class="text-right mt-4">
-      <a [routerLink]="['/pedidos', pedido.id]" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+    <div class="text-right">
+      <a [routerLink]="['/pedidos', pedido.id]"
+         class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition transform hover:scale-105">
         Ver detalles
       </a>
     </div>

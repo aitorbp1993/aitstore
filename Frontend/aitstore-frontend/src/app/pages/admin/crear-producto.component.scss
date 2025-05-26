@@ -2,3 +2,41 @@
   display: block;
   height: 100%;
 }
+
+input,
+textarea,
+select {
+  @apply w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white transition duration-200;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb; // azul-600
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+}
+
+label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+}
+
+button {
+  @apply w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 rounded transition transform duration-200;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+}
+
+h2 {
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-6;
+}
+
+form > div {
+  @apply space-y-2;
+}
