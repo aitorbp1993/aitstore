@@ -1,3 +1,4 @@
+// src/app/pages/cart.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -44,8 +45,27 @@ export class CartComponent implements OnInit {
   }
 
   vaciar(): void {
-    this.carritoService.vaciarCarrito();
-    this.carrito = [];
+    Swal.fire({
+      title: '¿Vaciar carrito?',
+      text: 'Se eliminarán todos los productos del carrito.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, vaciar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.carritoService.vaciarCarrito();
+        this.carrito = [];
+        Swal.fire({
+          icon: 'success',
+          title: 'Carrito vacío',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
   }
 
   finalizarCompra(): void {
@@ -74,9 +94,19 @@ export class CartComponent implements OnInit {
       items
     };
 
+    Swal.fire({
+      title: 'Procesando pedido...',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    });
+
     this.http.post(`${environment.apiUrl}/pedidos`, payload).subscribe({
       next: () => {
-        this.vaciar();
+        this.carritoService.vaciarCarrito();
+        this.carrito = [];
         Swal.fire({
           icon: 'success',
           title: '¡Compra realizada!',
@@ -88,28 +118,31 @@ export class CartComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error backend:', error);
+        Swal.close();
 
-        const msg = typeof error.error === 'string' ? error.error.toLowerCase() : error.error?.message?.toLowerCase();
+        const msg = typeof error.error === 'string'
+          ? error.error.toLowerCase()
+          : error.error?.message?.toLowerCase();
 
         if (error.status === 403) {
           Swal.fire({
             icon: 'warning',
-            title: 'Inicia sesión',
-            text: '🔒 Debes iniciar sesión o registrarte para continuar.',
+            title: 'Acceso denegado',
+            text: '🔒 Debes iniciar sesión para continuar.',
             confirmButtonColor: '#f59e0b'
           });
         } else if (error.status === 400 && msg?.includes('stock')) {
           Swal.fire({
             icon: 'error',
-            title: 'Sin stock',
-            text: '❌ No hay stock suficiente para uno o más productos del carrito.',
+            title: 'Sin stock suficiente',
+            text: '❌ Uno o más productos del carrito no tienen suficiente stock.',
             confirmButtonColor: '#dc2626'
           });
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Error inesperado',
-            text: '❗ Ocurrió un error al finalizar la compra.',
+            text: '❗ Ocurrió un error al procesar la compra. Inténtalo de nuevo más tarde.',
             confirmButtonColor: '#ef4444'
           });
         }

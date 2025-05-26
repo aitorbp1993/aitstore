@@ -1,50 +1,64 @@
-:host {
-  display: block;
-  width: 100%;
-}
-
-.carrito-container {
-  margin-top: 2.5rem;
-  padding: 1.5rem;
-  display: flex;
-  justify-content: center;
-}
-
-.cart-box {
-  width: 100%;
-  max-width: 64rem;
-  padding: 1.5rem;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
+/* Estilo general del fondo en móvil cuando se abre el modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 40;
 }
 
+/* Contenedor del carrito */
+.carrito-container {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
 
-img {
-  transition: transform 0.3s ease-in-out;
-}
-img:hover {
-  transform: scale(1.03);
+  &.modal {
+    position: fixed;
+    inset: 0;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 4rem;
+  }
 }
 
+/* Caja del carrito */
+.cart-box {
+  width: 100%;
+  max-width: 768px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #1f2937;
+  }
+}
+
+/* Animación de aparición suave */
+.cart-box,
+.modal-backdrop {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive para pantallas pequeñas */
 @media (max-width: 640px) {
-  h2 {
-    font-size: 1.75rem;
+  .cart-box {
+    padding: 1.5rem;
   }
 }
