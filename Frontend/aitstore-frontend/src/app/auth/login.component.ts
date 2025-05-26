@@ -1,4 +1,3 @@
-// src/app/auth/login.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +24,8 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
   });
+
+  credencialesIncorrectas = false;
 
   onSubmit(): void {
     if (this.loginForm.invalid) return;
@@ -59,6 +60,7 @@ export class LoginComponent {
             ? 'Credenciales incorrectas'
             : 'Error al iniciar sesión';
 
+        this.credencialesIncorrectas = true;
 
         Swal.fire({
           icon: 'error',

@@ -4,17 +4,45 @@
 }
 
 button {
-  @apply transition-all duration-200;
+  @apply transition-all duration-200 rounded font-semibold;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
 }
 
-input:focus {
-  outline: none;
-  border-color: #2563eb; // azul-600
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+input {
+  @apply w-full p-3 rounded border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white transition;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb; // azul-600
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: #ef4444; // rojo-500
+  }
 }
 
-@media (max-width: 640px) {
-  h2 {
+label {
+  @apply block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300;
+}
+
+h2 {
+  @apply text-3xl font-bold text-center text-gray-800 dark:text-white mb-6;
+
+  @media (max-width: 640px) {
     font-size: 1.75rem;
   }
+}
+
+.text-red-500 {
+  @apply text-sm mt-1;
 }

@@ -29,8 +29,10 @@
              class="text-red-500 text-sm mt-1">
           Contraseña obligatoria
         </div>
+        <div *ngIf="credencialesIncorrectas" class="text-red-500 text-sm mt-1">
+          Usuario o contraseña incorrectos
+        </div>
       </div>
-
 
       <button
         type="submit"
