@@ -12,10 +12,26 @@ nav a {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: rgba(59, 130, 246, 0.1); // azul suave
+    background-color: rgba(59, 130, 246, 0.1);
   }
 }
 
 nav a.router-link-active {
   font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .admin-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .admin-layout-main {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+  }
 }

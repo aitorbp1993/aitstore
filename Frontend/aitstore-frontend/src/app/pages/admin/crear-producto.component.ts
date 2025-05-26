@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment'; // ✅ Importar entorno
+import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-producto',
@@ -46,7 +47,12 @@ export class CrearProductoComponent {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      console.warn('Formulario inválido:', this.form.value);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor, rellena todos los campos obligatorios',
+        confirmButtonColor: '#f59e0b'
+      });
       return;
     }
 
@@ -54,12 +60,22 @@ export class CrearProductoComponent {
 
     this.http.post(`${environment.apiUrl}/productos`, producto).subscribe({
       next: () => {
-        alert('✅ Producto creado correctamente');
+        Swal.fire({
+          icon: 'success',
+          title: 'Producto creado',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.router.navigate(['/admin/productos']);
       },
       error: (err) => {
         console.error('❌ Error al crear el producto:', err);
-        alert('Error al crear el producto');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al crear producto',
+          text: 'Inténtalo de nuevo más tarde',
+          confirmButtonColor: '#ef4444'
+        });
       }
     });
   }

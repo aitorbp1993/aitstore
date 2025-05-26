@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+h2 {
+  @apply text-2xl sm:text-3xl font-bold;
+}
+
+button {
+  @apply transition-all duration-200;
+}
+
+table {
+  @apply w-full text-sm;
+}
+
+@media (max-width: 640px) {
+  td, th {
+    @apply px-2 py-2;
+  }
+}

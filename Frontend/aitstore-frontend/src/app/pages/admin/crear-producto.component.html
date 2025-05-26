@@ -1,55 +1,64 @@
-<div class="max-w-xl mx-auto p-4 bg-white dark:bg-gray-800 shadow rounded">
-  <h2 class="text-2xl font-bold mb-4">Crear Producto</h2>
+<div class="max-w-xl mx-auto p-4 sm:p-6 bg-white dark:bg-gray-800 shadow rounded mt-6">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+    ➕ Crear Producto
+  </h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-
-    <!-- Nombre -->
     <div>
-      <label for="nombre" class="block text-sm font-medium mb-1">Nombre del producto</label>
-      <input id="nombre" formControlName="nombre" type="text" placeholder="Ej. NVIDIA RTX 4080"
-             class="w-full p-2 border rounded" />
+      <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Nombre del producto
+      </label>
+      <input id="nombre" formControlName="nombre" type="text"
+             class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white" />
     </div>
 
-    <!-- Descripción -->
     <div>
-      <label for="descripcion" class="block text-sm font-medium mb-1">Descripción</label>
-      <textarea id="descripcion" formControlName="descripcion" placeholder="Detalles del producto"
-                class="w-full p-2 border rounded"></textarea>
+      <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Descripción
+      </label>
+      <textarea id="descripcion" formControlName="descripcion"
+                class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></textarea>
     </div>
 
-    <!-- Precio -->
-    <div>
-      <label for="precio" class="block text-sm font-medium mb-1">Precio (€)</label>
-      <input id="precio" type="number" formControlName="precio" placeholder="Ej. 999.99"
-             class="w-full p-2 border rounded" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="precio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Precio (€)
+        </label>
+        <input id="precio" type="number" formControlName="precio"
+               class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white" />
+      </div>
+
+      <div>
+        <label for="stock" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Stock disponible
+        </label>
+        <input id="stock" type="number" formControlName="stock"
+               class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white" />
+      </div>
     </div>
 
-    <!-- Stock -->
     <div>
-      <label for="stock" class="block text-sm font-medium mb-1">Stock disponible</label>
-      <input id="stock" type="number" formControlName="stock" placeholder="Ej. 10"
-             class="w-full p-2 border rounded" />
+      <label for="imagenUrl" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        URL de la imagen
+      </label>
+      <input id="imagenUrl" formControlName="imagenUrl" type="text"
+             class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white" />
     </div>
 
-    <!-- Imagen -->
     <div>
-      <label for="imagenUrl" class="block text-sm font-medium mb-1">URL de la imagen</label>
-      <input id="imagenUrl" formControlName="imagenUrl" type="text" placeholder="https://..."
-             class="w-full p-2 border rounded" />
-    </div>
-
-    <!-- Categoría -->
-    <div>
-      <label class="block text-sm font-medium mb-1">Categoría</label>
-      <select formControlName="categoria" class="w-full p-2 border rounded">
+      <label for="categoria" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Categoría
+      </label>
+      <select id="categoria" formControlName="categoria"
+              class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
         <option value="">Selecciona una categoría</option>
         <option *ngFor="let c of categorias" [value]="c.nombre">{{ c.nombre }}</option>
       </select>
     </div>
 
-    <!-- Botón enviar -->
     <button type="submit"
-            class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 rounded transition">
       Crear producto
     </button>
   </form>

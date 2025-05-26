@@ -12,10 +12,19 @@ import { RouterModule } from '@angular/router';
 })
 export class AdminLayoutComponent {
   currentYear: number = new Date().getFullYear();
+  menuAbierto = false;
 
   constructor(private router: Router) {}
 
   salirDelPanelAdmin(): void {
     this.router.navigateByUrl('/');
+  }
+
+  toggleMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  cerrarMenu(): void {
+    this.menuAbierto = false;
   }
 }

@@ -1,16 +1,38 @@
 <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
   <!-- Header -->
-  <header class="bg-gray-800 text-white py-4 px-6 shadow flex justify-between items-center">
+  <header class="admin-header bg-gray-800 text-white py-4 px-6 shadow flex justify-between items-center sm:flex-row sm:justify-between">
     <h1 class="text-xl font-bold">Panel de Administración</h1>
-    <button (click)="salirDelPanelAdmin()" class="bg-red-600 hover:bg-red-700 text-sm px-4 py-2 rounded">
+
+    <!-- Botón hamburguesa en móvil -->
+    <button class="sm:hidden text-white focus:outline-none" (click)="toggleMenu()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Botón salir visible siempre -->
+    <button
+      class="hidden sm:inline-block bg-red-600 hover:bg-red-700 text-sm px-4 py-2 rounded transition"
+      (click)="salirDelPanelAdmin()">
       Salir de admin
     </button>
   </header>
 
-  <!-- Contenido principal con barra lateral -->
-  <div class="flex flex-1">
-    <!-- Menú lateral -->
-    <nav class="w-64 bg-gray-200 dark:bg-gray-800 p-4 hidden sm:block">
+  <!-- Sidebar para móvil -->
+  <nav *ngIf="menuAbierto" class="sm:hidden bg-gray-100 dark:bg-gray-800 px-4 py-2">
+    <ul class="space-y-2 text-sm">
+      <li><a (click)="cerrarMenu()" routerLink="/admin/productos" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">📦 Productos</a></li>
+      <li><a (click)="cerrarMenu()" routerLink="/admin/usuarios" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">👥 Usuarios</a></li>
+      <li><a (click)="cerrarMenu()" routerLink="/admin/pedidos" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">📑 Pedidos</a></li>
+      <li><a (click)="salirDelPanelAdmin()">🚪 Salir</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="admin-layout-main flex flex-1 flex-col sm:flex-row">
+    <!-- Menú lateral en escritorio -->
+    <nav class="admin-sidebar hidden sm:block sm:w-64 bg-gray-200 dark:bg-gray-800 p-4">
       <ul class="space-y-2 text-sm">
         <li><a routerLink="/admin/productos" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">📦 Productos</a></li>
         <li><a routerLink="/admin/usuarios" routerLinkActive="font-bold text-blue-600 dark:text-blue-400">👥 Usuarios</a></li>
@@ -19,13 +41,13 @@
     </nav>
 
     <!-- Contenido dinámico -->
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-6 bg-white dark:bg-gray-900">
       <router-outlet></router-outlet>
     </main>
   </div>
 
   <!-- Footer -->
   <footer class="text-center text-sm py-4 bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-    © AITStore Admin
+    © {{ currentYear }} AITStore Admin
   </footer>
 </div>
