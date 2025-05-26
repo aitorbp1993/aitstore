@@ -1,13 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // ✅ Import correcto
 import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-pedido-detalle',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule], // ✅ Aquí está bien
   templateUrl: './admin-pedido-detalle.component.html',
   styleUrls: ['./admin-pedido-detalle.component.scss']
 })
@@ -23,7 +24,15 @@ export class AdminPedidoDetalleComponent implements OnInit {
     if (id) {
       this.http.get<any>(`${environment.apiUrl}/pedidos/${id}`).subscribe({
         next: res => this.pedido = res,
-        error: err => console.error('Error al cargar pedido:', err),
+        error: err => {
+          console.error('Error al cargar pedido:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar el pedido.',
+            confirmButtonColor: '#ef4444'
+          });
+        },
         complete: () => this.cargando = false
       });
     }
