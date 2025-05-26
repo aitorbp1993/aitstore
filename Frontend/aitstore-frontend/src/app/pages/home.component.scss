@@ -138,18 +138,3 @@
     font-size: 2rem;
   }
 }
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-:host {
-  display: block;
-  background-color: #f9fafb;
-  @media (prefers-color-scheme: dark) {
-    background-color: #111827;
-  }
-}
