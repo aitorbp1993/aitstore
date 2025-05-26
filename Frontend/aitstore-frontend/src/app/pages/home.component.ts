@@ -1,11 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { ProductCardComponent } from "../shared/components/product-card.component";
 
 interface ProductoDTO {
   id: number;
@@ -14,74 +13,70 @@ interface ProductoDTO {
   precio: number;
   stock: number;
   imagenUrl: string;
-  categoria: string;
 }
 
 interface CategoriaConProductosDTO {
-  id: number;
-  nombre: string;
+  nombreCategoria: string;
   productos: ProductoDTO[];
 }
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, ProductCardComponent],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   private http = inject(HttpClient);
   private carritoService = inject(CarritoService);
   private route = inject(ActivatedRoute);
 
-  categoriasConProductos = signal<CategoriaConProductosDTO[]>([]);
-  destacados: ProductoDTO[] = []; // ← agregado para evitar el error
+  categorias = signal<CategoriaConProductosDTO[]>([]);
   cargando = signal(true);
+  productoSeleccionado: ProductoDTO | null = null;
+  categoriaActiva: CategoriaConProductosDTO | null = null;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const search = params['search']?.trim();
-      if (search?.length > 0) {
-        this.buscarProductos(search);
+      const search = params['search'];
+      if (search && search.trim().length > 0) {
+        this.cargarFiltrados(search.trim());
       } else {
-        this.cargarCategoriasConProductos();
+        this.cargarDatos();
       }
     });
 
     this.carritoService.recargarCarrito();
   }
 
-  private buscarProductos(termino: string): void {
+  private cargarFiltrados(termino: string): void {
     this.cargando.set(true);
-    this.http.get<CategoriaConProductosDTO[]>(
-      `${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`
-    ).subscribe({
-      next: res => {
-        this.categoriasConProductos.set(res);
-        this.cargando.set(false);
-      },
-      error: err => {
-        console.error('Error buscando productos:', err);
-        this.cargando.set(false);
-      }
-    });
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`)
+      .subscribe({
+        next: (res) => {
+          this.categorias.set(res);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          console.error('Error buscando productos:', err);
+          this.cargando.set(false);
+        }
+      });
   }
 
-  private cargarCategoriasConProductos(): void {
-    this.cargando.set(true);
-    this.http.get<CategoriaConProductosDTO[]>(
-      `${environment.apiUrl}/home/categorias-productos`
-    ).subscribe({
-      next: res => {
-        this.categoriasConProductos.set(res);
-        this.cargando.set(false);
-      },
-      error: err => {
-        console.error('Error:', err);
-        this.cargando.set(false);
-      }
-    });
+  private cargarDatos(): void {
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
+      .subscribe({
+        next: (res) => {
+          this.categorias.set(res);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          console.error('Error:', err);
+          this.cargando.set(false);
+        }
+      });
   }
 
   agregarAlCarrito(producto: ProductoDTO): void {
@@ -105,10 +100,17 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  obtenerImagenPorCategoria(nombreCategoria: string): string {
+  obtenerImagen(producto: ProductoDTO, categoriaPadre: string): string {
+    this.categoriaActiva = this.categorias().find(c => c.nombreCategoria === categoriaPadre) || null;
+    const url = producto.imagenUrl?.trim();
+    const usaImagenDefault = !url || url.includes('placeholder') || url.includes('via.placeholder.com');
+    return usaImagenDefault ? this.obtenerImagenPorCategoria(categoriaPadre) : url;
+  }
+
+  private obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase().trim();
 
-    const mapeo: { [clave: string]: string } = {
+    const mapeoImagenes: { [key: string]: string } = {
       'sobremesa': 'desktop-default.png',
       'portátil': 'laptop-default.png',
       'monitor': 'monitor-default.png',
@@ -134,10 +136,8 @@ export class HomeComponent implements OnInit {
       'escritorio': 'chair-default.png'
     };
 
-    for (const clave in mapeo) {
-      if (nombre.includes(clave)) {
-        return `assets/img/${mapeo[clave]}`;
-      }
+    for (const [key, value] of Object.entries(mapeoImagenes)) {
+      if (nombre.includes(key)) return `assets/img/${value}`;
     }
 
     return 'assets/img/default.png';
