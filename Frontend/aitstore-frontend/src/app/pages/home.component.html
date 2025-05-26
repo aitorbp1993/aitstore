@@ -1,108 +1,47 @@
-<div class="home-container py-12 px-4 sm:px-6 lg:px-8">
+<!-- home.component.html -->
+<div class="max-w-screen-xl mx-auto px-4 py-8">
 
-  <!-- Hero principal -->
-  <section class="hero text-center mb-12">
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-      Bienvenido a <span class="text-blue-600">AITStore</span>
+  <!-- Hero / bienvenida -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+      ¡Bienvenido a <span class="text-blue-600 dark:text-blue-400">AITStore</span>!
     </h1>
-    <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-      Encuentra lo mejor en hardware, periféricos y tecnología con la mejor atención.
+    <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+      Explora nuestra selección de productos tecnológicos por categoría, con las mejores ofertas del mercado.
     </p>
-  </section>
-
-  <!-- Banner promocional -->
-  <section class="promo-banner mb-16 text-center rounded-xl shadow-md py-6 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-    <h2 class="text-2xl font-semibold mb-2">🚀 ¡ENVÍO GRATIS en pedidos superiores a 50 €!</h2>
-    <p class="text-sm sm:text-base opacity-90">Aprovecha ofertas exclusivas esta semana.</p>
-  </section>
-
-  <!-- Loader -->
-  <div *ngIf="cargando()" class="text-center py-20">
-    <div class="animate-spin inline-block w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-    <p class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">Cargando productos...</p>
   </div>
 
-  <!-- Secciones por categoría -->
-  <div *ngIf="!cargando()">
-    <section *ngFor="let categoria of categorias()" class="mb-16">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        {{ categoria.nombreCategoria }}
-      </h2>
+  <!-- Sección destacada opcional -->
+  <div *ngIf="destacados?.length" class="mb-16">
+    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">🔥 Productos destacados</h2>
 
-      <!-- Scroll de productos -->
-      <div class="overflow-x-auto pb-4">
-        <div class="flex gap-6 scroll-smooth">
-          <div *ngFor="let producto of categoria.productos"
-               class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition w-64 flex-shrink-0 flex flex-col">
-
-            <!-- Imagen -->
-            <div class="aspect-square overflow-hidden rounded-t-xl">
-              <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
-                   [alt]="producto.nombre"
-                   class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
-            </div>
-
-            <!-- Info -->
-            <div class="p-4 flex flex-col flex-grow">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate mb-1">
-                {{ producto.nombre }}
-              </h3>
-              <p class="text-blue-600 dark:text-blue-400 font-bold text-base mb-3">
-                {{ producto.precio | currency:'EUR' }}
-              </p>
-
-              <button (click)="productoSeleccionado = producto"
-                      class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition mb-2">
-                Ver detalles →
-              </button>
-
-              <button (click)="agregarAlCarrito(producto)"
-                      class="mt-auto py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
+    <div class="overflow-x-auto hide-scrollbar">
+      <div class="flex gap-6 pb-2">
+        <ng-container *ngFor="let producto of destacados">
+          <app-product-card [producto]="producto" (add)="agregarAlCarrito($event)"></app-product-card>
+        </ng-container>
       </div>
-    </section>
+    </div>
   </div>
 
-  <!-- Modal de detalles -->
-  <div *ngIf="productoSeleccionado"
-       class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-sm"
-       (click)="productoSeleccionado = null">
+  <!-- Categorías -->
+  <div *ngFor="let categoria of categoriasConProductos()" class="mb-16">
 
-    <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6"
-         (click)="$event.stopPropagation()">
+    <!-- Título de la categoría -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">{{ categoria.nombre }}</h2>
+      <a [routerLink]="['/categoria', categoria.id]"
+         class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium transition">
+        Ver todos →
+      </a>
+    </div>
 
-      <button (click)="productoSeleccionado = null"
-              class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition text-xl">
-        ✖
-      </button>
-
-      <h3 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-6">
-        {{ productoSeleccionado.nombre }}
-      </h3>
-
-      <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed mb-6">
-        {{ productoSeleccionado.descripcion }}
-      </p>
-
-      <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
-        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-          {{ productoSeleccionado.precio | currency:'EUR' }}
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
-                  class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow">
-            Añadir al carrito
-          </button>
-          <button (click)="productoSeleccionado = null"
-                  class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded font-medium">
-            Cerrar
-          </button>
-        </div>
+    <!-- Lista horizontal de productos -->
+    <div class="overflow-x-auto hide-scrollbar">
+      <div class="flex gap-6 pb-2">
+        <ng-container *ngFor="let producto of categoria.productos">
+          <app-product-card [producto]="producto" (add)="agregarAlCarrito($event)"></app-product-card>
+        </ng-container>
       </div>
     </div>
   </div>
