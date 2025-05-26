@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { CarritoService, CarritoItem } from '../shared/services/carrito.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -25,26 +26,21 @@ export class LoginComponent {
     password: ['', Validators.required]
   });
 
-  errorMessage: string | null = null;
-
   onSubmit(): void {
     if (this.loginForm.invalid) return;
 
     const { email, password } = this.loginForm.value;
     this.authService.login(email, password).subscribe({
       next: ({ token, refreshToken, usuarioId, nombre }) => {
-        // Guardar credenciales y datos de usuario
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('usuarioId', usuarioId.toString());
         localStorage.setItem('nombre', nombre);
 
-        // Extraer y guardar rol desde el JWT
         const payload: any = JSON.parse(atob(token.split('.')[1]));
         const rol: string = payload.rol;
         localStorage.setItem('rol', rol);
 
-        // Fusionar carrito anónimo con el del usuario
         const anonKey = 'carrito_usuario_anonimo';
         const anonCart: CarritoItem[] = JSON.parse(localStorage.getItem(anonKey) || '[]');
         const userKey = `carrito_usuario_${usuarioId}`;
@@ -53,18 +49,23 @@ export class LoginComponent {
         localStorage.setItem(userKey, JSON.stringify(mergedCart));
         localStorage.removeItem(anonKey);
 
-        // Recargar carrito con el contenido fusionado
         this.carritoService.recargarCarrito();
-
-        // Navegar según rol
         this.router.navigate([rol === 'ADMIN' ? '/admin/productos' : '/']);
       },
       error: (error: HttpErrorResponse) => {
         const detalles = error.error?.detalles as string[] | undefined;
-        this.errorMessage =
+        const mensaje =
           error.status === 401 || (error.status === 500 && detalles?.includes('Credenciales erróneas'))
             ? 'Credenciales incorrectas'
             : 'Error al iniciar sesión';
+
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: mensaje,
+          confirmButtonColor: '#2563eb'
+        });
       }
     });
   }
