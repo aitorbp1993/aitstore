@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -32,16 +33,28 @@ export class RegisterComponent {
     telefono: ['', [Validators.pattern(/^\d{9}$/)]]
   });
 
-  errorMessage: string | null = null;
-
   onSubmit(): void {
     if (this.registerForm.invalid) return;
 
     this.http.post(`${environment.apiUrl}/auth/register`, this.registerForm.value)
       .subscribe({
-        next: () => this.router.navigate(['/auth/login']),
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registro exitoso',
+            text: 'Ya puedes iniciar sesión',
+            confirmButtonColor: '#2563eb'
+          }).then(() => {
+            this.router.navigate(['/auth/login']);
+          });
+        },
         error: (err: HttpErrorResponse) => {
-          this.errorMessage = err.error?.message || 'Error al registrarse';
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al registrarse',
+            text: err.error?.message || 'Intenta de nuevo más tarde',
+            confirmButtonColor: '#ef4444'
+          });
         }
       });
   }
