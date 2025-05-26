@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './shared/header.component';
 import { FooterComponent } from './shared/footer.component';
-import { FloatingCartButtonComponent } from "./shared/floating-cart-button.component";
+import { FloatingCartButtonComponent } from './shared/floating-cart-button.component';
 
 @Component({
   selector: 'app-layout',
@@ -13,7 +13,10 @@ import { FloatingCartButtonComponent } from "./shared/floating-cart-button.compo
   templateUrl: './layout.component.html'
 })
 export class LayoutComponent {
-  toggleDarkMode() {
+  isDarkMode = false;
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
     document.documentElement.classList.toggle('dark');
   }
 }

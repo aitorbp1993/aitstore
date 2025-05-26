@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
-
+import Swal from 'sweetalert2';
 
 interface ProductoDTO {
   id: number;
@@ -26,46 +26,44 @@ interface CategoriaConProductosDTO {
   imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-
 })
 export class HomeComponent implements OnInit {
   private http = inject(HttpClient);
   private carritoService = inject(CarritoService);
   private route = inject(ActivatedRoute);
 
-
   categorias = signal<CategoriaConProductosDTO[]>([]);
   cargando = signal(true);
   productoSeleccionado: ProductoDTO | null = null;
   categoriaActiva: CategoriaConProductosDTO | null = null;
-ngOnInit(): void {
-  this.route.queryParams.subscribe(params => {
-    const search = params['search'];
-    if (search && search.trim().length > 0) {
-      this.cargarFiltrados(search.trim());
-    } else {
-      this.cargarDatos();
-    }
-  });
 
-  this.carritoService.recargarCarrito();
-}
-private cargarFiltrados(termino: string): void {
-  this.cargando.set(true);
-  this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`)
-    .subscribe({
-      next: (res) => {
-        this.categorias.set(res);
-        this.cargando.set(false);
-      },
-      error: (err) => {
-        console.error('Error buscando productos:', err);
-        this.cargando.set(false);
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search && search.trim().length > 0) {
+        this.cargarFiltrados(search.trim());
+      } else {
+        this.cargarDatos();
       }
     });
-}
 
+    this.carritoService.recargarCarrito();
+  }
 
+  private cargarFiltrados(termino: string): void {
+    this.cargando.set(true);
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`)
+      .subscribe({
+        next: (res) => {
+          this.categorias.set(res);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          console.error('Error buscando productos:', err);
+          this.cargando.set(false);
+        }
+      });
+  }
 
   private cargarDatos(): void {
     this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
@@ -87,6 +85,18 @@ private cargarFiltrados(termino: string): void {
       nombre: producto.nombre,
       precio: producto.precio,
       cantidad: 1
+    });
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: `${producto.nombre} añadido al carrito`,
+      showConfirmButton: false,
+      timer: 1600,
+      timerProgressBar: true,
+      background: '#1f2937',
+      color: '#fff'
     });
   }
 
@@ -129,6 +139,7 @@ private cargarFiltrados(termino: string): void {
     for (const [key, value] of Object.entries(mapeoImagenes)) {
       if (nombre.includes(key)) return `assets/img/${value}`;
     }
+
     return 'assets/img/default.png';
   }
 }

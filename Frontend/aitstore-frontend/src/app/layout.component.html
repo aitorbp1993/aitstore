@@ -1,14 +1,15 @@
-<div class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+<div class="layout-container flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
 
   <!-- Header -->
   <app-header></app-header>
 
   <!-- Botón modo oscuro -->
-  <div class="flex justify-end w-full max-w-screen-xl mx-auto px-4 mt-4">
+  <div class="dark-toggle flex justify-end w-full max-w-screen-xl mx-auto px-4 mt-4">
     <button
-      class="px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-shadow shadow-md"
+      class="flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-shadow shadow-md"
       (click)="toggleDarkMode()">
-      🌙 Alternar modo oscuro
+      <span class="text-lg">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+      <span>Modo {{ isDarkMode ? 'Claro' : 'Oscuro' }}</span>
     </button>
   </div>
 
@@ -22,5 +23,4 @@
 
   <!-- Botón flotante del carrito -->
   <app-floating-cart-button />
-
 </div>

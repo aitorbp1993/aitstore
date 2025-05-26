@@ -1,6 +1,100 @@
 :host {
   display: block;
   position: relative;
+  width: 100%;
+}
+
+/* Hero */
+h1 {
+  @apply text-4xl sm:text-5xl font-extrabold text-center mb-4;
+}
+
+p {
+  @apply text-center text-lg sm:text-xl text-gray-600 dark:text-gray-300;
+}
+
+/* Spinner */
+.animate-spin {
+  @apply border-4 border-blue-500 rounded-full border-t-transparent;
+}
+
+/* Categoría */
+section {
+  scroll-margin-top: 5rem;
+}
+
+/* Card */
+.product-card {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full;
+}
+
+/* Imagen dentro de la card */
+.product-card img {
+  @apply w-full h-full object-cover transition-transform duration-300;
+}
+
+.product-card img:hover {
+  transform: scale(1.1);
+}
+
+/* Botón */
+button {
+  @apply transition-all duration-200;
+}
+
+button:focus {
+  outline: 2px solid theme('colors.blue.500');
+  outline-offset: 2px;
+}
+
+.dark button:focus {
+  outline-color: theme('colors.blue.400');
+}
+
+/* Modal */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50;
+}
+
+.modal-content {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+  animation: modalEnter 0.3s ease-out;
+}
+
+.modal-content button.close-btn {
+  @apply absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Animaciones */
@@ -15,97 +109,21 @@
   }
 }
 
-@keyframes modalExit {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-}
-
-/* Modal de detalles */
-.modal-enter {
-  animation: modalEnter 0.3s ease-out;
-}
-
-.modal-exit {
-  animation: modalExit 0.2s ease-in;
-}
-
-/* Scroll personalizado */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  &:hover {
-    background: rgba(0, 0, 0, 0.3);
-  }
-}
-
-.dark {
-  ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    &:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-  }
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 640px) {
   .product-card {
-    width: calc(100vw - 2rem);
-    min-width: unset;
+    width: 100%;
   }
 
   .modal-content {
-    flex-direction: column;
-    max-height: 95vh;
-
-    > div {
-      width: 100% !important;
-    }
-
-    img {
-      height: 200px;
-    }
+    padding: 1.5rem;
   }
-}
 
-@media (min-width: 641px) and (max-width: 1024px) {
-  .product-card {
-    width: calc(50vw - 2rem);
+  h1 {
+    font-size: 2rem;
   }
-}
 
-/* Mejoras de accesibilidad */
-button:focus {
-  outline: 2px solid theme('colors.blue.500');
-  outline-offset: 2px;
-}
-
-.dark button:focus {
-  outline-color: theme('colors.blue.400');
-}
-
-/* Transiciones suaves */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  p {
+    font-size: 1rem;
+  }
 }

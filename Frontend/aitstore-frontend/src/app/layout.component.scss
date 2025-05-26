@@ -1,11 +1,31 @@
 :host {
   display: block;
+  width: 100%;
+}
+
+.layout-container {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 main {
   min-height: 60vh;
+  padding-bottom: 2rem;
 }
 
 button {
   font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+button:focus {
+  outline: 2px solid theme('colors.blue.500');
+  outline-offset: 2px;
+}
+
+.dark button:focus {
+  outline-color: theme('colors.blue.400');
+}
+
+.dark-toggle button {
+  @apply font-semibold tracking-tight;
 }
