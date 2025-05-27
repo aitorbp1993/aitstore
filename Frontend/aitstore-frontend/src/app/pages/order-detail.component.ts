@@ -1,15 +1,17 @@
+// src/app/pages/order-detail.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './order-detail.component.html',
-  styleUrl: './order-detail.component.scss'
+  styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -22,7 +24,14 @@ export class OrderDetailComponent implements OnInit {
     if (id) {
       this.http.get(`${environment.apiUrl}/pedidos/${id}`).subscribe({
         next: (data) => this.pedido = data,
-        error: () => alert('No se pudo cargar el pedido')
+        error: () => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar el pedido',
+            confirmButtonColor: '#ef4444'
+          });
+        }
       });
     }
   }

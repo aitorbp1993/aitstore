@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -25,8 +26,6 @@ export class PerfilComponent implements OnInit {
 
   pedidos: any[] = [];
   cargando = true;
-  mensajeExito: string | null = null;
-  mensajeError: string | null = null;
 
   ngOnInit(): void {
     this.http.get<any>(`${environment.apiUrl}/usuarios/me`).subscribe({
@@ -51,16 +50,25 @@ export class PerfilComponent implements OnInit {
   }
 
   guardarCambios(): void {
-    this.mensajeExito = null;
-    this.mensajeError = null;
-
     if (this.perfilForm.invalid) return;
 
     this.http.patch(`${environment.apiUrl}/usuarios/me`, this.perfilForm.value).subscribe({
-      next: () => this.mensajeExito = 'Perfil actualizado correctamente.',
-      error: err => {
-        console.error(err);
-        this.mensajeError = 'Error al actualizar el perfil.';
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Perfil actualizado',
+          text: 'Tu información se ha guardado correctamente',
+          timer: 1800,
+          showConfirmButton: false
+        });
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar el perfil.',
+          confirmButtonColor: '#ef4444'
+        });
       }
     });
   }

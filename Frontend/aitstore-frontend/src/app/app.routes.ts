@@ -8,10 +8,10 @@ import { RegisterComponent } from './auth/register.component';
 import { PedidosComponent } from './pages/pedidos/pedidos.component';
 import { OrderDetailComponent } from './pages/order-detail.component';
 import { AdminLayoutComponent } from './layouts/admin-layout.component';
+import { CategoriaProductosComponent } from './pages/categoria-productos.component';
 
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
-import { CategoriaProductosComponent } from './pages/categoria-productos.component';
 
 export const routes: Routes = [
   // 🧍‍♂️ Cliente - Layout general
@@ -76,11 +76,15 @@ export const routes: Routes = [
           import('./pages/admin/admin-pedido-detalle.component').then(m => m.AdminPedidoDetalleComponent)
       },
       {
-  path: 'categoria/:id',
-  component: CategoriaProductosComponent
-}
-
-
+        path: 'categoria/:id',
+        component: CategoriaProductosComponent
+      }
     ]
+  },
+
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];

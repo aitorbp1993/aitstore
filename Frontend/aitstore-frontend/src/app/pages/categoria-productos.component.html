@@ -5,6 +5,7 @@
       {{ categoriaNombre }}
     </h1>
 
+    <!-- Skeleton loader -->
     <div *ngIf="cargando" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto mt-8">
       <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="animate-pulse bg-gray-200 dark:bg-gray-700 h-72 rounded-xl"></div>
     </div>
@@ -14,6 +15,7 @@
     </div>
   </div>
 
+  <!-- Productos -->
   <div *ngIf="!cargando && productos.length > 0"
        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
     <div *ngFor="let producto of productos"

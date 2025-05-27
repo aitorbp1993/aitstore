@@ -20,11 +20,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
+  10%, 90% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -51,17 +47,15 @@ svg {
 button,
 a {
   transition: all 0.2s ease;
-
   &:hover {
     transform: translateY(-1px);
   }
-
   &:active {
     transform: translateY(1px);
   }
 }
 
-/* Evitar desbordes del dropdown de categorías */
+/* Menú desplegable categorías */
 @media (min-width: 768px) {
   .categorias-dropdown {
     max-width: 16rem;
@@ -71,7 +65,7 @@ a {
   }
 }
 
-/* Ajustes modo oscuro */
+/* Oscuro */
 .dark {
   .shadow-lg {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
@@ -89,15 +83,15 @@ a {
     color: #e5e7eb;
   }
 
-  .hover\:text-blue-300:hover {
-    svg {
-      stroke: #93c5fd;
-    }
+  .hover\\:text-blue-300:hover svg {
+    stroke: #93c5fd;
+  }
+
+  svg {
+    stroke: #93c5fd;
   }
 }
 
-.hover\:text-blue-600:hover {
-  svg {
-    stroke: #2563eb;
-  }
+.hover\\:text-blue-600:hover svg {
+  stroke: #2563eb;
 }

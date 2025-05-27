@@ -1,20 +1,20 @@
 <div class="max-w-4xl mx-auto py-10 px-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg">
-  <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-white mb-10">Mi Perfil</h2>
+  <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-white mb-10">👤 Mi Perfil</h2>
 
-  <!-- Información del usuario editable -->
+  <!-- Información personal -->
   <section *ngIf="perfilForm" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow mb-10">
     <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
       Información personal
     </h3>
 
-    <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="space-y-4 text-gray-800 dark:text-white">
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="space-y-6 text-gray-800 dark:text-white">
       <!-- Nombre -->
       <div>
-        <label class="block mb-1 font-medium">Nombre completo</label>
+        <label class="block text-sm font-medium mb-1">Nombre completo</label>
         <input
           type="text"
           formControlName="nombre"
-          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:ring-blue-500"
         />
         <p *ngIf="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched" class="text-sm text-red-500 mt-1">
           El nombre es obligatorio y no debe superar 100 caracteres.
@@ -23,11 +23,11 @@
 
       <!-- Dirección -->
       <div>
-        <label class="block mb-1 font-medium">Dirección</label>
+        <label class="block text-sm font-medium mb-1">Dirección</label>
         <input
           type="text"
           formControlName="direccion"
-          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:ring-blue-500"
         />
         <p *ngIf="perfilForm.get('direccion')?.invalid && perfilForm.get('direccion')?.touched" class="text-sm text-red-500 mt-1">
           La dirección no puede superar 255 caracteres.
@@ -36,38 +36,38 @@
 
       <!-- Teléfono -->
       <div>
-        <label class="block mb-1 font-medium">Teléfono</label>
+        <label class="block text-sm font-medium mb-1">Teléfono</label>
         <input
           type="text"
           formControlName="telefono"
-          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+          class="w-full p-3 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:ring-blue-500"
         />
         <p *ngIf="perfilForm.get('telefono')?.invalid && perfilForm.get('telefono')?.touched" class="text-sm text-red-500 mt-1">
           El teléfono debe tener exactamente 9 dígitos numéricos.
         </p>
       </div>
 
-      <!-- Mensajes -->
-      <p *ngIf="mensajeExito" class="text-green-600 dark:text-green-400 font-medium">{{ mensajeExito }}</p>
-      <p *ngIf="mensajeError" class="text-red-600 dark:text-red-400 font-medium">{{ mensajeError }}</p>
-
-      <!-- Botón -->
-      <button
-        type="submit"
-        [disabled]="perfilForm.invalid"
-        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow font-semibold transition disabled:opacity-50"
-      >
-        Guardar cambios
-      </button>
+      <!-- Botón guardar -->
+      <div class="text-center">
+        <button
+          type="submit"
+          [disabled]="perfilForm.invalid"
+          class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow font-semibold transition disabled:opacity-50"
+        >
+          💾 Guardar cambios
+        </button>
+      </div>
     </form>
   </section>
 
   <!-- Cargando pedidos -->
-  <div *ngIf="cargando" class="text-center text-gray-500 dark:text-gray-300">Cargando pedidos...</div>
+  <div *ngIf="cargando" class="text-center text-gray-500 dark:text-gray-300">
+    <span class="text-lg">🔄 Cargando pedidos...</span>
+  </div>
 
   <!-- Lista de pedidos -->
   <section *ngIf="!cargando && pedidos.length > 0">
-    <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center">Mis pedidos</h3>
+    <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center">📦 Mis pedidos</h3>
 
     <div class="space-y-4">
       <div *ngFor="let pedido of pedidos"
@@ -98,6 +98,6 @@
   <!-- Sin pedidos -->
   <div *ngIf="!cargando && pedidos.length === 0"
        class="text-center text-gray-600 dark:text-gray-400 mt-8 text-lg">
-    No tienes pedidos registrados aún.
+    🚫 No tienes pedidos registrados aún.
   </div>
 </div>
