@@ -82,152 +82,30 @@
   }
 
   .productos-scroll-wrapper {
-    position: relative;
-
-    .scroll-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: white;
-      color: #3b82f6;
-      border: none;
-      border-radius: 9999px;
-      width: 2rem;
-      height: 2rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      z-index: 10;
-
-      &:hover {
-        background-color: #3b82f6;
-        color: white;
-      }
-
-      &.left {
-        left: -0.5rem;
-      }
-
-      &.right {
-        right: -0.5rem;
-      }
-
-      .dark & {
-        background-color: #1e293b;
-      }
-    }
-
-   .productos-scroll {
-  display: flex;
-  gap: 1rem;
   overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 1rem 0;
+  position: relative;
+  padding-bottom: 1rem;
 
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
+  .productos-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 1rem 0;
 
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
-
-  .producto-card {
-    flex: 0 0 auto;
-    min-width: 220px;
-    max-width: 240px;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-6px);
+    .producto-card {
+      flex: 0 0 auto;
+      width: 240px; // clave
+      min-width: 240px;
+      max-width: 240px;
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
   }
 }
 
-
-      .producto-card {
-        background-color: #ffffff;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        min-width: 240px;
-        max-width: 260px;
-        flex: 0 0 auto;
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-
-        .dark & {
-          background-color: #1e293b;
-        }
-
-        &:hover {
-          transform: translateY(-6px);
-        }
-
-        .img-wrapper {
-          position: relative;
-
-          img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-top-left-radius: 0.75rem;
-            border-top-right-radius: 0.75rem;
-          }
-
-          .quick-view {
-            position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            border: none;
-            border-radius: 9999px;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-
-            &:hover {
-              background-color: #3b82f6;
-            }
-          }
-
-          &:hover .quick-view {
-            opacity: 1;
-          }
-        }
-
-        .info {
-          padding: 0.75rem;
-
-          h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: #1e293b;
-
-            .dark & {
-              color: #f8fafc;
-            }
-          }
-
-          .precio {
-            color: #3b82f6;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-          }
-
-          .acciones {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-          }
-        }
-      }
-    }
   }
 
 
