@@ -1,186 +1,336 @@
-@use '@angular/material' as mat;
-
-
-// Variables
 :host {
-  --primary-color: #2563eb;
-  --secondary-color: #1e40af;
-  --accent-color: #60a5fa;
-  --dark-bg: #0f172a;
-  --text-dark: #1e293b;
-  --text-light: #f8fafc;
-  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-// Global Styles
-.home-wrapper {
-  @apply relative min-h-screen;
-  background: radial-gradient(ellipse at top, var(--primary-color) -50%, transparent 50%),
-              linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
+  display: block;
+  background-color: #f9fafb;
 
   .dark & {
-    background: radial-gradient(ellipse at top, var(--secondary-color) -50%, transparent 50%),
-                linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+    background-color: #0f172a;
   }
 }
 
-// Hero Section
+/* Hero principal */
 .hero {
-  @apply relative text-center pt-24 pb-16 px-4 overflow-hidden;
+  text-align: center;
+  padding: 4rem 1rem 2rem;
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: #fff;
 
-  &-gradient {
-    @apply absolute inset-0 -z-10;
-    background: linear-gradient(45deg, var(--primary-color) 0%, transparent 70%);
-    opacity: 0.1;
-  }
-
-  &-title {
-    @apply text-4xl md:text-6xl font-bold mb-4 leading-tight;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: textGlow 2s ease-in-out infinite alternate;
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
 
     .brand {
-      @apply font-black;
-    }
-
-    .tech-icon {
-      @apply ml-2 inline-block;
-      filter: drop-shadow(0 0 8px rgba(var(--primary-color), 0.4));
+      color: #fff;
     }
   }
 
-  &-subtitle {
-    @apply text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto;
-    line-height: 1.6;
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: #e0f2fe;
   }
 }
 
-// Loading State
-.loading-container {
-  @apply flex flex-col items-center justify-center py-24;
+/* Loader */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem;
 
   .spinner {
-    @apply w-16 h-16 rounded-full border-4 border-t-transparent;
-    border-color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    border: 5px solid #3b82f6;
+    border-top: 5px solid transparent;
+    border-radius: 50%;
     animation: spin 1s linear infinite;
   }
 
-  .loading-text {
-    @apply mt-4 text-lg font-medium text-gray-600 dark:text-gray-300;
+  .text {
+    margin-top: 1rem;
+    color: #64748b;
+
+    .dark & {
+      color: #cbd5e1;
+    }
   }
 }
 
-// Categories Section
-.category-section {
-  @apply mb-16 px-4 md:px-8;
+/* Sección de categoría */
+.categorias-list {
+  padding: 2rem 1rem;
+}
 
-  .category-header {
-    @apply flex items-center justify-between mb-8;
-  }
+.categoria {
+  margin-bottom: 3rem;
 
-  .category-title {
-    @apply text-3xl md:text-4xl font-bold text-gray-900 dark:text-white;
-    position: relative;
-    padding-left: 1.5rem;
+  .categoria-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 
-    &::before {
-      content: '';
-      @apply absolute left-0 top-1/2 w-2 h-2/3;
-      background: var(--primary-color);
-      transform: translateY(-50%);
+    .categoria-titulo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+
+      .dark & {
+        color: #f1f5f9;
+      }
+    }
+
+    .ver-todos {
+      background-color: transparent;
+      border: 1px solid #3b82f6;
+      color: #3b82f6;
+      padding: 0.3rem 0.75rem;
       border-radius: 4px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+
+      &:hover {
+        background-color: #3b82f6;
+        color: white;
+      }
     }
   }
 
-  .scroll-controls {
-    @apply flex gap-2;
-  }
+  .productos-scroll-wrapper {
+    position: relative;
 
-  .scroll-button {
-    @apply p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:shadow-lg transition-all;
-    width: 40px;
-    height: 40px;
+    .scroll-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background-color: #fff;
+      border: none;
+      border-radius: 9999px;
+      width: 2rem;
+      height: 2rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      color: #3b82f6;
+      transition: 0.2s ease;
+
+      &:hover {
+        background-color: #3b82f6;
+        color: white;
+      }
+
+      &.left {
+        left: -0.5rem;
+      }
+
+      &.right {
+        right: -0.5rem;
+      }
+    }
+
+    .productos-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 1rem 0;
+
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+
+      .producto-card {
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        min-width: 220px;
+        max-width: 240px;
+        flex: 0 0 auto;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+
+        .dark & {
+          background-color: #1e293b;
+        }
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+        .producto-imagen-wrapper {
+          position: relative;
+
+          .producto-imagen {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+          }
+
+          .vista-rapida {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+          }
+
+          &:hover .vista-rapida {
+            opacity: 1;
+          }
+        }
+
+        .producto-info {
+          padding: 0.75rem;
+
+          .nombre {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1e293b;
+
+            .dark & {
+              color: #f1f5f9;
+            }
+          }
+
+          .precio {
+            color: #3b82f6;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+          }
+
+          .acciones {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+
+            button {
+              flex: 1;
+              background-color: #e2e8f0;
+              color: #1e293b;
+              border: none;
+              padding: 0.25rem 0.5rem;
+              border-radius: 4px;
+              font-size: 0.875rem;
+              cursor: pointer;
+
+              .dark & {
+                background-color: #334155;
+                color: #f1f5f9;
+              }
+
+              &:hover {
+                background-color: #3b82f6;
+                color: white;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-// Product Cards
-.product-card {
-  @apply relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all;
-  transition-duration: 400ms;
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
 
-  &-wrapper {
-    @apply w-72 flex-shrink-0 px-2 py-4;
-  }
+  .modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 
-  .card-media {
-    @apply relative aspect-square overflow-hidden;
-
-    .product-image {
-      @apply w-full h-full object-cover transition-transform duration-500;
+    .dark & {
+      background-color: #1e293b;
+      color: #f8fafc;
     }
 
-    .image-overlay {
-      @apply absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent;
-      opacity: 0;
-      transition: opacity 300ms var(--transition-easing);
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
     }
 
-    .quick-view-button {
-      @apply absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0;
-      transform: translateY(20px);
-      transition: all 300ms var(--transition-easing);
-    }
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-
-    .image-overlay {
-      opacity: 1;
+    .modal-precio {
+      font-size: 1.25rem;
+      color: #3b82f6;
+      margin: 1rem 0;
     }
 
-    .product-image {
-      transform: scale(1.05);
+    .modal-acciones {
+      display: flex;
+      gap: 1rem;
+
+      button {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        background-color: #3b82f6;
+        color: white;
+
+        &:last-child {
+          background-color: #e2e8f0;
+          color: #1e293b;
+
+          .dark & {
+            background-color: #334155;
+            color: #f1f5f9;
+          }
+        }
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
     }
 
-    .quick-view-button {
-      opacity: 1;
-      transform: translateY(0);
+    .cerrar {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #3b82f6;
     }
   }
 }
 
-// Modal
-.product-modal {
-  @apply fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4;
-
-  .modal-content {
-    @apply relative bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  }
-
-  .modal-title {
-    @apply text-3xl font-bold mb-4 text-gray-900 dark:text-white;
-  }
-
-  .modal-description {
-    @apply text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6;
-  }
-
-  .modal-price {
-    @apply text-4xl font-bold text-blue-600 dark:text-blue-400;
-  }
-}
-
-// Animations
+/* Animación loader */
 @keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes textGlow {
-  from { text-shadow: 0 0 10px rgba(var(--primary-color), 0.2); }
-  to { text-shadow: 0 0 20px rgba(var(--primary-color), 0.4); }
+  to {
+    transform: rotate(360deg);
+  }
 }
