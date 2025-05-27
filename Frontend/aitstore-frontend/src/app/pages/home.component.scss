@@ -1,4 +1,3 @@
-
 :host {
   display: block;
 }
@@ -223,19 +222,48 @@
   }
 }
 
+// Modo oscuro
 .dark {
   .home-wrapper,
   .hero-title,
-  .categoria-titulo {
-    color: #ffffff;
+  .hero-subtitle,
+  .categoria-titulo,
+  .loading-text {
+    color: #e5e7eb; // texto claro
   }
 
   .producto-card {
     background: #1f2937;
+
+    .info h3 {
+      color: #f3f4f6;
+    }
   }
 
   .modal {
     background: #1f2937;
-    color: #ffffff;
+    color: #f9fafb;
+
+    .cerrar {
+      color: #9ca3af;
+    }
+  }
+
+  .btn-outline {
+    border-color: #3b82f6;
+    color: #3b82f6;
+
+    &:hover {
+      background: #3b82f6;
+      color: white;
+    }
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+
+    &:hover {
+      background: #2563eb;
+    }
   }
 }
