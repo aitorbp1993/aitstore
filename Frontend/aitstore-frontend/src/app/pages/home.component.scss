@@ -222,14 +222,14 @@
   }
 }
 
-// Modo oscuro
+// MODO OSCURO
 .dark {
   .home-wrapper,
   .hero-title,
   .hero-subtitle,
   .categoria-titulo,
   .loading-text {
-    color: #e5e7eb; // texto claro
+    color: #f9fafb;
   }
 
   .producto-card {
@@ -237,6 +237,10 @@
 
     .info h3 {
       color: #f3f4f6;
+    }
+
+    .precio {
+      color: #3b82f6;
     }
   }
 
@@ -246,6 +250,10 @@
 
     .cerrar {
       color: #9ca3af;
+    }
+
+    .modal-precio {
+      color: #3b82f6;
     }
   }
 
