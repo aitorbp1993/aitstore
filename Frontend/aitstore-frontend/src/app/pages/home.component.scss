@@ -81,30 +81,126 @@
     }
   }
 
-  .productos-scroll-wrapper {
-  overflow-x: auto;
+  .productos-carrusel-wrapper {
   position: relative;
-  padding-bottom: 1rem;
+  overflow: hidden;
 
-  .productos-scroll {
+  .productos-carrusel {
     display: flex;
     flex-wrap: nowrap;
     gap: 1rem;
     overflow-x: auto;
     scroll-behavior: smooth;
     padding: 1rem 0;
+  }
 
-    .producto-card {
-      flex: 0 0 auto;
-      width: 240px; // clave
-      min-width: 240px;
-      max-width: 240px;
-      background-color: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  .producto-card {
+    flex: 0 0 auto;
+    width: 220px;
+    min-width: 220px;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+
+    .dark & {
+      background-color: #1e293b;
+    }
+
+    &:hover {
+      transform: translateY(-6px);
+    }
+
+    .img-wrapper {
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .quick-view {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border: none;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+      }
+
+      &:hover .quick-view {
+        opacity: 1;
+      }
+    }
+
+    .info {
+      padding: 0.75rem;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+
+        .dark & {
+          color: #f8fafc;
+        }
+      }
+
+      .precio {
+        color: #3b82f6;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .acciones {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: #fff;
+    border: none;
+    border-radius: 9999px;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    color: #3b82f6;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #3b82f6;
+      color: #fff;
+    }
+
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
+
+    .dark & {
+      background-color: #1e293b;
     }
   }
 }
+
 
   }
 

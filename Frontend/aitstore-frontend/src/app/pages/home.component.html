@@ -1,109 +1,70 @@
-<div class="home-container py-12 px-4 sm:px-6 lg:px-8">
+<div class="home-wrapper">
 
-  <!-- Hero principal -->
-  <section class="hero text-center mb-12">
-    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-      Bienvenido a <span class="text-blue-600">AITStore</span>
-    </h1>
-    <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-      Encuentra lo mejor en hardware, periféricos y tecnología con la mejor atención.
-    </p>
-  </section>
-
-  <!-- Banner promocional -->
-  <section class="promo-banner mb-16 text-center rounded-xl shadow-md py-6 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-    <h2 class="text-2xl font-semibold mb-2">🚀 ¡ENVÍO GRATIS en pedidos superiores a 50 €!</h2>
-    <p class="text-sm sm:text-base opacity-90">Aprovecha ofertas exclusivas esta semana.</p>
+  <!-- Hero -->
+  <section class="hero" [@fadeInUp]>
+    <h1 class="hero-title">Explora lo mejor en <span class="highlight">tecnología</span></h1>
+    <p class="hero-subtitle">Componentes, periféricos y equipos al mejor precio</p>
   </section>
 
   <!-- Loader -->
-  <div *ngIf="cargando()" class="text-center py-20">
-    <div class="animate-spin inline-block w-12 h-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-    <p class="mt-4 text-lg font-medium text-gray-600 dark:text-gray-300">Cargando productos...</p>
+  <div *ngIf="cargando()" class="loader-container" [@fadeIn]>
+    <div class="spinner"></div>
+    <p class="loading-text">Cargando catálogo...</p>
   </div>
 
-  <!-- Secciones por categoría -->
-  <div *ngIf="!cargando()">
-    <section *ngFor="let categoria of categorias()" class="mb-16">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        {{ categoria.nombreCategoria }}
-      </h2>
+  <!-- Contenido -->
+  <div *ngIf="!cargando()" class="categorias-container">
+    <section *ngFor="let categoria of categorias(); trackBy: trackByCategory"
+             class="categoria-seccion"
+             [@fadeInUp]>
 
-      <!-- Scroll de productos -->
-      <div class="overflow-x-auto pb-4">
-        <div class="flex gap-6 scroll-smooth">
-          <div *ngFor="let producto of categoria.productos"
-               class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition w-64 flex-shrink-0 flex flex-col">
+      <h2 class="categoria-titulo">{{ categoria.nombreCategoria }}</h2>
 
-            <!-- Imagen -->
-            <div class="aspect-square overflow-hidden rounded-t-xl">
-              <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
-                   [alt]="producto.nombre"
-                   class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
-            </div>
+      <div class="productos-carrusel-wrapper">
+  <button class="scroll-btn left" (click)="scrollLeft(categoria)">‹</button>
 
-            <!-- Info -->
-            <div class="p-4 flex flex-col flex-grow">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate mb-1">
-                {{ producto.nombre }}
-              </h3>
-              <p class="text-blue-600 dark:text-blue-400 font-bold text-base mb-3">
-                {{ producto.precio | currency:'EUR' }}
-              </p>
-
-              <button (click)="productoSeleccionado = producto"
-                      class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition mb-2">
-                Ver detalles →
-              </button>
-
-              <button (click)="agregarAlCarrito(producto)"
-                      class="mt-auto py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-        </div>
+  <div class="productos-carrusel" #scrollContainer>
+    <div *ngFor="let producto of categoria.productos; trackBy: trackByProduct"
+         class="producto-card" [@scaleIn]>
+      <div class="img-wrapper">
+        <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
+             [alt]="producto.nombre"
+             (load)="onImageLoad()">
+        <button class="quick-view" (click)="productoSeleccionado = producto">👁</button>
       </div>
-    </section>
-  </div>
-
-  <!-- Modal de detalles -->
-  <div *ngIf="productoSeleccionado"
-       class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-sm"
-       (click)="productoSeleccionado = null">
-
-    <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6"
-         (click)="$event.stopPropagation()">
-
-      <button (click)="productoSeleccionado = null"
-              class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 transition text-xl">
-        ✖
-      </button>
-
-      <h3 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-6">
-        {{ productoSeleccionado.nombre }}
-      </h3>
-
-      <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed mb-6">
-        {{ productoSeleccionado.descripcion }}
-      </p>
-
-      <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
-        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-          {{ productoSeleccionado.precio | currency:'EUR' }}
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
-                  class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium shadow">
-            Añadir al carrito
-          </button>
-          <button (click)="productoSeleccionado = null"
-                  class="px-6 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded font-medium">
-            Cerrar
-          </button>
+      <div class="info">
+        <h3>{{ producto.nombre }}</h3>
+        <p class="precio">{{ producto.precio | currency:'EUR' }}</p>
+        <div class="acciones">
+          <button class="btn-outline" (click)="productoSeleccionado = producto">Detalles</button>
+          <button class="btn-primary" (click)="agregarAlCarrito(producto)">Añadir</button>
         </div>
       </div>
     </div>
   </div>
+
+  <button class="scroll-btn right" (click)="scrollRight(categoria)">›</button>
+</div>
+
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div *ngIf="productoSeleccionado"
+       class="modal-backdrop"
+       [@fadeIn]
+       (click)="productoSeleccionado = null">
+
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="cerrar" (click)="productoSeleccionado = null">×</button>
+      <h2>{{ productoSeleccionado.nombre }}</h2>
+      <p>{{ productoSeleccionado.descripcion }}</p>
+      <p class="modal-precio">{{ productoSeleccionado.precio | currency:'EUR' }}</p>
+      <div class="modal-acciones">
+        <button class="btn-primary" (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null">Añadir al carrito</button>
+        <button class="btn-outline" (click)="productoSeleccionado = null">Seguir viendo</button>
+      </div>
+    </div>
+  </div>
+
 </div>
