@@ -96,13 +96,15 @@ export class HeaderComponent implements OnInit {
     this.categoriasDesplegadas = false;
     this.submenusAbiertos = {};
   }
-
-  buscar(): void {
-    if (this.searchTerm.trim().length > 0) {
-      this.router.navigate(['/'], { queryParams: { search: this.searchTerm.trim() } });
-      this.cerrarMenus();
-    }
+buscar(): void {
+  if (this.searchTerm.trim().length > 0) {
+    const termino = this.searchTerm.trim();
+    this.router.navigate(['/'], { queryParams: { search: termino } });
+    this.searchTerm = '';
+    this.cerrarMenus();
   }
+}
+
 
   irACategoria(id: number): void {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
