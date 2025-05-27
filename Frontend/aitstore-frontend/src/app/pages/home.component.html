@@ -1,18 +1,14 @@
 <div class="home-wrapper">
-
-  <!-- Hero -->
   <section class="hero" [@fadeInUp]>
     <h1 class="hero-title">Explora lo mejor en <span class="highlight">tecnología</span></h1>
     <p class="hero-subtitle">Componentes, periféricos y equipos al mejor precio</p>
   </section>
 
-  <!-- Loader -->
   <div *ngIf="cargando()" class="loader-container" [@fadeIn]>
     <div class="spinner"></div>
     <p class="loading-text">Cargando catálogo...</p>
   </div>
 
-  <!-- Contenido -->
   <div *ngIf="!cargando()" class="categorias-container">
     <section *ngFor="let categoria of categorias(); trackBy: trackByCategory"
              class="categoria-seccion"
@@ -20,36 +16,30 @@
 
       <h2 class="categoria-titulo">{{ categoria.nombreCategoria }}</h2>
 
-      <div class="productos-carrusel-wrapper">
-  <button class="scroll-btn left" (click)="scrollLeft(categoria)">‹</button>
+      <div class="productos-grid">
+        <div *ngFor="let producto of categoria.productos | slice:0:4; trackBy: trackByProduct"
+             class="producto-card" [@scaleIn]>
 
-  <div class="productos-carrusel" #scrollContainer>
-    <div *ngFor="let producto of categoria.productos; trackBy: trackByProduct"
-         class="producto-card" [@scaleIn]>
-      <div class="img-wrapper">
-        <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
-             [alt]="producto.nombre"
-             (load)="onImageLoad()">
-        <button class="quick-view" (click)="productoSeleccionado = producto">👁</button>
-      </div>
-      <div class="info">
-        <h3>{{ producto.nombre }}</h3>
-        <p class="precio">{{ producto.precio | currency:'EUR' }}</p>
-        <div class="acciones">
-          <button class="btn-outline" (click)="productoSeleccionado = producto">Detalles</button>
-          <button class="btn-primary" (click)="agregarAlCarrito(producto)">Añadir</button>
+          <div class="img-wrapper">
+            <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
+                 [alt]="producto.nombre"
+                 (load)="onImageLoad()">
+            <button class="quick-view" (click)="productoSeleccionado = producto">👁</button>
+          </div>
+
+          <div class="info">
+            <h3>{{ producto.nombre }}</h3>
+            <p class="precio">{{ producto.precio | currency:'EUR' }}</p>
+            <div class="acciones">
+              <button class="btn-outline" (click)="productoSeleccionado = producto">Detalles</button>
+              <button class="btn-primary" (click)="agregarAlCarrito(producto)">Añadir</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <button class="scroll-btn right" (click)="scrollRight(categoria)">›</button>
-</div>
-
     </section>
   </div>
 
-  <!-- Modal -->
   <div *ngIf="productoSeleccionado"
        class="modal-backdrop"
        [@fadeIn]
@@ -66,5 +56,4 @@
       </div>
     </div>
   </div>
-
 </div>

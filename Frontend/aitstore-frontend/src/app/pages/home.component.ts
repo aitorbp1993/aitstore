@@ -3,15 +3,12 @@ import {
   Component,
   OnInit,
   inject,
-  signal,
-  ViewChildren,
-  QueryList,
-  ElementRef
+  signal
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { trigger, transition, animate, style, query, stagger } from '@angular/animations';
+import { trigger, transition, animate, style } from '@angular/animations';
 import Swal from 'sweetalert2';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
@@ -81,8 +78,6 @@ export class HomeComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  @ViewChildren('scrollContainer') scrollContainers!: QueryList<ElementRef>;
-
   public categorias = signal<CategoriaConProductosDTO[]>([]);
   public cargando = signal(true);
   public productoSeleccionado: ProductoDTO | null = null;
@@ -90,14 +85,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.initDataLoading();
     this.carritoService.recargarCarrito();
-  }
-
-  public scrollRight(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, 600);
-  }
-
-  public scrollLeft(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, -600);
   }
 
   public agregarAlCarrito(producto: ProductoDTO): void {
@@ -125,7 +112,6 @@ export class HomeComponent implements OnInit {
     const defaultImage = this.obtenerImagenPorCategoria(categoriaPadre);
     const tieneImagen = producto.imagenUrl?.trim() &&
       !producto.imagenUrl.includes('placeholder');
-
     return tieneImagen ? producto.imagenUrl : defaultImage;
   }
 
@@ -137,9 +123,7 @@ export class HomeComponent implements OnInit {
     return producto.id;
   }
 
-  public onImageLoad(): void {
-    // Opcional: usar más adelante para animaciones o preloading
-  }
+  public onImageLoad(): void {}
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase();
@@ -148,27 +132,6 @@ export class HomeComponent implements OnInit {
     }
     return 'assets/img/default.png';
   }
-
-private handleScroll(categoria: CategoriaConProductosDTO, amount: number): void {
-  const index = this.categorias().indexOf(categoria);
-  const scrollElement = this.scrollContainers.toArray()[index]?.nativeElement;
-
-  if (scrollElement) {
-    const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
-
-    if (amount > 0 && scrollElement.scrollLeft >= maxScrollLeft - 5) {
-      // Al final → volver al inicio
-      scrollElement.scrollTo({ left: 0, behavior: 'smooth' });
-    } else if (amount < 0 && scrollElement.scrollLeft <= 5) {
-      // Al inicio → ir al final
-      scrollElement.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
-    } else {
-      // Scroll normal
-      scrollElement.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-  }
-}
-
 
   private initDataLoading(): void {
     this.route.queryParams.subscribe(params => {
