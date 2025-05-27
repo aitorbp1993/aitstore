@@ -1,11 +1,12 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+// src/app/pages/categoria-productos.component.ts
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
+import Swal from 'sweetalert2';
 
-// Mantener misma interfaz que en home.component.ts
 interface ProductoDTO {
   id: number;
   nombre: string;
@@ -40,37 +41,47 @@ export class CategoriaProductosComponent implements OnInit {
     });
   }
 
- private cargarProductos(id: number): void {
-  this.cargando = true;
-  this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
-    next: (res) => {
-      this.categoriaNombre = res.nombreCategoria;
+  private cargarProductos(id: number): void {
+    this.cargando = true;
+    this.http.get<any>(`${environment.apiUrl}/categorias/${id}/productos`).subscribe({
+      next: (res) => {
+        this.categoriaNombre = res.nombreCategoria;
+        this.productos = res.productos.map((p: any) => ({
+          id: p.id,
+          nombre: p.nombre,
+          descripcion: p.descripcion || 'Descripción no disponible',
+          precio: p.precio,
+          stock: p.stock || 0,
+          imagenUrl: p.imagenUrl || ''
+        }));
+        this.cargando = false;
+      },
+      error: () => {
+        this.cargando = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los productos de esta categoría.',
+          confirmButtonColor: '#ef4444'
+        });
+      }
+    });
+  }
 
-      // Mismo tratamiento que en home.component.ts
-      this.productos = res.productos.map((p: any) => ({
-        id: p.id,
-        nombre: p.nombre,
-        descripcion: p.descripcion || 'Descripción no disponible', // ← ¡Aquí está la clave!
-        precio: p.precio,
-        stock: p.stock || 0, // Por si acaso
-        imagenUrl: p.imagenUrl || ''
-      }));
-
-      this.cargando = false;
-    },
-    error: (err) => {
-      console.error('Error:', err);
-      this.cargando = false;
-    }
-  });
-}
-  // Mantener mismos métodos que en home.component.ts
   agregarAlCarrito(producto: ProductoDTO): void {
     this.carritoService.agregarItem({
       id: producto.id,
       nombre: producto.nombre,
       precio: producto.precio,
       cantidad: 1
+    });
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto añadido',
+      text: `${producto.nombre} se ha añadido al carrito.`,
+      timer: 1500,
+      showConfirmButton: false
     });
   }
 
@@ -84,7 +95,6 @@ export class CategoriaProductosComponent implements OnInit {
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
     const nombre = nombreCategoria.toLowerCase();
-    // Misma lógica que en home.component.ts
     const mapeo: { [key: string]: string } = {
       'sobremesa': 'desktop-default.png',
       'portátil': 'laptop-default.png',
@@ -110,7 +120,6 @@ export class CategoriaProductosComponent implements OnInit {
       'silla': 'chair-default.png',
       'escritorio': 'chair-default.png'
     };
-
     for (const [key, value] of Object.entries(mapeo)) {
       if (nombre.includes(key)) return `assets/img/${value}`;
     }
@@ -118,6 +127,17 @@ export class CategoriaProductosComponent implements OnInit {
   }
 
   volverInicio(): void {
-    this.router.navigate(['/']);
+    Swal.fire({
+      title: '¿Volver a la página principal?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, volver',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#2563eb'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

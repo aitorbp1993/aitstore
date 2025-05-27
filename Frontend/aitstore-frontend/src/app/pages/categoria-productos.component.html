@@ -1,45 +1,34 @@
-<!-- Mantener misma estructura que home.component.html -->
+<!-- src/app/pages/categoria-productos.component.html -->
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4">
   <div class="text-center mb-10">
     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
       {{ categoriaNombre }}
     </h1>
 
-    <!-- Mismo loading skeleton que en home -->
     <div *ngIf="cargando" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto mt-8">
       <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="animate-pulse bg-gray-200 dark:bg-gray-700 h-72 rounded-xl"></div>
     </div>
 
-    <!-- Mismo mensaje sin productos -->
     <div *ngIf="!cargando && productos.length === 0" class="text-gray-600 dark:text-gray-300 mt-4">
       No hay productos disponibles en esta categoría.
     </div>
   </div>
 
-  <!-- Mismo grid de productos -->
   <div *ngIf="!cargando && productos.length > 0"
        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl mx-auto">
     <div *ngFor="let producto of productos"
          class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
 
-      <!-- Misma imagen -->
-      <img
-        [src]="obtenerImagen(producto)"
-        alt="{{ producto.nombre }}"
-        class="w-full h-48 object-cover border-b"
-      />
+      <img [src]="obtenerImagen(producto)" alt="{{ producto.nombre }}"
+           class="w-full h-48 object-cover border-b" />
 
-      <!-- Mismo contenido -->
       <div class="p-4 flex-1 flex flex-col justify-between">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 truncate">{{ producto.nombre }}</h2>
         <p class="text-base text-gray-700 dark:text-gray-300 mb-4">{{ producto.precio | currency: 'EUR' }}</p>
 
-        <!-- Mismo botón ver detalles -->
         <div class="mb-3">
-          <button
-            (click)="productoSeleccionado = producto"
-            class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center group"
-          >
+          <button (click)="productoSeleccionado = producto"
+                  class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center group">
             <span class="text-sm">Ver detalles</span>
             <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
@@ -47,16 +36,15 @@
           </button>
         </div>
 
-        <button
-          (click)="agregarAlCarrito(producto)"
-          class="mt-auto w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
+        <button (click)="agregarAlCarrito(producto)"
+                class="mt-auto w-full py-2 rounded bg-green-600 text-white hover:bg-green-700 transition font-semibold">
           Añadir al carrito
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Mismo modal de detalles -->
+  <!-- Modal -->
   <div *ngIf="productoSeleccionado" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 backdrop-blur-sm"
        (click)="productoSeleccionado = null">
     <div class="relative bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl transform transition-all"
@@ -73,27 +61,24 @@
           {{ productoSeleccionado.nombre }}
         </h3>
 
-        <div class="prose dark:prose-invert max-w-none">
-          <!-- Mismo manejo de descripción -->
-          <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-            {{ productoSeleccionado.descripcion || 'Descripción no disponible' }}
-          </p>
+        <p class="text-lg text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          {{ productoSeleccionado.descripcion || 'Descripción no disponible' }}
+        </p>
 
-          <div class="mt-6 flex items-center justify-between">
-            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {{ productoSeleccionado.precio | currency:'EUR' }}
-            </p>
-            <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
-                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors">
-              Añadir al carrito
-            </button>
-          </div>
+        <div class="mt-6 flex items-center justify-between">
+          <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            {{ productoSeleccionado.precio | currency:'EUR' }}
+          </p>
+          <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null"
+                  class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors">
+            Añadir al carrito
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mismo botón volver -->
+  <!-- Botón volver -->
   <div class="mt-12 flex justify-center">
     <button (click)="volverInicio()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
       ← Volver al inicio
