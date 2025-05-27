@@ -1,4 +1,8 @@
-<header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-800">
+<header [ngClass]="{
+  'sticky top-0 z-50 backdrop-blur-md transition-shadow bg-white/90 dark:bg-gray-900/90': true,
+  'shadow-sm border-b border-gray-200 dark:border-gray-800': !scrolled,
+  'shadow-lg border-b border-blue-200 dark:border-blue-800': scrolled
+}">
   <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-6">
     <!-- Logo -->
     <div class="flex items-center gap-3 cursor-pointer select-none" (click)="irAInicio()">
@@ -87,7 +91,7 @@
       </ng-template>
     </nav>
 
-    <!-- Botones móviles: hamburguesa + perfil -->
+    <!-- Botones móviles -->
     <div class="md:hidden flex items-center gap-3 ml-auto">
       <!-- Hamburguesa -->
       <button (click)="toggleMenu()" class="text-gray-800 dark:text-gray-200">
@@ -96,7 +100,7 @@
         </svg>
       </button>
 
-      <!-- Perfil (siempre visible) -->
+      <!-- Perfil móvil -->
       <ng-container *ngIf="autenticado; else noAuthMobile">
         <button (click)="irAPerfil()" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold" title="Perfil">
           {{ inicial }}
@@ -143,7 +147,7 @@
     </div>
   </div>
 
-  <!-- Popup al añadir producto al carrito -->
+  <!-- Popup de confirmación -->
   <div *ngIf="mensajePopup"
        class="fixed bottom-6 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-slide">
     {{ mensajePopup }}

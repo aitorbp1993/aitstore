@@ -95,3 +95,6 @@ a {
 .hover\\:text-blue-600:hover svg {
   stroke: #2563eb;
 }
+.transition-shadow {
+  transition: box-shadow 0.3s ease-in-out;
+}

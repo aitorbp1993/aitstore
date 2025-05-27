@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CarritoService } from '../shared/services/carrito.service';
@@ -38,6 +38,8 @@ export class HeaderComponent implements OnInit {
   categoriasDesplegadas = false;
   perfilMenuAbierto = false;
 
+  scrolled = false;
+
   ngOnInit(): void {
     this.carritoService.recargarCarrito();
 
@@ -51,6 +53,11 @@ export class HeaderComponent implements OnInit {
     });
 
     this.cargarCategorias();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.scrolled = window.scrollY > 10;
   }
 
   get autenticado(): boolean {

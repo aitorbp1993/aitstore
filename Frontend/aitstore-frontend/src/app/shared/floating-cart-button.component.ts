@@ -9,19 +9,7 @@ import { map } from 'rxjs/operators';
   selector: 'app-floating-cart-button',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div *ngIf="cantidadTotal$ | async as cantidad"
-         class="fixed bottom-6 right-6 z-50">
-      <button (click)="irAlCarrito()"
-              class="w-14 h-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center text-lg font-bold relative hover:bg-blue-700 transition-all">
-        🛒
-        <span *ngIf="cantidad > 0"
-              class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-          {{ cantidad }}
-        </span>
-      </button>
-    </div>
-  `,
+  templateUrl: './floating-cart-button.component.html',
   styleUrls: ['./floating-cart-button.component.scss']
 })
 export class FloatingCartButtonComponent {
