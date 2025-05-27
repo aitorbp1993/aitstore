@@ -58,27 +58,24 @@ const IMAGENES_POR_CATEGORIA: { [key: string]: string } = {
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('400ms ease-in', style({ opacity: 1 }))
+        animate('500ms ease-in', style({ opacity: 1 }))
       ])
     ]),
     trigger('fadeInUp', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
+        style({ opacity: 0, transform: 'translateY(30px)' }),
         animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
       ])
     ]),
     trigger('scaleIn', [
       transition(':enter', [
         style({ transform: 'scale(0.95)', opacity: 0 }),
-        animate('300ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
+        animate('400ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
       ])
     ])
   ]
 })
 export class HomeComponent implements OnInit {
-onImageLoad() {
-throw new Error('Method not implemented.');
-}
   private readonly http = inject(HttpClient);
   private readonly carritoService = inject(CarritoService);
   private readonly route = inject(ActivatedRoute);
@@ -96,11 +93,11 @@ throw new Error('Method not implemented.');
   }
 
   public scrollRight(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, 400);
+    this.handleScroll(categoria, 600);
   }
 
   public scrollLeft(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, -400);
+    this.handleScroll(categoria, -600);
   }
 
   public agregarAlCarrito(producto: ProductoDTO): void {
@@ -138,6 +135,10 @@ throw new Error('Method not implemented.');
 
   public trackByProduct(index: number, producto: ProductoDTO): number {
     return producto.id;
+  }
+
+  public onImageLoad(): void {
+    // Opcional: usar más adelante para animaciones o preloading
   }
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {

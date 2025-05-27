@@ -1,32 +1,38 @@
 :host {
   display: block;
-  background-color: #f9fafb;
+  background-color: #f3f4f6;
 
   .dark & {
     background-color: #0f172a;
   }
 }
 
-/* Hero principal */
+/* Hero */
 .hero {
   text-align: center;
-  padding: 5rem 1rem 3rem;
-  background: linear-gradient(to right, #3b82f6, #2563eb);
-  color: #fff;
+  padding: 4rem 1rem 2rem;
 
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    color: #1e293b;
+
+    .dark & {
+      color: #f8fafc;
+    }
 
     .highlight {
-      color: #fff;
+      color: #3b82f6;
     }
   }
 
   .hero-subtitle {
-    font-size: 1.2rem;
-    color: #e0f2fe;
+    font-size: 1.1rem;
+    color: #64748b;
+
+    .dark & {
+      color: #cbd5e1;
+    }
   }
 }
 
@@ -40,9 +46,9 @@
   .spinner {
     width: 40px;
     height: 40px;
-    border: 5px solid #3b82f6;
-    border-top: 5px solid transparent;
-    border-radius: 50%;
+    border: 4px solid #3b82f6;
+    border-top: 4px solid transparent;
+    border-radius: 9999px;
     animation: spin 1s linear infinite;
   }
 
@@ -56,7 +62,7 @@
   }
 }
 
-/* Contenedor principal de categorías */
+/* Secciones */
 .categorias-container {
   padding: 2rem 1rem;
 }
@@ -71,7 +77,7 @@
     color: #1e293b;
 
     .dark & {
-      color: #f8fafc;
+      color: #f1f5f9;
     }
   }
 
@@ -82,16 +88,16 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #ffffff;
+      background-color: white;
       color: #3b82f6;
       border: none;
       border-radius: 9999px;
       width: 2rem;
       height: 2rem;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      z-index: 5;
+      z-index: 10;
 
       &:hover {
         background-color: #3b82f6;
@@ -105,15 +111,18 @@
       &.right {
         right: -0.5rem;
       }
+
+      .dark & {
+        background-color: #1e293b;
+      }
     }
 
     .productos-scroll {
       display: flex;
-      gap: 1.25rem;
+      gap: 1rem;
       overflow-x: auto;
       scroll-behavior: smooth;
-      padding-bottom: 1rem;
-      margin-bottom: 1rem;
+      padding: 1rem 0;
 
       &::-webkit-scrollbar {
         height: 6px;
@@ -127,11 +136,10 @@
       .producto-card {
         background-color: #ffffff;
         border-radius: 0.75rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        min-width: 220px;
-        max-width: 240px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        min-width: 240px;
+        max-width: 260px;
         flex: 0 0 auto;
-        overflow: hidden;
         transition: transform 0.3s ease;
         display: flex;
         flex-direction: column;
@@ -149,8 +157,10 @@
 
           img {
             width: 100%;
-            height: 160px;
+            height: 180px;
             object-fit: cover;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
           }
 
           .quick-view {
@@ -161,14 +171,14 @@
             color: #fff;
             border: none;
             border-radius: 9999px;
+            padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
-            padding: 0.3rem 0.6rem;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s ease-in-out;
+            transition: opacity 0.2s ease;
 
             &:hover {
-              background: #3b82f6;
+              background-color: #3b82f6;
             }
           }
 
@@ -181,8 +191,9 @@
           padding: 0.75rem;
 
           h3 {
-            font-weight: 600;
             font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
             color: #1e293b;
 
             .dark & {
@@ -192,36 +203,14 @@
 
           .precio {
             color: #3b82f6;
-            font-size: 1rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
           }
 
           .acciones {
             display: flex;
-            flex-wrap: wrap;
             gap: 0.5rem;
-
-            button {
-              flex: 1 1 auto;
-              padding: 0.4rem;
-              font-size: 0.85rem;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              background-color: #e2e8f0;
-              color: #1e293b;
-
-              .dark & {
-                background-color: #334155;
-                color: #f1f5f9;
-              }
-
-              &:hover {
-                background-color: #3b82f6;
-                color: white;
-              }
-            }
+            margin-top: 0.5rem;
           }
         }
       }
@@ -229,7 +218,41 @@
   }
 }
 
-/* Modal de producto */
+/* Botones */
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #3b82f6;
+    color: white;
+  }
+}
+
+/* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -247,6 +270,7 @@
     max-width: 500px;
     width: 90%;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
 
     .dark & {
       background-color: #1e293b;
@@ -268,31 +292,6 @@
     .modal-acciones {
       display: flex;
       gap: 1rem;
-
-      button {
-        flex: 1;
-        padding: 0.5rem;
-        border-radius: 4px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        background-color: #3b82f6;
-        color: white;
-
-        &:last-child {
-          background-color: #e2e8f0;
-          color: #1e293b;
-
-          .dark & {
-            background-color: #334155;
-            color: #f1f5f9;
-          }
-        }
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
     }
 
     .cerrar {

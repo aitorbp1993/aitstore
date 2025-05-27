@@ -1,18 +1,18 @@
 <div class="home-wrapper">
 
-  <!-- Sección principal de bienvenida -->
+  <!-- Hero -->
   <section class="hero" [@fadeInUp]>
-    <h1 class="hero-title">Bienvenido a <span class="highlight">AITStore</span></h1>
-    <p class="hero-subtitle">Descubre lo último en tecnología para tu setup</p>
+    <h1 class="hero-title">Explora lo mejor en <span class="highlight">tecnología</span></h1>
+    <p class="hero-subtitle">Componentes, periféricos y equipos al mejor precio</p>
   </section>
 
-  <!-- Cargando productos -->
+  <!-- Loader -->
   <div *ngIf="cargando()" class="loader-container" [@fadeIn]>
     <div class="spinner"></div>
-    <p class="loading-text">Cargando productos...</p>
+    <p class="loading-text">Cargando catálogo...</p>
   </div>
 
-  <!-- Categorías y productos -->
+  <!-- Contenido -->
   <div *ngIf="!cargando()" class="categorias-container">
     <section *ngFor="let categoria of categorias(); trackBy: trackByCategory"
              class="categoria-seccion"
@@ -25,8 +25,10 @@
 
         <div class="productos-scroll" #scrollContainer>
           <div *ngFor="let producto of categoria.productos; trackBy: trackByProduct"
-               class="producto-card" [@scaleIn]>
+               class="producto-card"
+               [@scaleIn]>
 
+            <!-- Imagen -->
             <div class="img-wrapper">
               <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
                    [alt]="producto.nombre"
@@ -34,12 +36,13 @@
               <button class="quick-view" (click)="productoSeleccionado = producto">👁</button>
             </div>
 
+            <!-- Info -->
             <div class="info">
               <h3>{{ producto.nombre }}</h3>
               <p class="precio">{{ producto.precio | currency:'EUR' }}</p>
               <div class="acciones">
-                <button (click)="productoSeleccionado = producto">Detalles</button>
-                <button (click)="agregarAlCarrito(producto)">Añadir</button>
+                <button class="btn-outline" (click)="productoSeleccionado = producto">Detalles</button>
+                <button class="btn-primary" (click)="agregarAlCarrito(producto)">Añadir</button>
               </div>
             </div>
           </div>
@@ -50,19 +53,20 @@
     </section>
   </div>
 
-  <!-- Modal producto -->
+  <!-- Modal -->
   <div *ngIf="productoSeleccionado"
        class="modal-backdrop"
        [@fadeIn]
        (click)="productoSeleccionado = null">
+
     <div class="modal" (click)="$event.stopPropagation()">
       <button class="cerrar" (click)="productoSeleccionado = null">×</button>
       <h2>{{ productoSeleccionado.nombre }}</h2>
       <p>{{ productoSeleccionado.descripcion }}</p>
       <p class="modal-precio">{{ productoSeleccionado.precio | currency:'EUR' }}</p>
       <div class="modal-acciones">
-        <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null">Añadir al carrito</button>
-        <button (click)="productoSeleccionado = null">Seguir viendo</button>
+        <button class="btn-primary" (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null">Añadir al carrito</button>
+        <button class="btn-outline" (click)="productoSeleccionado = null">Seguir viendo</button>
       </div>
     </div>
   </div>
