@@ -112,10 +112,11 @@ buscar(): void {
     });
   }
 
-  irAInicio(): void {
-    this.router.navigate(['/']);
-    this.cerrarMenus();
-  }
+irAInicio(): void {
+  this.router.navigateByUrl('/').then(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 
   irAPerfil(): void {
     this.router.navigate(['/perfil']);
