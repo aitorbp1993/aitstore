@@ -55,17 +55,18 @@ a {
   }
 }
 
-/* Menú desplegable categorías */
+.transition-shadow {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
 @media (min-width: 768px) {
   .categorias-dropdown {
     max-width: 16rem;
     overflow-x: hidden;
-    word-wrap: break-word;
     white-space: normal;
   }
 }
 
-/* Oscuro */
 .dark {
   .shadow-lg {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
@@ -94,7 +95,4 @@ a {
 
 .hover\\:text-blue-600:hover svg {
   stroke: #2563eb;
-}
-.transition-shadow {
-  transition: box-shadow 0.3s ease-in-out;
 }
