@@ -1,3 +1,4 @@
+// src/app/pages/home/home.component.ts
 import {
   Component,
   OnInit,
@@ -50,7 +51,7 @@ const IMAGENES_POR_CATEGORIA: { [key: string]: string } = {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   animations: [
@@ -68,13 +69,16 @@ const IMAGENES_POR_CATEGORIA: { [key: string]: string } = {
     ]),
     trigger('scaleIn', [
       transition(':enter', [
-        style({ transform: 'scale(0.9)', opacity: 0 }),
+        style({ transform: 'scale(0.95)', opacity: 0 }),
         animate('300ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
       ])
     ])
   ]
 })
 export class HomeComponent implements OnInit {
+onImageLoad() {
+throw new Error('Method not implemented.');
+}
   private readonly http = inject(HttpClient);
   private readonly carritoService = inject(CarritoService);
   private readonly route = inject(ActivatedRoute);
@@ -134,10 +138,6 @@ export class HomeComponent implements OnInit {
 
   public trackByProduct(index: number, producto: ProductoDTO): number {
     return producto.id;
-  }
-
-  public verTodos(categoria: CategoriaConProductosDTO): void {
-    this.router.navigate(['/categoria', categoria.nombreCategoria.toLowerCase()]);
   }
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {

@@ -1,61 +1,60 @@
 <div class="home-wrapper">
 
-  <!-- Hero Section -->
+  <!-- Sección principal de bienvenida -->
   <section class="hero" [@fadeInUp]>
-    <h1 class="hero-title">Bienvenido a <span class="brand">AITStore</span></h1>
-    <p class="hero-subtitle">Tu tienda de confianza en tecnología</p>
+    <h1 class="hero-title">Bienvenido a <span class="highlight">AITStore</span></h1>
+    <p class="hero-subtitle">Descubre lo último en tecnología para tu setup</p>
   </section>
 
-  <!-- Loader -->
-  <div *ngIf="cargando()" class="loading" [@fadeIn]>
+  <!-- Cargando productos -->
+  <div *ngIf="cargando()" class="loader-container" [@fadeIn]>
     <div class="spinner"></div>
-    <p class="text">Cargando productos...</p>
+    <p class="loading-text">Cargando productos...</p>
   </div>
 
-  <!-- Categorías -->
-  <div *ngIf="!cargando()" class="categorias-list">
-
+  <!-- Categorías y productos -->
+  <div *ngIf="!cargando()" class="categorias-container">
     <section *ngFor="let categoria of categorias(); trackBy: trackByCategory"
-             class="categoria" [@fadeInUp]>
+             class="categoria-seccion"
+             [@fadeInUp]>
 
-      <div class="categoria-header">
-        <h2 class="categoria-titulo">{{ categoria.nombreCategoria }}</h2>
-        <button class="ver-todos" (click)="verTodos(categoria)">Ver todos</button>
-      </div>
+      <h2 class="categoria-titulo">{{ categoria.nombreCategoria }}</h2>
 
-      <!-- Scroll de productos -->
       <div class="productos-scroll-wrapper">
-        <button class="scroll-button left" (click)="scrollLeft(categoria)">‹</button>
+        <button class="scroll-btn left" (click)="scrollLeft(categoria)">‹</button>
 
         <div class="productos-scroll" #scrollContainer>
           <div *ngFor="let producto of categoria.productos; trackBy: trackByProduct"
                class="producto-card" [@scaleIn]>
 
-            <div class="producto-imagen-wrapper">
+            <div class="img-wrapper">
               <img [src]="obtenerImagen(producto, categoria.nombreCategoria)"
                    [alt]="producto.nombre"
-                   class="producto-imagen">
-              <button class="vista-rapida" (click)="productoSeleccionado = producto">👁 Vista rápida</button>
+                   (load)="onImageLoad()">
+              <button class="quick-view" (click)="productoSeleccionado = producto">👁</button>
             </div>
 
-            <div class="producto-info">
-              <h3 class="nombre">{{ producto.nombre }}</h3>
+            <div class="info">
+              <h3>{{ producto.nombre }}</h3>
               <p class="precio">{{ producto.precio | currency:'EUR' }}</p>
               <div class="acciones">
                 <button (click)="productoSeleccionado = producto">Detalles</button>
-                <button (click)="agregarAlCarrito(producto)">Añadir al carrito</button>
+                <button (click)="agregarAlCarrito(producto)">Añadir</button>
               </div>
             </div>
           </div>
         </div>
 
-        <button class="scroll-button right" (click)="scrollRight(categoria)">›</button>
+        <button class="scroll-btn right" (click)="scrollRight(categoria)">›</button>
       </div>
     </section>
   </div>
 
-  <!-- Modal Producto -->
-  <div *ngIf="productoSeleccionado" class="modal-backdrop" [@fadeIn] (click)="productoSeleccionado = null">
+  <!-- Modal producto -->
+  <div *ngIf="productoSeleccionado"
+       class="modal-backdrop"
+       [@fadeIn]
+       (click)="productoSeleccionado = null">
     <div class="modal" (click)="$event.stopPropagation()">
       <button class="cerrar" (click)="productoSeleccionado = null">×</button>
       <h2>{{ productoSeleccionado.nombre }}</h2>
@@ -63,7 +62,7 @@
       <p class="modal-precio">{{ productoSeleccionado.precio | currency:'EUR' }}</p>
       <div class="modal-acciones">
         <button (click)="agregarAlCarrito(productoSeleccionado); productoSeleccionado = null">Añadir al carrito</button>
-        <button (click)="productoSeleccionado = null">Seguir comprando</button>
+        <button (click)="productoSeleccionado = null">Seguir viendo</button>
       </div>
     </div>
   </div>

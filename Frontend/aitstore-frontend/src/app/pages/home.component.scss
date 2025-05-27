@@ -10,7 +10,7 @@
 /* Hero principal */
 .hero {
   text-align: center;
-  padding: 4rem 1rem 2rem;
+  padding: 5rem 1rem 3rem;
   background: linear-gradient(to right, #3b82f6, #2563eb);
   color: #fff;
 
@@ -19,23 +19,23 @@
     font-weight: 800;
     margin-bottom: 0.5rem;
 
-    .brand {
+    .highlight {
       color: #fff;
     }
   }
 
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: #e0f2fe;
   }
 }
 
 /* Loader */
-.loading {
+.loader-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem;
+  padding: 3rem;
 
   .spinner {
     width: 40px;
@@ -46,7 +46,7 @@
     animation: spin 1s linear infinite;
   }
 
-  .text {
+  .loading-text {
     margin-top: 1rem;
     color: #64748b;
 
@@ -56,65 +56,42 @@
   }
 }
 
-/* Sección de categoría */
-.categorias-list {
+/* Contenedor principal de categorías */
+.categorias-container {
   padding: 2rem 1rem;
 }
 
-.categoria {
-  margin-bottom: 3rem;
+.categoria-seccion {
+  margin-bottom: 4rem;
 
-  .categoria-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .categoria-titulo {
+    font-size: 1.5rem;
+    font-weight: 700;
     margin-bottom: 1rem;
+    color: #1e293b;
 
-    .categoria-titulo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #1e293b;
-
-      .dark & {
-        color: #f1f5f9;
-      }
-    }
-
-    .ver-todos {
-      background-color: transparent;
-      border: 1px solid #3b82f6;
-      color: #3b82f6;
-      padding: 0.3rem 0.75rem;
-      border-radius: 4px;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: 0.2s ease;
-
-      &:hover {
-        background-color: #3b82f6;
-        color: white;
-      }
+    .dark & {
+      color: #f8fafc;
     }
   }
 
   .productos-scroll-wrapper {
     position: relative;
 
-    .scroll-button {
+    .scroll-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 10;
-      background-color: #fff;
+      background: #ffffff;
+      color: #3b82f6;
       border: none;
       border-radius: 9999px;
       width: 2rem;
       height: 2rem;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      color: #3b82f6;
-      transition: 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      z-index: 5;
 
       &:hover {
         background-color: #3b82f6;
@@ -132,13 +109,14 @@
 
     .productos-scroll {
       display: flex;
-      gap: 1rem;
+      gap: 1.25rem;
       overflow-x: auto;
       scroll-behavior: smooth;
-      padding: 1rem 0;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
 
       &::-webkit-scrollbar {
-        height: 8px;
+        height: 6px;
       }
 
       &::-webkit-scrollbar-thumb {
@@ -148,11 +126,12 @@
 
       .producto-card {
         background-color: #ffffff;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         min-width: 220px;
         max-width: 240px;
         flex: 0 0 auto;
+        overflow: hidden;
         transition: transform 0.3s ease;
         display: flex;
         flex-direction: column;
@@ -162,51 +141,52 @@
         }
 
         &:hover {
-          transform: translateY(-4px);
+          transform: translateY(-6px);
         }
 
-        .producto-imagen-wrapper {
+        .img-wrapper {
           position: relative;
 
-          .producto-imagen {
+          img {
             width: 100%;
-            height: 180px;
+            height: 160px;
             object-fit: cover;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
           }
 
-          .vista-rapida {
+          .quick-view {
             position: absolute;
             bottom: 0.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #3b82f6;
-            color: white;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
             border: none;
             border-radius: 9999px;
             font-size: 0.75rem;
-            padding: 0.25rem 0.75rem;
+            padding: 0.3rem 0.6rem;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.2s ease-in-out;
+
+            &:hover {
+              background: #3b82f6;
+            }
           }
 
-          &:hover .vista-rapida {
+          &:hover .quick-view {
             opacity: 1;
           }
         }
 
-        .producto-info {
+        .info {
           padding: 0.75rem;
 
-          .nombre {
+          h3 {
             font-weight: 600;
             font-size: 1rem;
             color: #1e293b;
 
             .dark & {
-              color: #f1f5f9;
+              color: #f8fafc;
             }
           }
 
@@ -219,18 +199,18 @@
 
           .acciones {
             display: flex;
-            gap: 0.5rem;
             flex-wrap: wrap;
+            gap: 0.5rem;
 
             button {
-              flex: 1;
+              flex: 1 1 auto;
+              padding: 0.4rem;
+              font-size: 0.85rem;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
               background-color: #e2e8f0;
               color: #1e293b;
-              border: none;
-              padding: 0.25rem 0.5rem;
-              border-radius: 4px;
-              font-size: 0.875rem;
-              cursor: pointer;
 
               .dark & {
                 background-color: #334155;
@@ -249,7 +229,7 @@
   }
 }
 
-/* Modal */
+/* Modal de producto */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -328,7 +308,7 @@
   }
 }
 
-/* Animación loader */
+/* Animaciones */
 @keyframes spin {
   to {
     transform: rotate(360deg);
