@@ -1,20 +1,10 @@
-// src/app/pages/home/home.component.ts
-import {
-  Component,
-  OnInit,
-  inject,
-  signal,
-  ViewChildren,
-  QueryList,
-  ElementRef
-} from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { trigger, transition, animate, style, query, stagger } from '@angular/animations';
-import Swal from 'sweetalert2';
 import { CarritoService } from '../shared/services/carrito.service';
 import { environment } from '../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface ProductoDTO {
   id: number;
@@ -30,77 +20,66 @@ interface CategoriaConProductosDTO {
   productos: ProductoDTO[];
 }
 
-const IMAGENES_POR_CATEGORIA: { [key: string]: string } = {
-  'portátil': 'laptop-default.png',
-  'sobremesa': 'desktop-default.png',
-  'monitor': 'monitor-default.png',
-  'ratón': 'mouse-default.png',
-  'teclado': 'keyboard-default.png',
-  'procesador': 'cpu-default.png',
-  'gráfica': 'gpu-default.png',
-  'placa base': 'motherboard-default.png',
-  'ssd': 'ssd-default.png',
-  'ram': 'ram-default.png',
-  'fuente': 'psu-default.png',
-  'caja': 'case-default.png',
-  'refrigeración': 'cooling-default.png',
-  'silla': 'chair-default.png',
-  'accesorio': 'accessory-default.png'
-};
-
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [
-    trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('500ms ease-in', style({ opacity: 1 }))
-      ])
-    ]),
-    trigger('fadeInUp', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(30px)' }),
-        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
-    ]),
-    trigger('scaleIn', [
-      transition(':enter', [
-        style({ transform: 'scale(0.95)', opacity: 0 }),
-        animate('400ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
-      ])
-    ])
-  ]
 })
 export class HomeComponent implements OnInit {
-  private readonly http = inject(HttpClient);
-  private readonly carritoService = inject(CarritoService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  private http = inject(HttpClient);
+  private carritoService = inject(CarritoService);
+  private route = inject(ActivatedRoute);
 
-  @ViewChildren('scrollContainer') scrollContainers!: QueryList<ElementRef>;
-
-  public categorias = signal<CategoriaConProductosDTO[]>([]);
-  public cargando = signal(true);
-  public productoSeleccionado: ProductoDTO | null = null;
+  categorias = signal<CategoriaConProductosDTO[]>([]);
+  cargando = signal(true);
+  productoSeleccionado: ProductoDTO | null = null;
+  categoriaActiva: CategoriaConProductosDTO | null = null;
 
   ngOnInit(): void {
-    this.initDataLoading();
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search && search.trim().length > 0) {
+        this.cargarFiltrados(search.trim());
+      } else {
+        this.cargarDatos();
+      }
+    });
+
     this.carritoService.recargarCarrito();
   }
 
-  public scrollRight(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, 600);
+  private cargarFiltrados(termino: string): void {
+    this.cargando.set(true);
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`)
+      .subscribe({
+        next: (res) => {
+          this.categorias.set(res);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          console.error('Error buscando productos:', err);
+          this.cargando.set(false);
+        }
+      });
   }
 
-  public scrollLeft(categoria: CategoriaConProductosDTO): void {
-    this.handleScroll(categoria, -600);
+  private cargarDatos(): void {
+    this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
+      .subscribe({
+        next: (res) => {
+          this.categorias.set(res);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          console.error('Error:', err);
+          this.cargando.set(false);
+        }
+      });
   }
 
-  public agregarAlCarrito(producto: ProductoDTO): void {
+  agregarAlCarrito(producto: ProductoDTO): void {
     this.carritoService.agregarItem({
       id: producto.id,
       nombre: producto.nombre,
@@ -121,86 +100,46 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public obtenerImagen(producto: ProductoDTO, categoriaPadre: string): string {
-    const defaultImage = this.obtenerImagenPorCategoria(categoriaPadre);
-    const tieneImagen = producto.imagenUrl?.trim() &&
-      !producto.imagenUrl.includes('placeholder');
-
-    return tieneImagen ? producto.imagenUrl : defaultImage;
-  }
-
-  public trackByCategory(index: number, categoria: CategoriaConProductosDTO): string {
-    return categoria.nombreCategoria;
-  }
-
-  public trackByProduct(index: number, producto: ProductoDTO): number {
-    return producto.id;
-  }
-
-  public onImageLoad(): void {
-    // Opcional: usar más adelante para animaciones o preloading
+  obtenerImagen(producto: ProductoDTO, categoriaPadre: string): string {
+    this.categoriaActiva = this.categorias().find(c => c.nombreCategoria === categoriaPadre) || null;
+    const url = producto.imagenUrl?.trim();
+    const usaImagenDefault = !url || url.includes('placeholder') || url.includes('via.placeholder.com');
+    return usaImagenDefault ? this.obtenerImagenPorCategoria(categoriaPadre) : url;
   }
 
   private obtenerImagenPorCategoria(nombreCategoria: string): string {
-    const nombre = nombreCategoria.toLowerCase();
-    for (const [key, value] of Object.entries(IMAGENES_POR_CATEGORIA)) {
+    const nombre = nombreCategoria.toLowerCase().trim();
+
+    const mapeoImagenes: { [key: string]: string } = {
+      'sobremesa': 'desktop-default.png',
+      'portátil': 'laptop-default.png',
+      'monitor': 'monitor-default.png',
+      'teclado': 'keyboard-default.png',
+      'ratón': 'mouse-default.png',
+      'ratones': 'mouse-default.png',
+      'placa base': 'motherboard-default.png',
+      'procesador': 'cpu-default.png',
+      'cpu': 'cpu-default.png',
+      'gráfica': 'gpu-default.png',
+      'gpu': 'gpu-default.png',
+      'ram': 'ram-default.png',
+      'disco': 'ssd-default.png',
+      'ssd': 'ssd-default.png',
+      'fuente': 'psu-default.png',
+      'caja': 'case-default.png',
+      'torre': 'case-default.png',
+      'refrigeración': 'cooling-default.png',
+      'ventilador': 'cooling-default.png',
+      'periférico': 'accessory-default.png',
+      'accesorio': 'accessory-default.png',
+      'silla': 'chair-default.png',
+      'escritorio': 'chair-default.png'
+    };
+
+    for (const [key, value] of Object.entries(mapeoImagenes)) {
       if (nombre.includes(key)) return `assets/img/${value}`;
     }
+
     return 'assets/img/default.png';
-  }
-
-private handleScroll(categoria: CategoriaConProductosDTO, amount: number): void {
-  const index = this.categorias().indexOf(categoria);
-  const scrollElement = this.scrollContainers.toArray()[index]?.nativeElement;
-
-  if (scrollElement) {
-    const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
-
-    if (amount > 0 && scrollElement.scrollLeft >= maxScrollLeft - 5) {
-      // Al final → volver al inicio
-      scrollElement.scrollTo({ left: 0, behavior: 'smooth' });
-    } else if (amount < 0 && scrollElement.scrollLeft <= 5) {
-      // Al inicio → ir al final
-      scrollElement.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
-    } else {
-      // Scroll normal
-      scrollElement.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-  }
-}
-
-
-  private initDataLoading(): void {
-    this.route.queryParams.subscribe(params => {
-      const search = params['search']?.trim();
-      search ? this.cargarProductosFiltrados(search) : this.cargarTodosLosProductos();
-    });
-  }
-
-  private cargarTodosLosProductos(): void {
-    this.handleDataLoading(
-      this.http.get<CategoriaConProductosDTO[]>(`${environment.apiUrl}/home/categorias-productos`)
-    );
-  }
-
-  private cargarProductosFiltrados(termino: string): void {
-    this.handleDataLoading(
-      this.http.get<CategoriaConProductosDTO[]>(
-        `${environment.apiUrl}/home/categorias-productos?search=${encodeURIComponent(termino)}`
-      )
-    );
-  }
-
-  private handleDataLoading(observable$: any): void {
-    this.cargando.set(true);
-    observable$.subscribe({
-      next: (res: CategoriaConProductosDTO[]) => {
-        this.categorias.set(res);
-        this.cargando.set(false);
-      },
-      error: () => {
-        this.cargando.set(false);
-      }
-    });
   }
 }
