@@ -3,15 +3,23 @@
   width: 100%;
 }
 
+/* Estilo general del layout */
 .layout-container {
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+/* El main se adapta bien al espacio restante */
 main {
+  flex: 1;
   min-height: 60vh;
   padding-bottom: 2rem;
+  padding-top: 5.5rem; // asegúrate que coincida con el alto del header sticky
 }
 
+/* Botones visuales */
 button {
   font-weight: 500;
   transition: all 0.2s ease-in-out;
@@ -26,6 +34,7 @@ button:focus {
   outline-color: theme('colors.blue.400');
 }
 
+/* Estilo adicional para el botón de modo oscuro */
 .dark-toggle button {
   @apply font-semibold tracking-tight;
 }

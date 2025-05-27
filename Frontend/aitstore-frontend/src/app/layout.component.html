@@ -1,0 +1,25 @@
+<div class="layout-container min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
+
+  <!-- Header sticky -->
+  <div class="sticky top-0 z-50 w-full bg-[#1e293b] text-white shadow-md">
+    <app-header></app-header>
+  </div>
+
+  <!-- Botón modo oscuro -->
+  <div class="flex justify-end max-w-screen-xl w-full px-4 mt-4 mx-auto">
+    <button
+      class="flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-shadow shadow-md"
+      (click)="toggleDarkMode()">
+      <span class="text-lg">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+      <span>Modo {{ isDarkMode ? 'Claro' : 'Oscuro' }}</span>
+    </button>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="flex-1 max-w-screen-xl w-full mx-auto px-4 py-8 pt-[5.5rem]">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>
