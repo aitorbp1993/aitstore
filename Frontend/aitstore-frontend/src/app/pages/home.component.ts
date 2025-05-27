@@ -149,11 +149,26 @@ export class HomeComponent implements OnInit {
     return 'assets/img/default.png';
   }
 
-  private handleScroll(categoria: CategoriaConProductosDTO, amount: number): void {
-    const index = this.categorias().indexOf(categoria);
-    const el = this.scrollContainers.toArray()[index]?.nativeElement;
-    if (el) el.scrollBy({ left: amount, behavior: 'smooth' });
+private handleScroll(categoria: CategoriaConProductosDTO, amount: number): void {
+  const index = this.categorias().indexOf(categoria);
+  const scrollElement = this.scrollContainers.toArray()[index]?.nativeElement;
+
+  if (scrollElement) {
+    const maxScrollLeft = scrollElement.scrollWidth - scrollElement.clientWidth;
+
+    if (amount > 0 && scrollElement.scrollLeft >= maxScrollLeft - 5) {
+      // Al final → volver al inicio
+      scrollElement.scrollTo({ left: 0, behavior: 'smooth' });
+    } else if (amount < 0 && scrollElement.scrollLeft <= 5) {
+      // Al inicio → ir al final
+      scrollElement.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+    } else {
+      // Scroll normal
+      scrollElement.scrollBy({ left: amount, behavior: 'smooth' });
+    }
   }
+}
+
 
   private initDataLoading(): void {
     this.route.queryParams.subscribe(params => {
