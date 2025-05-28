@@ -46,7 +46,7 @@ export class CarritoService {
     }
 
     this.guardarCarrito(carrito);
-    this.notificacionSubject.next(`✅ ${item.nombre} añadido al carrito`);
+
   }
 
   eliminarItem(productoId: number): void {
