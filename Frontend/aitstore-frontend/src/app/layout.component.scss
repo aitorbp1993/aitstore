@@ -3,15 +3,22 @@
   width: 100%;
 }
 
-/* Estilo general del layout */
 .layout-container {
   transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
+  color: #1f2937;
 }
 
-/* El main se adapta bien al espacio restante */
+/* MODO OSCURO */
+.dark .layout-container {
+  background-color: #0f172a; /* Fondo oscuro */
+  color: #f9fafb; /* Texto claro base */
+}
+
+/* Contenido principal */
 main {
   flex: 1;
   min-height: 60vh;
@@ -26,15 +33,15 @@ button {
 }
 
 button:focus {
-  outline: 2px solid theme('colors.blue.500');
+  outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
 
 .dark button:focus {
-  outline-color: theme('colors.blue.400');
+  outline-color: #3b82f6;
 }
 
-/* Estilo adicional para el botón de modo oscuro */
 .dark-toggle button {
-  @apply font-semibold tracking-tight;
+  font-weight: 600;
+  letter-spacing: -0.015em;
 }
