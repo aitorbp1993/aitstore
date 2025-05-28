@@ -3,78 +3,80 @@
 
 <!-- Contenedor del carrito -->
 <div class="carrito-container" [ngClass]="{ 'modal': esMovil() }">
-  <div class="cart-box bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 sm:p-10 transition-all duration-300">
+  <div class="cart-box bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 sm:p-10 transition-all duration-300 h-[90vh] max-h-[90vh] flex flex-col overflow-hidden">
 
-    <!-- Título -->
-    <h2 class="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white flex justify-between items-center">
+    <!-- Título fijo arriba -->
+    <h2 class="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white flex justify-between items-center shrink-0">
       <span>🛒 Tu carrito</span>
       <button *ngIf="esMovil()" (click)="cerrarModal()" class="text-gray-400 hover:text-red-500 text-xl transition">
         ✖
       </button>
     </h2>
 
-    <!-- Carrito vacío -->
-    <div *ngIf="carrito.length === 0" class="text-center text-gray-500 dark:text-gray-300 text-lg">
-      El carrito está vacío.
-    </div>
+    <!-- Contenido desplazable del carrito -->
+    <div class="flex-1 overflow-y-auto pr-1">
+      <!-- Carrito vacío -->
+      <div *ngIf="carrito.length === 0" class="text-center text-gray-500 dark:text-gray-300 text-lg">
+        El carrito está vacío.
+      </div>
 
-    <!-- Lista de productos -->
-    <div *ngFor="let item of carrito"
-         class="mb-5 p-5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
+      <!-- Lista de productos -->
+      <div *ngFor="let item of carrito"
+           class="mb-5 p-5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition flex justify-between items-center gap-4 flex-wrap sm:flex-nowrap">
 
-      <!-- Detalles del producto -->
-      <div class="flex flex-col gap-1">
-        <p class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ item.nombre }}
-        </p>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-          Precio: {{ item.precio | currency:'EUR' }}
-        </p>
+        <!-- Detalles del producto -->
+        <div class="flex flex-col gap-1">
+          <p class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ item.nombre }}
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Precio: {{ item.precio | currency:'EUR' }}
+          </p>
 
-        <!-- Controles de cantidad -->
-        <div class="flex items-center gap-2 mt-2">
-          <button (click)="disminuir(item.id)"
-                  class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400 transition">
-            -
-          </button>
-          <span class="font-semibold text-gray-900 dark:text-white">
-            {{ item.cantidad }}
-          </span>
-          <button (click)="aumentar(item.id)"
-                  class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400 transition">
-            +
-          </button>
-          <button (click)="eliminarItem(item.id)"
-                  class="text-red-600 text-sm ml-3 hover:underline transition">
-            ❌ Eliminar
-          </button>
+          <!-- Controles de cantidad -->
+          <div class="flex items-center gap-2 mt-2">
+            <button (click)="disminuir(item.id)"
+                    class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400 transition">
+              -
+            </button>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ item.cantidad }}
+            </span>
+            <button (click)="aumentar(item.id)"
+                    class="px-2 py-1 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded hover:bg-gray-400 transition">
+              +
+            </button>
+            <button (click)="eliminarItem(item.id)"
+                    class="text-red-600 text-sm ml-3 hover:underline transition">
+              ❌ Eliminar
+            </button>
+          </div>
+        </div>
+
+        <!-- Subtotal del producto -->
+        <div class="text-right font-bold text-gray-900 dark:text-white text-lg min-w-[100px]">
+          {{ item.precio * item.cantidad | currency:'EUR' }}
         </div>
       </div>
+    </div>
 
-      <!-- Subtotal del producto -->
-      <div class="text-right font-bold text-gray-900 dark:text-white text-lg min-w-[100px]">
-        {{ item.precio * item.cantidad | currency:'EUR' }}
+    <!-- Total y botones fijos abajo -->
+    <div *ngIf="carrito.length > 0" class="shrink-0 pt-4 border-t border-gray-300 dark:border-gray-700">
+      <div class="text-right text-2xl font-bold text-gray-900 dark:text-white mt-4 mb-3">
+        Total: {{ total | currency:'EUR' }}
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between gap-4 mt-2">
+        <button (click)="vaciar()"
+                class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition font-medium">
+          🗑 Vaciar carrito
+        </button>
+
+        <button (click)="finalizarCompra()"
+                class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition font-medium">
+          ✅ Finalizar compra
+        </button>
       </div>
     </div>
-
-    <!-- Total del carrito -->
-    <div class="text-right text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">
-      Total: {{ total | currency:'EUR' }}
-    </div>
-
- <!-- Botones de acción -->
-<div *ngIf="carrito.length > 0" class="flex flex-col sm:flex-row justify-between gap-4 mt-4">
-  <button (click)="vaciar()"
-          class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition font-medium">
-    🗑 Vaciar carrito
-  </button>
-
-  <button (click)="finalizarCompra()"
-          class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition font-medium">
-    ✅ Finalizar compra
-  </button>
-</div>
-
-
   </div>
 </div>
