@@ -71,15 +71,29 @@ export class CartComponent implements OnInit {
   finalizarCompra(): void {
     const usuarioId = this.carritoService.obtenerUsuarioId();
 
-    if (!usuarioId || usuarioId === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Inicia sesión',
-        text: '🔒 Debes iniciar sesión o registrarte para finalizar la compra.',
-        confirmButtonColor: '#2563eb'
-      });
-      return;
+   if (!usuarioId || usuarioId === 0) {
+  Swal.fire({
+    icon: 'warning',
+    title: '🔐 Inicia sesión o regístrate',
+    text: 'Necesitas una cuenta para finalizar tu compra.',
+    showCancelButton: true,
+    showDenyButton: true,
+    confirmButtonText: 'Iniciar sesión',
+    denyButtonText: 'Registrarse',
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#2563eb',
+    denyButtonColor: '#10b981',
+    cancelButtonColor: '#6b7280'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/auth/login']);
+    } else if (result.isDenied) {
+      this.router.navigate(['/auth/register']);
     }
+  });
+  return;
+}
+
 
     const items = this.carrito.map(item => ({
       productoId: item.id,
