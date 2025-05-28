@@ -75,9 +75,12 @@
       <!-- Perfil -->
       <ng-container *ngIf="autenticado; else noAuth">
         <div class="relative">
-          <button (click)="togglePerfilMenu()" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
-            {{ inicial }}
-          </button>
+        <!-- Botón perfil escritorio -->
+<button (click)="togglePerfilMenu()"
+        class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
+  {{ inicial }}
+</button>
+
           <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
             <a (click)="irAPerfil(); togglePerfilMenu()">Perfil</a>
             <button (click)="logout(); togglePerfilMenu()" class="cerrar">Cerrar sesión</button>
@@ -100,9 +103,12 @@
       </button>
 
       <ng-container *ngIf="autenticado; else noAuthMobile">
-        <button (click)="togglePerfilMenu()" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
-          {{ inicial }}
-        </button>
+      <!-- Botón perfil escritorio -->
+<button (click)="togglePerfilMenu()"
+        class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
+  {{ inicial }}
+</button>
+
         <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
           <a (click)="irAPerfil(); togglePerfilMenu()">Perfil</a>
           <button (click)="logout(); togglePerfilMenu()" class="cerrar">Cerrar sesión</button>

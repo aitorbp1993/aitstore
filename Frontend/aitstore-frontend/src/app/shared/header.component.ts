@@ -97,6 +97,7 @@ export class HeaderComponent implements OnInit {
     this.submenusAbiertos = {};
   }
 
+
 buscar(): void {
   if (this.searchTerm.trim().length > 0) {
     const termino = this.searchTerm.trim();
@@ -169,4 +170,13 @@ irAInicio(): void {
       items: agrupadas[grupo]
     }));
   }
+  @HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  const clickedInsidePerfil = target.closest('.perfil-dropdown') || target.closest('.avatar-perfil');
+
+  if (!clickedInsidePerfil) {
+    this.perfilMenuAbierto = false;
+  }
+}
 }
