@@ -223,25 +223,43 @@
   }
 }
 
-/* ✅ MODO OSCURO COMPLETO */
+/* 🌙 MODO OSCURO COMPLETO */
 .dark {
-  .home-wrapper,
-  .hero-title,
-  .hero-subtitle,
-  .categoria-titulo,
+  .home-wrapper {
+    color: #f9fafb !important;
+  }
+
+  .hero-title {
+    color: #f9fafb !important;
+
+    .highlight {
+      color: #3b82f6 !important;
+    }
+  }
+
+  .hero-subtitle {
+    color: #e5e7eb !important;
+  }
+
   .loading-text {
+    color: #e5e7eb !important;
+  }
+
+  .categoria-titulo {
     color: #f9fafb !important;
   }
 
   .producto-card {
     background: #1f2937;
 
-    .info h3 {
-      color: #f9fafb !important;
-    }
+    .info {
+      h3 {
+        color: #f9fafb !important;
+      }
 
-    .precio {
-      color: #3b82f6 !important;
+      .precio {
+        color: #3b82f6 !important;
+      }
     }
   }
 
