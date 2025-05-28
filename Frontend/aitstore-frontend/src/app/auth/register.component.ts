@@ -19,7 +19,13 @@ export class RegisterComponent {
   private router = inject(Router);
 
   registerForm: FormGroup = this.fb.group({
-    nombre: ['', Validators.required],
+  nombre: [
+  '',
+  [
+    Validators.required,
+    Validators.pattern(/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/)
+  ]
+],
     email: ['', [Validators.required, Validators.email]],
     password: [
       '',

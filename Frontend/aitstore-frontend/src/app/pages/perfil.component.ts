@@ -19,7 +19,13 @@ export class PerfilComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   perfilForm: FormGroup = this.fb.group({
-    nombre: ['', [Validators.required, Validators.maxLength(100)]],
+  nombre: [
+  '',
+  [
+    Validators.required,
+    Validators.pattern(/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/)
+  ]
+],
     direccion: ['', [Validators.maxLength(255)]],
     telefono: ['', [Validators.pattern(/^\d{9}$/)]]
   });
