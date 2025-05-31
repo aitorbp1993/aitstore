@@ -214,6 +214,10 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
+
+    button {
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
   }
 }
 
@@ -223,7 +227,7 @@
   }
 }
 
-/* 🌙 MODO OSCURO BIEN APLICADO SOLO A ELEMENTOS NECESARIOS */
+
 :host-context(.dark) .hero-title {
   color: #f9fafb !important;
 }
@@ -266,20 +270,23 @@
   color: #f3f4f6;
 }
 
-:host-context(.dark) .btn-outline {
-  border-color: #3b82f6;
-  color: #3b82f6;
 
-  &:hover {
-    background: #3b82f6;
-    color: white;
-  }
-}
-
-:host-context(.dark) .btn-primary {
+:host-context(.dark) .modal-acciones .btn-primary {
   background: #3b82f6;
+  color: white;
+  font-weight: 600;
 
   &:hover {
     background: #2563eb;
+  }
+}
+
+:host-context(.dark) .modal-acciones .btn-outline {
+  border: 1px solid #94a3b8;
+  color: #94a3b8;
+
+  &:hover {
+    background-color: #334155;
+    color: white;
   }
 }
