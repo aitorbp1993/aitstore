@@ -271,15 +271,26 @@
 }
 
 
-:host-context(.dark) .modal-acciones .btn-primary {
+:host-context(.dark) .modal .btn-primary {
   background: #3b82f6;
-  color: white;
+  color: white !important;
   font-weight: 600;
 
   &:hover {
     background: #2563eb;
   }
 }
+
+:host-context(.dark) .modal .btn-outline {
+  border: 1px solid #94a3b8;
+  color: #94a3b8;
+
+  &:hover {
+    background-color: #334155;
+    color: white;
+  }
+}
+
 
 :host-context(.dark) .modal-acciones .btn-outline {
   border: 1px solid #94a3b8;
