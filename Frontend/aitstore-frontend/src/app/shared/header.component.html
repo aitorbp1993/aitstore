@@ -72,14 +72,13 @@
         </span>
       </a>
 
-      <!-- Perfil -->
+      <!-- Perfil escritorio -->
       <ng-container *ngIf="autenticado; else noAuth">
         <div class="relative">
-        <!-- Botón perfil escritorio -->
-<button (click)="togglePerfilMenu()"
-        class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
-  {{ inicial }}
-</button>
+          <button (click)="togglePerfilMenu()"
+                  class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
+            {{ inicial }}
+          </button>
 
           <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
             <a (click)="irAPerfil(); togglePerfilMenu()">Perfil</a>
@@ -103,27 +102,32 @@
       </button>
 
       <ng-container *ngIf="autenticado; else noAuthMobile">
-      <!-- Botón perfil escritorio -->
-<button (click)="togglePerfilMenu()"
-        class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
-  {{ inicial }}
-</button>
+        <div class="relative">
+          <button (click)="togglePerfilMenu()"
+                  class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold hover:ring-2 ring-blue-400 transition">
+            {{ inicial }}
+          </button>
 
-        <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
-          <a (click)="irAPerfil(); togglePerfilMenu()">Perfil</a>
-          <button (click)="logout(); togglePerfilMenu()" class="cerrar">Cerrar sesión</button>
+          <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
+            <a (click)="irAPerfil(); togglePerfilMenu()">Perfil</a>
+            <button (click)="logout(); togglePerfilMenu()" class="cerrar">Cerrar sesión</button>
+          </div>
         </div>
       </ng-container>
 
       <ng-template #noAuthMobile>
-        <button (click)="togglePerfilMenu()" class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z" />
-          </svg>
-        </button>
-        <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
-          <a routerLink="/auth/login" (click)="togglePerfilMenu()">Ingresar</a>
-          <a routerLink="/auth/register" (click)="togglePerfilMenu()">Registrarse</a>
+        <div class="relative">
+          <button (click)="togglePerfilMenu()"
+                  class="avatar-perfil w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:ring-2 ring-blue-400 transition">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 3a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </button>
+
+          <div *ngIf="perfilMenuAbierto" class="perfil-dropdown">
+            <a routerLink="/auth/login" (click)="togglePerfilMenu()">Ingresar</a>
+            <a routerLink="/auth/register" (click)="togglePerfilMenu()">Registrarse</a>
+          </div>
         </div>
       </ng-template>
     </div>
